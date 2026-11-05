@@ -1,12 +1,4 @@
-// Test storage for the Gherkin feature port: a real in-memory SQLite
-// database (the LocalSqliteDriver), the core schema loaded, and the three
-// engines the Gherkin steps exercise (FetchEngine, RenderEngine,
-// CardActionEngine). Mirrors the storage style of tests/card/render/
-// render-test-storage.ts and tests/card/actions/actions-test-storage.ts
-// without crossing those streams.
-//
-// Synthetic content only (DATA RULE). All fixture cards are seeded by the
-// spec via the step helpers, not by this module — it owns the engines.
+
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -18,9 +10,6 @@ import { FetchEngine } from "../../../src/card/fetch.js";
 import { RenderEngine } from "../../../src/card/render.js";
 import type { Actor } from "../../../src/card/actions/types.js";
 
-/** Quote-aware `--` comment stripping + ";" split (the same splitter as the
- *  fetch and render storage streams — the DDL carries no ";" inside
- *  literals). */
 export function splitSqlStatements(ddl: string): string[] {
   const statements: string[] = [];
   let current = "";
@@ -65,7 +54,6 @@ export interface GherkinTestStorage {
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
-/** Fresh in-memory CORE-schema database + the three engines. */
 export async function createGherkinTestStorage(): Promise<GherkinTestStorage> {
   const driver = new LocalSqliteDriver({ path: ":memory:" });
   const ddl = readFileSync(`${REPO_ROOT}db/schema.sqlite.sql`, "utf8");
@@ -90,9 +78,6 @@ export async function createGherkinTestStorage(): Promise<GherkinTestStorage> {
   };
 }
 
-/** Type-card codename -> id mapping for the synthetic deck. Mirrors the
- *  Ruby mod-* seed (cards.yml) and the standard deck seeded in the
- *  action tests (actions-test-storage.ts:175-205). */
 export const TYPE_IDS = {
   richText: 2,
   cardtype: 3,
@@ -100,13 +85,8 @@ export const TYPE_IDS = {
   pointer: 5,
 } as const;
 
-/** Default actor for the CardActionEngine — Joe User, the same fixture
- *  the action layer tests use (actions-test-storage.ts:64). */
 export const JOE_ACTOR: Actor = { id: 9, name: "Joe User" };
 
-/** Direct INSERT seed (mirrors the fetch and action stream's helpers —
- *  the write path is its own stream). Simple cards carry name + key;
- *  compound cards carry NULL name/key with left_id/right_id. */
 export async function seedCard(
   storage: GherkinTestStorage,
   opts: {
@@ -164,8 +144,6 @@ export async function seedCard(
   return inserted;
 }
 
-/** Seed the synthetic standard deck (RichText, Cardtype, *all, *default,
- *  *all+*default). Mirrors actions-test-storage.ts seedStandardDeck. */
 export async function seedStandardDeck(storage: GherkinTestStorage): Promise<void> {
   await seedCard(storage, {
     id: TYPE_IDS.richText,
@@ -189,9 +167,6 @@ export async function seedStandardDeck(storage: GherkinTestStorage): Promise<voi
   await seedCard(storage, { leftId: 7, rightId: 8, typeId: TYPE_IDS.richText });
 }
 
-/** Seed an extended deck: standard + the Phrase and Pointer type cards
- *  the Gherkin features reference (pointer_inputs.feature creates
- *  Phrase cards and the pointer inputs machinery needs both). */
 export async function seedExtendedDeck(storage: GherkinTestStorage): Promise<void> {
   await seedStandardDeck(storage);
   await seedCard(storage, {

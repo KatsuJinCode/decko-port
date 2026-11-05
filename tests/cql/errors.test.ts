@@ -1,7 +1,4 @@
-/**
- * BadQuery parity tests: the invalid-input surfaces of card-1.110.0 CQL.
- * Each case cites the Ruby raise site; oracle-verified cases note it.
- */
+
 
 import { describe, expect, it } from "vitest";
 import { CqlBadQuery } from "../../src/cql/ast.js";
@@ -15,15 +12,13 @@ describe("invalid attributes [Interpretation#bad_attribute!]", () => {
   });
 
   it("operator aliases that are not attributes raise [oracle: neq / not_in do not exist in 1.110]", () => {
-    // The 1.110 operator spellings are ne / "not in"; neq and not_in are
-    // attribute KEYS and unknown -> BadQuery (verified against the oracle)
+
     expect(() => parseCql({ neq: 5 })).toThrow(/Invalid attribute: neq/);
     expect(() => parseCql({ not_in: [1, 2] })).toThrow(/Invalid attribute: not_in/);
   });
 
   it("sort_by with a Hash value is not a modifier and not an attribute", () => {
-    // interpret_as_modifier? requires a non-Hash; sort_by is absent from
-    // Query.attributes, so a Hash value falls through to bad_attribute!
+
     expect(() => parseCql({ sort_by: { right: {} } })).toThrow(/Invalid attribute: sort_by/);
   });
 
@@ -34,10 +29,7 @@ describe("invalid attributes [Interpretation#bad_attribute!]", () => {
 
 describe("invalid operators [Value#canonicalize_operator]", () => {
   it("unknown first elements are treated as values, not operators [oracle]", () => {
-    // oracle: id: ["between", 1, 2] -> c0.id in ('between','1','2').
-    // parse_array_value only shifts KNOWN operator keys, so the Ruby
-    // "Invalid operator" raise is unreachable from CQL input in 1.110; the
-    // canonicalize guard exists in the port for parity but is defensive.
+
     const ast = parseCql({ id: ["between", 1, 2] });
     expect(ast.conditions[0]).toMatchObject({
       kind: "value",
@@ -63,8 +55,7 @@ describe("invalid property values [Value#parse_simple_value]", () => {
 
 describe("safe_sql [Query.safe_sql]", () => {
   it("rejects disallowed characters in raw fragments at SQL generation", () => {
-    // Ruby applies safe_sql in SqlStatement#group / #standard_full_field /
-    // Order#order_field — i.e. during SQL generation, not interpretation
+
     expect(() => generateSql(parseCql({ group: "x; DROP" }))).toThrow(/disallowed characters/);
     expect(() => generateSql(parseCql({ return: "a'b" }))).toThrow(/disallowed characters/);
   });

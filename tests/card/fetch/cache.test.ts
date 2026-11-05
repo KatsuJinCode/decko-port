@@ -1,7 +1,4 @@
-// Unit tests for the two-level fetch cache port
-// (src/card/fetch/cache.ts <- card-1.110.0 lib/card/cache.rb,
-// cache/temporary.rb, cache/shared.rb). Every expectation cites the Ruby
-// file/method it derives from.
+
 
 import { describe, expect, it } from "vitest";
 import {
@@ -39,7 +36,7 @@ describe("TemporaryCache (lib/card/cache/temporary.rb)", () => {
       return `value-${computes}`;
     };
     expect(temp.fetch("k", compute)).toBe("value-1");
-    expect(temp.fetch("k", compute)).toBe("value-1"); // hit: no recompute
+    expect(temp.fetch("k", compute)).toBe("value-1");
     expect(computes).toBe(1);
   });
 
@@ -67,13 +64,13 @@ describe("TemporaryCache (lib/card/cache/temporary.rb)", () => {
 
   it("resets the whole store only when the REAL size exceeds maxKeys (temporary.rb#within_key_counts)", () => {
     const temp = new TemporaryCache(3);
-    // reps overestimates: 3 writes to the SAME key -> reps=3 but size=1
+
     for (let i = 0; i < 3; i++) temp.write("same", i);
-    expect(temp.read("same")).toBe(2); // NOT reset: recount (size=1) <= max
-    // now push past the real cap
+    expect(temp.read("same")).toBe(2);
+
     temp.write("a", 1);
     temp.write("b", 2);
-    temp.write("c", 3); // reps>=3 triggered a recount at write 4 -> size 4 > 3 -> reset
+    temp.write("c", 3);
     temp.write("d", 4);
     expect(temp.read("same")).toBeUndefined();
     expect(temp.read("a")).toBeUndefined();
@@ -88,7 +85,7 @@ describe("TemporaryCache (lib/card/cache/temporary.rb)", () => {
 describe("SharedCache (lib/card/cache/shared.rb)", () => {
   it("keys entries under {database}-{classKey}-{stamp}:{key} with a '/' before the key (shared.rb#full_key/#prefix)", () => {
     const shared = new SharedCache({ store: mapStore(), database: "decko", className: "Card" });
-    // shared.rb#full_key: fk = "#{prefix}/#{key}" where prefix ends with ':'
+
     expect(shared.fullKey("some_key")).toMatch(new RegExp("^decko-Card-stamp-\\d+-\\d+:/some_key$"));
   });
 
@@ -115,7 +112,7 @@ describe("SharedCache (lib/card/cache/shared.rb)", () => {
     const shared = new SharedCache({ store: mapStore() });
     shared.write("k", "v");
     shared.renew();
-    expect(shared.read("k")).toBe("v"); // same stamp re-read from the registry
+    expect(shared.read("k")).toBe("v");
   });
 
   it("write_attribute/readAttribute mutate a cached object (shared.rb#write_attribute)", () => {
@@ -141,7 +138,7 @@ describe("CardCache (lib/card/cache.rb)", () => {
     cache.shared!.write("k", "shared-value");
     expect(cache.temp.read("k")).toBeUndefined();
     expect(cache.read("k")).toBe("shared-value");
-    expect(cache.temp.read("k")).toBe("shared-value"); // copied into temp
+    expect(cache.temp.read("k")).toBe("shared-value");
   });
 
   it("write goes to BOTH shared and temp (cache.rb#write)", () => {
@@ -174,7 +171,7 @@ describe("CardCache (lib/card/cache.rb)", () => {
     const cache = new CardCache();
     cache.write("a", 1);
     cache.write("b", 2);
-    expect(cache.readMulti(["a"]).size).toBe(0); // size <= 1 -> {}
+    expect(cache.readMulti(["a"]).size).toBe(0);
     const multi = cache.readMulti(["a", "b", "c"]);
     expect(multi.get("a")).toBe(1);
     expect(multi.get("b")).toBe(2);

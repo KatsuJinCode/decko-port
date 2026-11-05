@@ -1,6 +1,4 @@
-// Tests for the DB-backed lexicon port (src/card/fetch/lexicon.ts <-
-// card-1.110.0 lib/card/lexicon.rb) against real SQLite storage. Every
-// expectation cites the Ruby method it derives from.
+
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
@@ -24,7 +22,7 @@ describe("DbLexicon.id (lexicon.rb#id)", () => {
   it("resolves simple names by their key (lex_query { key: })", async () => {
     await seedCard(storage, { id: 10, name: "Home Page" });
     expect(await storage.engine.lexicon.id("Home Page")).toBe(10);
-    // an already-canonical key string round-trips (name.to_name.key is idempotent)
+
     expect(await storage.engine.lexicon.id("home_page")).toBe(10);
   });
 
@@ -72,7 +70,7 @@ describe("DbLexicon.name (lexicon.rb#name)", () => {
   });
 
   it("returns undefined when a side card is missing (lex_to_name's `name side_id or return`)", async () => {
-    // junction row pointing at a nonexistent right card (broken lexicon)
+
     await seedCard(storage, { id: 10, name: "Left Part" });
     await seedCard(storage, { id: 12, name: "Left Part+Ghost", leftId: 10, rightId: 999 });
     expect(await storage.engine.lexicon.name(12)).toBeUndefined();
@@ -88,14 +86,12 @@ describe("DbLexicon caching (Card::Cache[Lexicon])", () => {
     await seedCard(storage, { id: 10, name: "Cached Card" });
     storage.counting.reset();
 
-    await storage.engine.lexicon.id("Cached Card"); // miss: queries the db
+    await storage.engine.lexicon.id("Cached Card");
     const afterFirst = storage.counting.queries;
     expect(afterFirst).toBeGreaterThan(0);
-    await storage.engine.lexicon.id("Cached Card"); // cached: zero queries
+    await storage.engine.lexicon.id("Cached Card");
     expect(storage.counting.queries).toBe(afterFirst);
-    // simple lexes do NOT get a reverse (id -> name) entry (lexicon.rb:124
-    // "don't store name, because lex might not be the canonical name"), so
-    // name(10) queries once, and only once
+
     await storage.engine.lexicon.name(10);
     const afterName = storage.counting.queries;
     expect(afterName).toBeGreaterThan(afterFirst);
@@ -111,13 +107,11 @@ describe("DbLexicon caching (Card::Cache[Lexicon])", () => {
   it("writeTemp mirrors id->name and lex->id into the temp cache (lexicon.rb#write_to_temp_cache)", async () => {
     const lexicon = storage.engine.lexicon;
     lexicon.writeTemp(77, undefined, "mirrored_card");
-    // the lex->id entry serves id() straight from cache - exactly Ruby's
-    // "temp cache ahead of the database" semantics (cache.rb module doc);
-    // no db row exists, so nothing else is known
+
     expect(await storage.engine.lexicon.id("mirrored_card")).toBe(77);
-    expect(storage.counting.queries).toBe(0); // served from temp, not the db
-    expect(lexicon.cache.temp.read("77")).toBeUndefined(); // name was nil
-    // deleting the lex entry (as the write path does) restores the miss
+    expect(storage.counting.queries).toBe(0);
+    expect(lexicon.cache.temp.read("77")).toBeUndefined();
+
     lexicon.deleteFor(77, "mirrored_card");
     expect(await storage.engine.lexicon.id("mirrored_card")).toBeUndefined();
   });
@@ -127,7 +121,7 @@ describe("DbLexicon caching (Card::Cache[Lexicon])", () => {
     await seedCard(storage, { id: 11, name: "Right Part" });
     await seedCard(storage, { id: 12, name: "Left Part+Right Part" });
     await storage.engine.lexicon.id("Left Part+Right Part");
-    // lex_to_id wrote id->lex under "12" so name(12) needs no db query
+
     expect(storage.engine.lexicon.cache.temp.read("12")).toEqual([10, 11]);
   });
 });

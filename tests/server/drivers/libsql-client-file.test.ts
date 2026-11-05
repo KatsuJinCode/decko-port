@@ -1,16 +1,4 @@
-// Cross-check: run the SAME conformance suite against @libsql/client with a
-// file: URL, wrapped in SQLDatabaseDriver. This is NOT a shipped adapter —
-// @libsql/client is a devDependency and production HTTP traffic goes through
-// LibSqlHttpAdapter — it exists to prove the conformance suite is strict
-// against a second independent implementation (and to document how the
-// official client's types line up with our driver contract).
-//
-// Feasibility notes (why the wrapper lives here and not in src/):
-// - The client's ResultSet maps cleanly onto SQLQueryResult: rows are
-//   index-and-name accessible, rowsAffected is a number, lastInsertRowId is
-//   `bigint | undefined`. Only awkwardness: InStatement args are typed
-//   InValue[], so our `unknown[]` params need a cast — safe for the scalar
-//   params this contract supports.
+
 
 import { describe, afterAll } from "vitest";
 import fs from "node:fs";
@@ -33,8 +21,7 @@ class LibSqlClientFileDriver implements SQLDatabaseDriver {
   }
 
   async batch(statements: SQLStatement[]): Promise<SQLQueryResult[]> {
-    // "write" mode wraps the batch in a transaction, matching the atomic
-    // batch semantics of LocalSqliteDriver and D1.
+
     const rss = await this.client.batch(
       statements.map((s) => ({ sql: s.sql, args: s.params as InValue[] })),
       "write",
@@ -55,12 +42,11 @@ const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "decko-libsql-file-test-")
 const dbPath = path.join(tempDir, "decko-test.db").replace(/\\/g, "/");
 
 afterAll(() => {
-  // Swallow cleanup failures: the native libsql handle can hold the file
-  // lock briefly after close() on Windows. Temp litter is acceptable.
+
   try {
     fs.rmSync(tempDir, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
   } catch {
-    /* temp litter is acceptable */
+
   }
 });
 

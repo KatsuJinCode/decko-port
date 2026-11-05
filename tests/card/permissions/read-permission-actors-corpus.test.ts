@@ -1,26 +1,4 @@
-// CORPUS PROOF of the signed-in readable-set math — the production deck's
-// real account/role data against the real ReadRuleCache.
-//
-// What the corpus CAN and CANNOT prove (said plainly):
-// - The corpus CAPTURE (fixtures/corpus/*) is anonymous-viewer only — no
-//   rendered bytes exist for a signed-in viewer, so this test proves the
-//   READABLE-SET math, not signed-in HTML bytes.
-// - The deck's storage carries the full role algebra: real Role cards
-//   (codename "role" type), real `<Role>+*members` IdList cards with their
-//   member reference rows (card-mod-account set/self/role.rb:33-40's
-//   rolehash source; the reference rows are the IdList's own save-time
-//   output, card-mod-list set/abstract/id_list.rb:33-47 — the anonymizer
-//   rewrote list CONTENT, the id references survived, and item counts
-//   match reference counts on every list), and 1,010 (role-party,
-//   read-rule) grant rows.
-// - This test therefore computes Ruby's read_rule_cache union
-//   (account_holder.rb:115-123 over [AnyoneID] + parties, :27-29, roles
-//   from :107-113) DIRECTLY from the corpus SQLite with independent raw
-//   SQL, and asserts the TS statement batch returns the identical rule-id
-//   set — for Anonymous AND for every one of the deck's 113 role members.
-//
-// Skips when the corpus database is absent (it is a local benchmark
-// artifact, not a repo fixture).
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { existsSync } from "node:fs";
@@ -47,9 +25,6 @@ describeIfCorpus("read permission actors: corpus union math (bench-corpus-v2)", 
   let raw: Database;
   let driver: LocalSqliteDriver;
 
-  /** Ruby's ReadRuleCache SQL (lib/card/rule/read_rule_cache.rb:7-18) with
-   *  ReadID/SetID interpolated from the codename cards — the expectation
-   *  side, deliberately independent of the TS statement builder. */
   const cacheRows = (): Array<{ partyId: number; readRuleId: number }> =>
     raw
       .prepare(
@@ -68,9 +43,6 @@ describeIfCorpus("read permission actors: corpus union math (bench-corpus-v2)", 
       | { id: number }
       | undefined)?.id ?? -1;
 
-  /** Self::Role.role_ids (set/self/role.rb:8-14) — the member-list rows of
-   *  the role cards the actor sits in (ordered by role id, the same
-   *  normalization the TS statement applies). */
   const rolesOf = (actorId: number): number[] =>
     (
       raw
@@ -88,8 +60,6 @@ describeIfCorpus("read permission actors: corpus union math (bench-corpus-v2)", 
         .all(actorId) as Array<{ roleId: number }>
     ).map((row) => row.roleId);
 
-  /** account_holder.rb: fetch_read_rules (:115-123): union of
-   *  read_rule_cache[party] over [AnyoneID] + parties (:27-29, :39-41). */
   function expectedUnion(parties: number[]): Set<number> {
     const cache = new Map<number, Set<number>>();
     for (const row of cacheRows()) {
@@ -104,8 +74,6 @@ describeIfCorpus("read permission actors: corpus union math (bench-corpus-v2)", 
     return union;
   }
 
-  /** The TS side, exactly the way an engine resolves it: one base batch +
-   *  the viewer parse (statement 4 spliced in for signed-in viewers). */
   async function tsState(viewer: ReadViewer) {
     const baseResults = await driver.batch(readPermissionStatements());
     const statements = readPermissionStatements(viewer);
@@ -144,8 +112,7 @@ describeIfCorpus("read permission actors: corpus union math (bench-corpus-v2)", 
   });
 
   it("a real roleful account holder: TS readable set equals Ruby's role-party union", async () => {
-    // Lowest-id account holder with roles and WITHOUT the Administrator
-    // role (the admin path is always_ok?, proven separately below).
+
     const accountId = codenameId("account");
     const administratorId = codenameId("administrator");
     const anyone = codenameId("anyone");
@@ -187,7 +154,7 @@ describeIfCorpus("read permission actors: corpus union math (bench-corpus-v2)", 
     expect(state.parties).toEqual(parties);
     expect(state.alwaysOk).toBe(false);
     expect(state.readableRuleIds).toEqual(expected);
-    // The point of the wave: role membership reads rules Anonymous cannot.
+
     const anonymousUnion = expectedUnion([anyone, codenameId("anonymous")]);
     expect(state.readableRuleIds.size).toBeGreaterThan(anonymousUnion.size);
     for (const ruleId of anonymousUnion) {
@@ -219,7 +186,7 @@ describeIfCorpus("read permission actors: corpus union math (bench-corpus-v2)", 
     const roles = rolesOf(adminMember!);
     const expected = expectedUnion([anyone, anyoneSignedIn, ...roles, adminMember!]);
     const state = await tsState({ signedIn: true, actorId: adminMember! });
-    expect(state.alwaysOk).toBe(true); // auth/permissions.rb:52-60 cached admin?
+    expect(state.alwaysOk).toBe(true);
     expect(state.readableRuleIds).toEqual(expected);
   });
 
@@ -227,7 +194,7 @@ describeIfCorpus("read permission actors: corpus union math (bench-corpus-v2)", 
     const anyone = codenameId("anyone");
     const anyoneSignedIn = codenameId("anyone_signed_in");
     const administratorId = codenameId("administrator");
-    const deckobotId = codenameId("deckobot"); // absent in this deck -> -1
+    const deckobotId = codenameId("deckobot");
     const memberIds = (
       raw
         .prepare(

@@ -6,7 +6,7 @@ import {
   normalizeSlotIds,
 } from "../../src/testing/diff.js";
 
-const HEX20 = "abcdef0123456789abcd"; // exactly 20 lowercase hex chars
+const HEX20 = "abcdef0123456789abcd";
 const hexId = (quote: string) => `data-slot-id=${quote}${HEX20}${quote}`;
 
 describe("normalizeSlotIds (the recording-layer rule)", () => {
@@ -81,7 +81,7 @@ describe("byteDiff (exact bytes, no tolerance)", () => {
     const first = diff.firstDifference;
     expect(first).not.toBeNull();
     expect(first!.codeUnitOffset).toBe(22);
-    expect(first!.byteOffset).toBe(22); // ASCII prefix: byte offset == code-unit offset
+    expect(first!.byteOffset).toBe(22);
     expect(first!.expectedChar).toBe('"e"');
     expect(first!.actualChar).toBe('"z"');
     expect(first!.expectedExcerpt).toContain("card-title");
@@ -91,7 +91,7 @@ describe("byteDiff (exact bytes, no tolerance)", () => {
   it("reports a UTF-8 byte offset that differs from the code-unit offset after multibyte chars", () => {
     const diff = byteDiff("\u00e9abc", "\u00e9abx");
     expect(diff.firstDifference!.codeUnitOffset).toBe(3);
-    expect(diff.firstDifference!.byteOffset).toBe(4); // "\u00e9" is 2 bytes in UTF-8
+    expect(diff.firstDifference!.byteOffset).toBe(4);
   });
 
   it("handles a length mismatch at end-of-string (one side exhausted)", () => {

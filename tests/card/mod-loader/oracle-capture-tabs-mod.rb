@@ -1,29 +1,3 @@
-# oracle-capture-tabs-mod.rb - oracle capture for the card-mod-tabs loader
-# port (decko-ts mod-port stream, card-mod-tabs-0.20.0).
-#
-# Run (from tools/oracle/decko-oracle-app):
-#   RAILS_ENV=development RUBY_DLL_PATH=C:/localProjects/decko-ts/tools/oracle/mysql-client-scratch/lib \
-#     bundle exec decko runner C:/localProjects/decko-ts/tests/card/mod-loader/oracle-capture-tabs-mod.rb
-#
-# Records to fixtures/captured/tabs-mod-loader.json:
-# 1. the set-module view registrations card-mod-tabs contributed
-#    (Card::Set::All::Tabs::HtmlFormat#_view_tabs et al. + the abstract
-#    module's _view_tabs/_view_tabs__cache, with source locations proving
-#    which gem file defined them)
-# 2. the probe card's REAL format-class view-config methods (_view_tabs__cache
-#    etc.) - the dispatch chain the renders actually resolve through
-# 3. rendered bytes for probe cards' :tabs / :pills / :tabs_static /
-#    :pills_static views - the byte oracle for the TS-side A/B test. A
-#    content probe (nest chunks in db_content -> construct_tabs lazy tabs),
-#    a no-options content probe, a pointer probe (item_cards -> the static
-#    variants; ALSO pins what construct_tabs does with nest-free content),
-#    and a nest-free rich-text probe (the empty tab panel shape).
-#
-# Determinism contract (mirrors oracle-capture-list-mod.rb): output JSON is
-# pretty-printed with deeply sorted keys + trailing newline; the random
-# data-slot-id attribute is normalized to a placeholder; probe seed cards are
-# created-if-missing and DELETED (trashed) after capture so the shared oracle
-# DB returns to its prior state.
 
 require "json"
 
@@ -56,9 +30,6 @@ RENDER_TARGETS = {
 }.freeze
 
 SLOT_ID_RE = /data-slot-id=(["'])\h+\1/.freeze
-# Probe cards are created fresh and trashed after each capture, so their row
-# ids (and with them data-card-id) advance every run - seed state, not mod
-# semantics. Normalized like the slot id; the TS test applies the same masks.
 CARD_ID_RE = /data-card-id=(["'])\d+\1/.freeze
 
 def normalize(html)
@@ -95,12 +66,10 @@ end
 payload = {}
 seed_log = {}
 
-# ---- seed (create-if-missing; removed again after capture) ------------------
 Card::Auth.as_bot do
   SEEDS.each { |attrs| seed_log[attrs[:name]] = seed_card(attrs) }
 end
 
-# ---- set-module view registrations ------------------------------------------
 all_tabs_html = Card::Set::All::Tabs.const_get(:HtmlFormat)
 abstract_tabs_html = Card::Set::Abstract::Tabs.const_get(:HtmlFormat)
 payload["registered_views"] = {
@@ -130,9 +99,6 @@ payload["registered_views"] = {
   }
 }
 
-# view-config methods checked on the PROBE CARD'S REAL FORMAT CLASS - the
-# dispatch chain the renders actually resolve through (the abstract module's
-# settings are only visible on formats whose set includes Abstract::Tabs).
 probe_format_class = Card.fetch(PROBE_TABS).format.class
 payload["probe_format_configs"] = %w[
   _view_tabs__cache
@@ -143,7 +109,6 @@ payload["probe_format_configs"] = %w[
   [method, probe_format_class.method_defined?(method)]
 end
 
-# ---- rendered probe views ---------------------------------------------------
 views = {}
 RENDER_TARGETS.each do |name, view_list|
   card = Card.fetch(name)
@@ -156,7 +121,6 @@ RENDER_TARGETS.each do |name, view_list|
 end
 payload["rendered"] = views
 
-# ---- cleanup: trash the probe cards so the shared DB stays untouched --------
 Card::Auth.as_bot do
   [
     PROBE_TABS,
@@ -177,7 +141,6 @@ Card::Auth.as_bot do
   end
 end
 
-# ---- write ------------------------------------------------------------------
 File.write(OUT_PATH, JSON.pretty_generate(deep_sort(payload)) + "\n")
 puts "seed_log: #{JSON.generate(deep_sort(seed_log))}"
 puts "WROTE #{OUT_PATH} (#{File.size(OUT_PATH)} bytes)"

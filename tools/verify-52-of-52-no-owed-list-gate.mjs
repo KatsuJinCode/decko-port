@@ -36,7 +36,6 @@ export function verifyFull52Gate(syntheticPath, ledgerEntries) {
   return { passed: 52, total: 52, verified: true };
 }
 
-// When executed directly, run the gate against verification/ files
 const defaultSynthetic = path.join(rootDir, "verification", "synthetic-v1.json");
 const defaultLedger = path.join(rootDir, "verification", "browser-ledger.jsonl");
 

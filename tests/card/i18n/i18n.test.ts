@@ -1,7 +1,4 @@
-// Surface 2 — minimal I18n port.
-// Validates the YAML loader + lookup + interpolation + missing-key
-// behavior + pluralization + Date localize the render layer needs to
-// close the locale-token divergences in card-mod-format.ts.
+
 
 import { beforeEach, describe, expect, it } from "vitest";
 import {
@@ -203,8 +200,7 @@ describe("t - translation lookup", () => {
   });
 
   it("leaves literal %% as a single %", () => {
-    // None of the captured en.yml files use %%, but the Ruby interpolation
-    // supports it (i18n/interpolate/ruby.rb). Verify the port does too.
+
     loadLocaleFromString("en", "en:\n  pct: \"100%% done\"\n");
     expect(t("pct")).toBe("100% done");
   });
@@ -258,8 +254,7 @@ describe("tExists - existence check", () => {
 
 describe("l - Date localize (strftime via i18n format strings)", () => {
   it("renders card_dayofwk_min_tz: full day, full month, day, year, hour:min am/pm, tz", () => {
-    // 2026-09-22T10:30:00 local. The exact tz varies by environment; we
-    // assert the shape, not the timezone string.
+
     const out = l(new Date(2026, 8, 22, 10, 30, 0), { format: "card_dayofwk_min_tz" });
     expect(out).toMatch(/^Tuesday, September 22, 2026 10:30 AM /);
   });

@@ -1,21 +1,4 @@
-// Save-path notify wiring, end to end: a card saved through the REAL
-// CardActionEngine dispatches the act's events to the registered
-// follow-notify hook, whose template resolves from THIS deck's
-// follower_notification_email children (deckEmailTemplateResolver) and
-// whose mail lands in the injected CaptureTransport.
-//
-// Proven here (the wiring per docs/notify-port-notes.md "save-path
-// registration line"):
-//   - no integrationHooks configured -> saves dispatch nothing (engine
-//     behavior unchanged for every pre-existing caller);
-//   - hooks configured -> updating a followed card fires the hook once
-//     with the deck-resolved template bytes (the interpolation vars the
-//     first mechanism supports: {{follower}}, {{followed_set}},
-//     {{follow_option}} — mail.ts renderMail);
-//   - an anonymous actor dispatches nothing (notifications carry the
-//     acting user; anonymous writes throw before any dispatch).
-// The follower rule-algebra walk is a deferred stream: the follower
-// resolver here is the fixed sugar (deck-resolvers.ts header).
+
 
 import { describe, expect, it } from "vitest";
 import {
@@ -70,10 +53,6 @@ async function freshWithHook(): Promise<{
   return { f, engine, transport };
 }
 
-/** The template triple, seeded as REAL rows: the setting cards (*subject,
- *  *text message, *html message) + the junction children under `follower
- *  notification email` (junction rows carry NULL name + side ids — the
- *  child names M6's real capture proved). */
 async function seedTemplateCards(f: StandardFixture): Promise<void> {
   await seedCard(f.storage, { id: 556, name: "follower notification email", typeId: 2 });
   await seedCard(f.storage, { id: 557, name: "*subject", typeId: 2 });
@@ -117,7 +96,7 @@ describe("save-path notify wiring (CardActionEngine -> integration hooks)", () =
     const { f, engine, transport } = await freshWithHook();
     await seedTemplateCards(f);
     const created = await engine.createCard({ name: "Watched Card", content: "first" });
-    transport.drain(); // the create's own act is not the target here
+    transport.drain();
     await engine.updateCard({ cardId: created.cardId, content: "second" });
     const mails = transport.captured();
     expect(mails.length).toBe(1);

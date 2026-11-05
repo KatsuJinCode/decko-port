@@ -1,5 +1,5 @@
 
- RUN  v5.0.1 C:/localProjects/decko-ts-o6-bunny-hosted-20261103
+ RUN  v5.0.1 workspace/decko-ts-o6-bunny-hosted-20261103
 
  ✓ tests/deploy/runtime-db-matrix.test.ts (5 tests) 107910ms
    ✓ matrix: hosted libsql (5)
@@ -14,4 +14,4 @@
    Start at  17:25:38
    Duration  110.87s (tests 97%, transform 2%, import 1%)
 
-JUNIT report written to C:/localProjects/fleet-briefs/routing-20261101/o6-bunny/matrix-attempt2.junit.xml
+JUNIT report written to workspace/fleet-briefs/routing-20261101/o6-bunny/matrix-attempt2.junit.xml

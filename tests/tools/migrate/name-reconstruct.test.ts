@@ -1,5 +1,4 @@
-// name-reconstruct.test.ts — the name-reconstruction ladder for junction
-// cards with NULL name/key columns. All inputs are SYNTHETIC.
+
 
 import { describe, it, expect } from "vitest";
 import { mkdtempSync } from "node:fs";
@@ -22,13 +21,13 @@ function makeTargetDb(): { path: string; driver: InstanceType<typeof LocalSqlite
       left_id INTEGER, right_id INTEGER, trash INTEGER
     )
   `);
-  // simple cards (left_id NULL) with non-null names
+
   db.exec(`INSERT INTO cards (id, name, key, left_id, right_id, trash) VALUES (1, 'Alpha', 'alpha', NULL, NULL, 0)`);
   db.exec(`INSERT INTO cards (id, name, key, left_id, right_id, trash) VALUES (2, 'Beta',  'beta',  NULL, NULL, 0)`);
   db.exec(`INSERT INTO cards (id, name, key, left_id, right_id, trash) VALUES (3, 'child', 'child', NULL, NULL, 0)`);
-  // junction card whose name/key columns ARE present (corpus-v2 shape)
+
   db.exec(`INSERT INTO cards (id, name, key, left_id, right_id, trash) VALUES (10, 'Alpha+child', 'alpha+child', 1, 3, 0)`);
-  // junction card with NULL name/key (the fallback case)
+
   db.exec(`INSERT INTO cards (id, name, key, left_id, right_id, trash) VALUES (11, NULL, NULL, 2, 3, 0)`);
   db.close();
   const driver = new LocalSqliteToolDriver(path);
@@ -60,8 +59,8 @@ describe("reconstructCardName — fallback ladder", () => {
       const r = await reconstructCardName({
         sourceName: null,
         sourceKey: null,
-        leftId: 2, // Beta
-        rightId: 3, // child
+        leftId: 2,
+        rightId: 3,
         driver,
       });
       expect(r.name).toBe("Beta+child");
@@ -78,7 +77,7 @@ describe("reconstructCardName — fallback ladder", () => {
       const r = await reconstructCardName({
         sourceName: null,
         sourceKey: null,
-        leftId: 99999, // nonexistent
+        leftId: 99999,
         rightId: 3,
         driver,
       });
@@ -112,7 +111,7 @@ describe("countNullNameJunctions", () => {
     const { driver } = makeTargetDb();
     try {
       const n = await countNullNameJunctions(driver);
-      // only id=11 is junction with NULL/empty name
+
       expect(n).toBe(1);
     } finally {
       driver.close();

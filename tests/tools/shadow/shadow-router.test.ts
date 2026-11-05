@@ -1,13 +1,4 @@
-// shadow-router.test.ts — unit tests for tools/shadow/shadow-router.mjs
-// and tools/shadow/shadow-report.mjs.
-//
-// The tests use TWO local http stub servers (one Ruby, one TypeScript) on
-// ephemeral ports plus a third proxy server that fronts them. Every
-// assertion is run against this isolated in-process harness; no Ruby,
-// TypeScript engine, or network is involved.
-//
-// DATA RULE: synthetic payloads only (e.g. "Hello world!" vs "Hello
-// WORLD!"). No real card names or content.
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import {
@@ -34,10 +25,6 @@ import {
   shouldShadow,
 } from "../../../tools/shadow/shadow-router.mjs";
 import { aggregateLog } from "../../../tools/shadow/shadow-report.mjs";
-
-// ---------------------------------------------------------------------------
-// Stub server helpers
-// ---------------------------------------------------------------------------
 
 interface StubState {
   setBody(b: string): void;
@@ -78,16 +65,12 @@ function makeStub(): StubState {
           res.writeHead(nextStatus, { "content-type": nextContentType });
           res.end(nextBody);
         } catch {
-          // socket closed mid-write — fine.
+
         }
       });
     },
   };
 }
-
-// ---------------------------------------------------------------------------
-// Process-level fixtures (one Ruby stub, one TS stub, one proxy)
-// ---------------------------------------------------------------------------
 
 let ruby: StubState;
 let ts: StubState;
@@ -141,10 +124,6 @@ afterAll(async () => {
   ]);
 });
 
-// ---------------------------------------------------------------------------
-// HTTP client helper (for the in-process proxy)
-// ---------------------------------------------------------------------------
-
 interface Resp {
   status: number;
   body: Buffer;
@@ -189,7 +168,6 @@ function clientRequest(
   });
 }
 
-/** Wait briefly so the proxy's async log-write has time to flush. */
 async function settle(ms = 25): Promise<void> {
   await new Promise((r) => setTimeout(r, ms));
 }
@@ -201,10 +179,6 @@ function readLog(): Array<Record<string, unknown>> {
     .filter((l) => l.length > 0)
     .map((l) => JSON.parse(l));
 }
-
-// ===========================================================================
-// Unit tests: loadPolicy
-// ===========================================================================
 
 describe("loadPolicy", () => {
   it("loads the default routes.shadow.json", () => {
@@ -256,10 +230,6 @@ describe("loadPolicy", () => {
   });
 });
 
-// ===========================================================================
-// Unit tests: shouldShadow
-// ===========================================================================
-
 describe("shouldShadow", () => {
   it("shadow-everything + 100 → true for any path", () => {
     const p = {
@@ -304,10 +274,6 @@ describe("shouldShadow", () => {
   });
 });
 
-// ===========================================================================
-// Unit tests: percent sampling — monotonic subset across rates
-// ===========================================================================
-
 describe("percent sampling monotonicity", () => {
   it("shadowed set at rate r1 is a subset of the set at r2 > r1", () => {
     const paths = Array.from({ length: 400 }, (_, i) => `/p/${i}`);
@@ -331,23 +297,19 @@ describe("percent sampling monotonicity", () => {
     const r75 = at(75);
     const r100 = at(100);
 
-    // Boundary: 0 → empty, 100 → all.
     expect(r0.size).toBe(0);
     expect(r100.size).toBe(paths.length);
 
-    // Monotonic subset: every element at r1 must also be at r2.
     for (const p of r10) expect(r25.has(p)).toBe(true);
     for (const p of r25) expect(r50.has(p)).toBe(true);
     for (const p of r50) expect(r75.has(p)).toBe(true);
     for (const p of r75) expect(r100.has(p)).toBe(true);
 
-    // Volume grows monotonically.
     expect(r10.size).toBeLessThanOrEqual(r25.size);
     expect(r25.size).toBeLessThanOrEqual(r50.size);
     expect(r50.size).toBeLessThanOrEqual(r75.size);
     expect(r75.size).toBeLessThanOrEqual(r100.size);
 
-    // Volume at r=50 is roughly half (within ±15% on 400 paths).
     expect(Math.abs(r50.size - paths.length / 2)).toBeLessThan(
       paths.length * 0.15,
     );
@@ -364,14 +326,10 @@ describe("percent sampling monotonicity", () => {
     const b = shouldShadow(p, "GET", "/cards/Sample+Name");
     const c = shouldShadow(p, "POST", "/cards/Sample+Name");
     expect(a).toBe(b);
-    // Method participates in the hash — POST and GET can differ.
+
     expect(typeof c).toBe("boolean");
   });
 });
-
-// ===========================================================================
-// Unit tests: compareResponses
-// ===========================================================================
 
 describe("compareResponses", () => {
   it("identical → same=true, firstDiffOffset=-1", () => {
@@ -405,7 +363,7 @@ describe("compareResponses", () => {
     };
     const c = compareResponses(a, b);
     expect(c.same).toBe(false);
-    expect(c.firstDiffOffset).toBe(6); // 'w' vs 'W'
+    expect(c.firstDiffOffset).toBe(6);
   });
 
   it("truncation → firstDiffOffset = min length", () => {
@@ -456,10 +414,6 @@ describe("compareResponses", () => {
   });
 });
 
-// ===========================================================================
-// End-to-end proxy tests (two stub upstreams)
-// ===========================================================================
-
 describe("proxy end-to-end", () => {
   it("returns Ruby bytes untouched to the client", async () => {
     ruby.setBody("<html>ruby-pure</html>");
@@ -474,7 +428,7 @@ describe("proxy end-to-end", () => {
   });
 
   it("logs a deliberate TS difference with the right first-diff offset", async () => {
-    // 'w' (0x77) at byte index 6 differs from 'W' (0x57).
+
     ruby.setBody("Hello world!");
     ruby.setStatus(200);
     ruby.setContentType("text/html");
@@ -484,7 +438,7 @@ describe("proxy end-to-end", () => {
 
     const resp = await clientRequest(`${proxyUrl}/cards/42?x=1`);
     expect(resp.status).toBe(200);
-    expect(resp.body.toString()).toBe("Hello world!"); // Ruby wins for the user
+    expect(resp.body.toString()).toBe("Hello world!");
     await settle();
 
     const entries = readLog();
@@ -515,10 +469,7 @@ describe("proxy end-to-end", () => {
   });
 
   it("verifies both upstreams receive the body (Ruby also gets it)", async () => {
-    // We do not have a direct Ruby receiver assertion in this test, but the
-    // body bytes are forwarded by the same code path that forwardOnce uses
-    // for TS, so the symmetric assertion is covered by the replay test
-    // above and by forwardOnce's own contract tested below.
+
     expect(typeof forwardOnce).toBe("function");
   });
 
@@ -545,7 +496,7 @@ describe("proxy end-to-end", () => {
       const resp = await clientRequest(`${skipUrl}/x`);
       expect(resp.body.toString()).toBe("r");
       await settle();
-      // TS must not have been hit.
+
       expect(ts.receivedBodies().length).toBe(0);
       const lines = readFileSync(skipLog, "utf8")
         .split("\n")
@@ -559,10 +510,6 @@ describe("proxy end-to-end", () => {
     }
   });
 });
-
-// ===========================================================================
-// End-to-end: policy actually filters via the proxy
-// ===========================================================================
 
 describe("policy filtering through the proxy", () => {
   it("shadow-allowlist only logs allowlisted paths", async () => {
@@ -592,18 +539,18 @@ describe("policy filtering through the proxy", () => {
       await clientRequest(`${polUrl}/admin/secret`);
       await settle();
       const tsBodies = ts.receivedBodies();
-      // Only the two /cards/* requests reached TS.
+
       expect(tsBodies.length).toBe(2);
       const lines = readFileSync(polLog, "utf8")
         .split("\n")
         .filter(Boolean);
-      expect(lines.length).toBe(3); // every request is logged (skipped or compared)
+      expect(lines.length).toBe(3);
       const paths = lines.map((l) => JSON.parse(l).path);
       const cards = paths.filter((p) => String(p).startsWith("/cards/"));
       const admin = paths.filter((p) => String(p).startsWith("/admin/"));
       expect(cards.length).toBe(2);
       expect(admin.length).toBe(1);
-      // The /admin request was filtered out before forwarding.
+
       const adminEntry = JSON.parse(lines[2]);
       expect(adminEntry.verdict).toBe("skipped");
       expect(adminEntry.tsStatus).toBeNull();
@@ -644,10 +591,6 @@ describe("policy filtering through the proxy", () => {
     }
   });
 });
-
-// ===========================================================================
-// aggregateLog unit tests
-// ===========================================================================
 
 describe("aggregateLog", () => {
   it("returns zeroed summary for empty input", () => {
@@ -693,13 +636,13 @@ describe("aggregateLog", () => {
 
   it("ranks worst offenders by diff rate then volume", () => {
     const lines = [];
-    // /a — 1 diff out of 1 (100% diff rate)
+
     lines.push({ timestamp: "t", method: "GET", path: "/a", verdict: "diff", firstDiffOffset: 0, rubyBytes: 1, tsBytes: 1 });
-    // /b — 5 diff out of 10 (50%)
+
     for (let i = 0; i < 10; i++) {
       lines.push({ timestamp: "t", method: "GET", path: "/b", verdict: i < 5 ? "diff" : "same", firstDiffOffset: i < 5 ? 0 : -1, rubyBytes: 1, tsBytes: 1 });
     }
-    // /c — 3 diff out of 100 (3%)
+
     for (let i = 0; i < 100; i++) {
       lines.push({ timestamp: "t", method: "GET", path: "/c", verdict: i < 3 ? "diff" : "same", firstDiffOffset: i < 3 ? 0 : -1, rubyBytes: 1, tsBytes: 1 });
     }
@@ -711,20 +654,13 @@ describe("aggregateLog", () => {
   });
 });
 
-// ===========================================================================
-// Sanity: fnv1a is deterministic
-// ===========================================================================
-
 describe("fnv1a", () => {
   it("is deterministic for the same input", () => {
     expect(fnv1a("GET /cards/1")).toBe(fnv1a("GET /cards/1"));
-    // Computed against this implementation (FNV-1a 32-bit, offset basis
-    // 0x811c9dc5, prime 0x01000193). Hard-coded so any silent change to
-    // the algorithm breaks this test loudly.
+
     expect(fnv1a("hello")).toBe(0x4f9f2cab);
     expect(fnv1a("GET /cards/1")).toBe(0x55b11ec5);
   });
 });
 
-// Suppress unused-binding lint.
 void appendLogEntry;

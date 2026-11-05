@@ -1,24 +1,4 @@
-// The card-mod-assets mod loader tests: prove the port's view registrations
-// match the Ruby source's per-view semantics, byte-for-byte where the
-// engine's surface is portable, and document the gap where it isn't.
-//
-// Proof shape:
-//   - The manifest has the ONE set module with portable html views
-//     (set/right/group_remote.rb), and that module's :html format registers
-//     exactly the two gem-specific views the T6 verdict names
-//     (metrics.htmlViewsMissingNames = ["javascript_include_tag",
-//     "stylesheet_include_tag"]).
-//   - The registered view functions emit the same per-URL byte strings
-//     Ruby's asset_tag_helper.rb#javascript_include_tag / tag "link"
-//     produce for a remote URL (no asset-pipeline digest lookup).
-//   - The ModLoader's reset() restores the pre-registration view table, so
-//     this test mutates no shared surface (parity with the help mod test's
-//     afterAll.reset()).
-//
-// What this test does NOT pin: the asset pipeline's filesystem-touching
-// views (right/asset_output view :not_found -> update_asset_output_live;
-// abstract/asset_file view :javascript_include_tag -> card.existing_source_paths),
-// documented in card-mod-assets.ts's NOT-PORTED block.
+
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { ModLoader } from "../../../src/card/mod-loader.js";
@@ -33,14 +13,10 @@ beforeAll(() => {
 });
 
 afterAll(() => {
-  loader?.reset(); // unregister the mod views from the live HTML_VIEWS record
+  loader?.reset();
   loader = undefined;
 });
 
-/** A ViewContext stub sized for the two ported views: they only read
- *  ctx.fmt.card.dbContent (the URL list newline-joined - group_remote.rb:30
- *  content = urls.join "\n"). voo / engine / nest processing are not
- *  exercised. */
 function ctxForUrls(urls: string): ViewContext {
   return {
     fmt: { card: { dbContent: urls } } as unknown as ViewContext["fmt"],
@@ -48,7 +24,6 @@ function ctxForUrls(urls: string): ViewContext {
   };
 }
 
-/** Pull the mod-registered view function out of the live views record. */
 function viewFor(name: string): ViewFn {
   const table = loader!.viewsTable();
   const fn = table[name];
@@ -90,9 +65,7 @@ describe("card-mod-assets mod loader", () => {
     it("the mod's name / gemName / group match the card-mod-assets-0.20.0 manifest", () => {
       expect(cardModAssets.name).toBe("assets");
       expect(cardModAssets.gemName).toBe("card-mod-assets");
-      // dirs.rb:66-78 + 148-156: cards-installed gems live under
-      // "gem-defaults"; card-mod-assets ships as a gem so the group is
-      // "gem-defaults".
+
       expect(cardModAssets.group).toBe("gem-defaults");
     });
   });
@@ -112,9 +85,7 @@ describe("card-mod-assets mod loader", () => {
     });
 
     it("a single URL emits one <script src=...></script> tag with no leading whitespace", () => {
-      // group_remote.rb:45 maps the path through javascript_include_tag
-      // (Rails emits <script src=\"<url>\"></script> for a remote URL);
-      // the join is "\n" with no trailing newline.
+
       expect(registered(ctxForUrls("https://cdn.example.com/lib.js"))).toBe(
         '<script src="https://cdn.example.com/lib.js"></script>',
       );
@@ -135,11 +106,7 @@ describe("card-mod-assets mod loader", () => {
     });
 
     it("a trailing newline is filtered so the output has no trailing newline either", () => {
-      // group_remote.rb:25-27 urls filters no blanks explicitly, but the
-      // port's url source (card.dbContent = urls.join "\n") carries one
-      // trailing newline on cards where the manifest had no remote URLs
-      // after the last one. Splitting a trailing newline yields one empty
-      // string the helper filters out.
+
       expect(registered(ctxForUrls("https://cdn.example.com/lib.js\n"))).toBe(
         '<script src="https://cdn.example.com/lib.js"></script>',
       );
@@ -153,9 +120,7 @@ describe("card-mod-assets mod loader", () => {
     });
 
     it("a single URL emits one <link href=... media=all rel=stylesheet type=text/css /> with the Ruby argument order", () => {
-      // group_remote.rb:52 `tag "link", href:, media:, rel:, type:` - Rails'
-      // tag helper preserves Hash insertion order, so the byte order is
-      // href, media, rel, type.
+
       expect(registered(ctxForUrls("https://cdn.example.com/lib.css"))).toBe(
         '<link href="https://cdn.example.com/lib.css" media="all" rel="stylesheet" type="text/css" />',
       );
@@ -184,10 +149,7 @@ describe("card-mod-assets mod loader", () => {
 
   describe("the mod loader's reset() restores the pre-registration view table", () => {
     it("undoes each registered view's presence in HTML_VIEWS after reset()", () => {
-      // The beforeAll registered the two views into the SHARED HTML_VIEWS
-      // record. After reset() the live record no longer carries the mod
-      // views (so a subsequent default-load won't have them). The help mod
-      // test asserts the same via afterAll; here we exercise it explicitly.
+
       const table = loader!.viewsTable();
       expect(typeof table["javascript_include_tag"]).toBe("function");
       expect(typeof table["stylesheet_include_tag"]).toBe("function");
@@ -195,8 +157,7 @@ describe("card-mod-assets mod loader", () => {
       loader!.reset();
 
       const after = loader!.viewsTable();
-      // HTML_VIEWS has neither in its baseline (the T6 verdict named them
-      // as the missing entries), so reset() REMOVES both views.
+
       expect(after["javascript_include_tag"]).toBeUndefined();
       expect(after["stylesheet_include_tag"]).toBeUndefined();
     });

@@ -1,23 +1,4 @@
-// import-deck.test.ts — the productized CLI's tests, covering chunking +
-// validation on a small synthetic fixture.
-//
-// The ask: "tests for the chunking + validation on a small fixture". The
-// fixture is a tiny deck built from the existing synthetic-dump helpers,
-// written in all three source shapes (SQLite, mysqldump, deck-INSERT
-// text) so the CLI's three ingest paths are exercised end-to-end on the
-// same logical deck.
-//
-// Checks:
-//   1. card count + junction count + integrity (validator)
-//   2. chunking - rows are split into chunks by row-count AND byte-budget
-//   3. D1-ready SQL output - every chunk parses back to the same row set
-//      when fed to a fresh staging DB (round-trip property)
-//   4. content-free report - the JSON never contains card names/content
-//      (DATA RULE audit)
-//
-// The 867MB anonymized seed's full local-D1 import is run by the lane
-// lead and reported in the deliverable; this suite covers the correctness
-// surface on a small fixture where the assertions are sharp.
+
 
 import { describe, it, expect, afterAll } from "vitest";
 import { spawnSync } from "node:child_process";
@@ -49,7 +30,7 @@ afterAll(() => {
     try {
       rmSync(dir, { recursive: true, force: true });
     } catch {
-      // best-effort
+
     }
   }
 });
@@ -105,10 +86,7 @@ function writeMysqldumpFixture(dir: string): string {
 }
 
 function writeSeedFixture(dir: string): string {
-  // The deck-INSERT shape the M5 parser handles: explicit column lists,
-  // single-statement-per-row, semicolon-terminated. Mirror the mysqldump
-  // cards shape (NOT the anonymized corpus shape - that uses 'content'
-  // not 'db_content' - the schema map must rename it during ingest).
+
   const lines = [];
   for (const c of FIXTURE()) {
     const cols = ["id", "name", "key", "codename", "left_id", "right_id",
@@ -120,13 +98,13 @@ function writeSeedFixture(dir: string): string {
       c.id,
       isJunction ? null : c.name,
       key,
-      null, // codename
+      null,
       c.leftId ?? null,
       c.rightId ?? null,
-      1, // creator_id
-      1, // updater_id
-      null, // read_rule_class
-      null, // read_rule_id
+      1,
+      1,
+      null,
+      null,
       c.trash ?? 0,
       c.typeId ?? 2,
       c.dbContent ?? null,
@@ -210,8 +188,7 @@ function runCLI(args: string[]): { status: number; stdout: string; stderr: strin
     [CLI, ...args],
     { encoding: "utf8", timeout: 180_000 },
   );
-  // status is null only when the child was killed by a signal (the 180s
-  // timeout); map that to -1 so callers can assert non-zero uniformly.
+
   return { status: run.status ?? -1, stdout: run.stdout ?? "", stderr: run.stderr ?? "" };
 }
 
@@ -231,31 +208,28 @@ describe("import-deck CLI - chunking + validation", () => {
     expect(result.stderr).toBe("");
     expect(existsSync(join(outDir, "report.json"))).toBe(true);
 
-    // chunks were written
     const chunkFiles = readdirSync(join(outDir, "chunks")).filter((f) => f.endsWith(".sql")).sort();
     expect(chunkFiles.length).toBeGreaterThan(0);
     for (const f of chunkFiles) {
       const txt = readFileSync(join(outDir, "chunks", f), "utf8");
-      // Every chunk: header comment + BEGIN + INSERTs + COMMIT
+
       expect(txt).toMatch(/^-- chunk \d+ of \d+/m);
       expect(txt).toMatch(/BEGIN TRANSACTION/);
       expect(txt).toMatch(/COMMIT/);
       expect(txt).toMatch(/INSERT INTO "cards"/);
     }
 
-    // report validation
     const report = JSON.parse(readFileSync(join(outDir, "report.json"), "utf8"));
     expect(report.tool).toContain("decko-ts import-deck");
     expect(report.source.kind).toBe("mysqldump");
     expect(report.source.cardsCount).toBe(7);
     expect(report.target.cardsCount).toBe(7);
-    expect(report.target.junctionsCount).toBe(2); // ids 3 and 5
+    expect(report.target.junctionsCount).toBe(2);
     expect(report.integrity.junctionWalk.resolved).toBe(report.integrity.junctionWalk.sampled);
     expect(report.integrity.orphanLeftCount).toBe(0);
     expect(report.integrity.orphanRightCount).toBe(0);
     expect(report.allChecksPass).toBe(true);
 
-    // content-free DATA RULE audit
     const json = JSON.stringify(report);
     expect(json).not.toContain("Migra Home");
     expect(json).not.toContain("welcome to the migration test deck");
@@ -306,8 +280,7 @@ describe("import-deck CLI - chunking + validation", () => {
     const dir = makeDir();
     const outDir = join(dir, "chunks");
     const dumpPath = writeMysqldumpFixture(dir);
-    // 7 cards + 1 card_acts = 8 rows total. chunk-rows=3 should yield 3 chunks
-    // (3 + 3 + 2) assuming the chunker groups by row budget alone.
+
     const result = runCLI([
       "--dump",
       dumpPath,
@@ -319,11 +292,9 @@ describe("import-deck CLI - chunking + validation", () => {
     ]);
     expect(result.status).toBe(0);
     const chunkFiles = readdirSync(join(outDir, "chunks")).filter((f) => f.endsWith(".sql")).sort();
-    // The chunker flushes when EITHER the row count or the byte budget
-    // is hit, so 8 rows / 3 rows-per-chunk = at least 3 chunks.
+
     expect(chunkFiles.length).toBeGreaterThanOrEqual(3);
 
-    // Each chunk's row count must be at most 3 (unless it carries the tail)
     const report = JSON.parse(readFileSync(join(outDir, "report.json"), "utf8"));
     for (const n of report.chunks.rowsPerChunk) {
       expect(n).toBeLessThanOrEqual(3);
@@ -360,7 +331,6 @@ describe("import-deck CLI - chunking + validation", () => {
     ]);
     expect(result.status).toBe(0);
 
-    // Apply every chunk into a brand-new SQLite DB and re-count.
     const targetDb = join(dir, "roundtrip.sqlite");
     const db = new Database(targetDb);
     const { readFileSync: rd, readdirSync: rdd } = require("node:fs") as typeof import("node:fs");
@@ -372,7 +342,7 @@ describe("import-deck CLI - chunking + validation", () => {
     expect(cards.n).toBe(7);
     const acts = db.prepare("SELECT COUNT(*) AS n FROM card_acts").get() as { n: number };
     expect(acts.n).toBe(1);
-    // junction rows landed (left_id NOT NULL, name NULL per 2020 convention)
+
     const j = db.prepare("SELECT COUNT(*) AS n FROM cards WHERE left_id IS NOT NULL AND trash = 0").get() as { n: number };
     expect(j.n).toBe(2);
     db.close();
@@ -390,11 +360,7 @@ describe("import-deck CLI - chunking + validation", () => {
       "--quiet",
     ]);
     expect(result.status).toBe(0);
-    // The CLI cleans up its staging DB on success; we cannot tamper with
-    // it here. But we CAN prove the validator surfaces a parity failure
-    // when the source and target counts differ - by re-applying the
-    // chunks into a fresh SQLite DB and deleting one row before running
-    // the validator.
+
     const chunkFiles = readdirSync(join(outDir, "chunks")).filter((x) => x.endsWith(".sql")).sort();
     const tamperedDb = join(dir, "tampered.sqlite");
     const db = new Database(tamperedDb);

@@ -1,10 +1,4 @@
-// settings-map.test.ts — the settings inventory module (the
-// "settings tables are inventoried, never imported" rule).
-//
-// DATA RULE: settings VALUES are never read into the report (settings
-// may carry account email templates, OAuth tokens, deck-private config).
-// The test asserts: settings TABLES are inventoried, settings KEYS are
-// sampled, settings VALUES never appear in the report.
+
 
 import { describe, it, expect } from "vitest";
 import { mkdtempSync } from "node:fs";
@@ -65,7 +59,7 @@ describe("inventorySettings", () => {
       expect(metaEntry!.sampleKeys).toContain("secret_oauth_token");
       expect(metaEntry!.sampleKeys).toContain("ui_theme");
       expect(metaEntry!.sampleKeys).toContain("build_seed");
-      // THE DATA RULE: no values appear in the inventory
+
       const json = JSON.stringify(settings);
       expect(json).not.toContain("should-not-appear");
       expect(json).not.toContain("dark");

@@ -46,7 +46,7 @@ comparison used the exact release engine bytes, with all 364 release `src/`
 files hash-verified into the deployment inputs, and matched its local render
 except six generated slot IDs. These are distinct source attributions;
 [VERIFICATION.md](VERIFICATION.md) records both and their limits. Deploying to Bunny
-uses [docs/deploy-bunny.md](docs/deploy-bunny.md);
+uses `docs/deploy-bunny.md` (development repository; not included);
 this package ships the engine without a provisioner by design.
 
 Subsequent hosted application, transaction, mail and cleanup evidence is in

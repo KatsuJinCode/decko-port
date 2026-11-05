@@ -1,6 +1,4 @@
-// deck-seed-parser.test.ts — the deck-INSERT parser behind the M5 CLI's
-// third ingest path. Same shape as parse-dump.test.ts: feed-size
-// invariance is the sharpest contract for a streaming parser.
+
 
 import { describe, it, expect, afterAll } from "vitest";
 import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
@@ -34,7 +32,6 @@ function tmp(): string {
   return d;
 }
 
-
 describe("deck-seed-parser", () => {
   it("decodes SQL doubled-quote escapes", () => {
     expect(decodeLiteral("plain")).toBe("plain");
@@ -54,12 +51,12 @@ describe("deck-seed-parser", () => {
     expect(cards.length).toBe(3);
     expect(refs.length).toBe(1);
     expect(meta.length).toBe(2);
-    // junction row id=2 carries NULL name/key per the 2020 convention
+
     const junction = cards.find((c) => c.values[0] === 2);
     expect(junction?.values[1]).toBeNull();
     expect(junction?.values[2]).toBeNull();
-    expect(junction?.values[4]).toBe(3); // right_id
-    // content escapes decoded
+    expect(junction?.values[4]).toBe(3);
+
     const content = junction?.values[6] as string;
     expect(content).toContain("apostrophes");
   });
@@ -101,14 +98,12 @@ line three</p>',
       `INSERT INTO cards (id, name, key) VALUES (1, 'a', 'a'); NOT SQL; INSERT INTO cards (id, name, key) VALUES (2, 'b', 'b');`,
       "utf8",
     );
-    // The first statement is valid; "NOT SQL;" is treated as a non-INSERT
-    // line and skipped (the parser only emits INSERT rows); the third
-    // statement is valid.
+
     const rows = await readAll(p);
     expect(rows.length).toBe(2);
   });
 
   afterAll(() => {
-    for (const d of dirs) try { rmSync(d, { recursive: true, force: true }); } catch { /* */ }
+    for (const d of dirs) try { rmSync(d, { recursive: true, force: true }); } catch {  }
   });
 });

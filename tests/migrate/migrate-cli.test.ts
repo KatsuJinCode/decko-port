@@ -1,8 +1,4 @@
-// migrate-cli.test.ts — the one-click entry point end to end:
-//   node tools/migrate/migrate.mjs --dump <synthetic> --out <db> --verify
-// asserting exit code 0, a populated database, and the JSON report on
-// disk. (The --engine-verify spawn path is exercised manually; in-suite it
-// would nest a vitest run inside a vitest run.)
+
 
 import { describe, it, expect, afterAll } from "vitest";
 import { spawnSync } from "node:child_process";
@@ -27,7 +23,7 @@ afterAll(() => {
     try {
       rmSync(dir, { recursive: true, force: true });
     } catch {
-      // best-effort cleanup of %TEMP%
+
     }
   }
 });
@@ -90,7 +86,7 @@ describe("migrate CLI", () => {
     expect(report.allParity).toBe(true);
     expect(report.cards?.parity).toBe(true);
     expect(report.engine.status).toBe("skipped");
-    // the CLI report is content-free too
+
     const json = JSON.stringify(report);
     expect(json).not.toContain("Cli Card One");
     expect(json).not.toContain("first cli card");

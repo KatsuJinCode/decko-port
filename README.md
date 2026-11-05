@@ -13,10 +13,10 @@ Verification of this port is backed by in-tree test records, execution ledgers, 
   - **Semantics:** 2,389 / 2,389 (100%)
   - **Persistence:** 16 / 16 (100%)
   - **Side Effects:** 19 / 19 (100%)
-  - *Receipt:* [verification/synthetic-v1.json](verification/synthetic-v1.json)
+  - *Fixture Manifest:* [reference-harness/fixtures/synthetic-v1/MANIFEST.json](reference-harness/fixtures/synthetic-v1/MANIFEST.json)
 - **Canonical Browser Journeys:**
   - **52 / 52** passed (100%), **0** failed, **0** owed
-  - *Receipts:* [verification/browser-gate-52.json](verification/browser-gate-52.json), [verification/browser-ledger.jsonl](verification/browser-ledger.jsonl)
+  - *Receipts:* [verification/synthetic-v1.json](verification/synthetic-v1.json), [verification/browser-gate-52.json](verification/browser-gate-52.json), [verification/browser-ledger.jsonl](verification/browser-ledger.jsonl)
 - **Runtime Database Matrices:**
   - **PostgreSQL 16.15:** 5 / 5 passed
   - **MySQL 8.4.11:** 5 / 5 passed
@@ -35,7 +35,7 @@ For complete verification methodologies, build attributions, and the excluded-in
 
 ## Running Tests
 
-This release includes the complete port test suite (218 test files across 188 test suites in `tests/`) and gate runner tools.
+This release ships the included test collection (216 test files across 188 test suites in `tests/`) and gate runner tools. The original development full-suite benchmark was the ~12k test suite run on the Linux VM (12,072 passed / 75 failed / 194 skipped); this package ships the included test collection and gating tools.
 
 - **Vitest:** `npx vitest run`
 - **Test Gate Runner:** `node tools/test-gates.mjs run full`
@@ -49,4 +49,4 @@ Detailed instructions and prerequisites are in [TESTING.md](TESTING.md).
 
 - Licensed under the **GNU General Public License v3.0 or later (GPL-3.0-or-later)**.
 - See [NOTICE](NOTICE) and [LICENSE](LICENSE) for copyright attribution and full license terms.
-- Bundled third-party source in `third-party-source/` contains TinyMCE 5.10.7 licensed under the **GNU Lesser General Public License v2.1 (LGPL-2.1)** (see `third-party-source/tinymce-5.10.7/LICENSE.txt`).
+- Bundled third-party source in `third-party-source/` contains TinyMCE 5.10.7 licensed under the **GNU Lesser General Public License v2.1 (LGPL-2.1)** (see `third-party-source/tinymce-5.10.7/upstream/LICENSE.TXT`).

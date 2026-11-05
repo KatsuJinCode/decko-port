@@ -1,10 +1,4 @@
-// Shared seeding for the read-permission corpus replay: the shard's rows
-// WITH their stored read_rule_id / read_rule_class columns plus the FULL
-// read-rule universe (every *read rule card, its set card, the rules'
-// card_references party grants, and the codename cards the party math
-// resolves) and the transitive side/type closure junction composition
-// needs. This is the seed enrichment the corpus replay flip
-// (permissionPending -> JUDGED) requires; see docs/permissions-port-notes.md.
+
 
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -21,16 +15,13 @@ const REPO_ROOT = path.resolve(HERE, "..", "..", "..");
 export const CORPUS_DB = path.join(REPO_ROOT, "benchmarks", "corpus-v2", "bench-corpus-v2.sqlite3");
 export const SHARD_PATH = path.join(REPO_ROOT, "fixtures", "corpus", "shard-000000.jsonl");
 
-/** The codename cards the permission state resolution reads. */
 const PERMISSION_CODENAMES = ["anyone", "anyone_signed_in", "anonymous", "read", "set"];
 
 export interface ShardLine {
   id: number;
   name: string;
   views?: Record<string, string>;
-  /** The captured card record (the corpus JSONL's `record` payload); the
-   *  structure-template replay (structure-corpus-replay.test.ts) reads
-   *  `.content` for its classification predicate. */
+
   record?: { content: string };
 }
 
@@ -55,14 +46,6 @@ export async function createPermissionSeededStorage(): Promise<RenderTestStorage
   return createCorpusSeededStorage(new Set(readShardLines().map((l) => l.id)));
 }
 
-/**
- * The permission seeding for an ARBITRARY id set — the corpus replay
- * driver's entry point (it seeds the union of every shard's ids so
- * cross-shard nest targets resolve). Same enrichment as the single-shard
- * path: the rows' stored read_rule_id / read_rule_class columns, the full
- * read-rule universe, the rules' card_references party grants, the
- * permission codename cards, and the transitive side/type closure.
- */
 export async function createCorpusSeededStorage(ids: Set<number>): Promise<RenderTestStorage> {
   const storage = await createRenderTestStorage();
   const corpus = new Database(CORPUS_DB, { readonly: true });
@@ -71,9 +54,8 @@ export async function createCorpusSeededStorage(ids: Set<number>): Promise<Rende
     corpus.prepare(`SELECT id FROM cards WHERE codename = 'read' AND trash = 0`).get() as
       { id: number } | undefined
   )?.id;
-  if (readId === undefined) throw new Error("corpus deck has no *read card");
+  if (readId === undefined) throw new Error("seeded deck has no *read card");
 
-  // Rule universe: every live *read rule card + the set card it hangs on.
   const ruleRows = corpus
     .prepare(`SELECT ${CORPUS_ROW_COLUMNS} FROM cards WHERE right_id = ? AND trash = 0`)
     .all(readId) as CorpusRow[];
@@ -89,8 +71,6 @@ export async function createCorpusSeededStorage(ids: Set<number>): Promise<Rende
     referee_key: string | null;
   }>;
 
-  // Seed ids: caller's ids + codename cards + rule cards + their set cards,
-  // then the transitive side/type closure to fixpoint.
   for (const codename of PERMISSION_CODENAMES) {
     const row = corpus
       .prepare(`SELECT id FROM cards WHERE codename = ? AND trash = 0`)
@@ -99,17 +79,7 @@ export async function createCorpusSeededStorage(ids: Set<number>): Promise<Rende
   }
   for (const rule of ruleRows) ids.add(rule.id);
   for (const id of setCardIds) ids.add(id);
-  // SET-card child-card grant walk (deep-read-rule / read-rule-grant-vs-deny
-  // closure gap fix, 2026-09-25). For every *read rule, resolve its SET card
-  // (left_id), then walk the SET card's CHILD cards (left_id = set_card.id).
-  // Each child's card_references name the GRANT PARTIES that setting rule
-  // grants (e.g. `*all+*create` -> AnyoneSignedIn, `*all+*delete` ->
-  // Administrator, `*all+*read` -> Anyone). Ruby's permissions.rb#read_rule?
-  // walks the SET card's rule children via Card.where(matches_rule) and
-  // unions the grants; the previous closure walked only refs FROM the *read
-  // rule cards (ruleRows), missing the grants named by the SET's other
-  // setting children. Chunked at 500 to stay under
-  // SQLITE_MAX_VARIABLE_NUMBER (default 999).
+
   const childCardIds: number[] = [];
   const childRefs: Array<{
     referer_id: number;
@@ -199,10 +169,7 @@ export async function createCorpusSeededStorage(ids: Set<number>): Promise<Rende
   for (const ref of refs) {
     await seedReference(storage, ref.referer_id, ref.referee_id, ref.referee_key);
   }
-  // SET-card child-card grant walk follow-up: seed the child-card references
-  // captured above (childRefs + childCardIds were collected at the same point
-  // as setCardIds were expanded). Same persist path as the rules-as-referers
-  // loop above.
+
   for (const ref of childRefs) {
     await seedReference(storage, ref.referer_id, ref.referee_id, ref.referee_key);
   }

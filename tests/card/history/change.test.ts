@@ -1,5 +1,4 @@
-// Unit tests for the Card::Change write-side port (src/card/history/change.ts).
-// Every expectation cites the Ruby file it derives from.
+
 
 import { describe, expect, it } from "vitest";
 import {
@@ -13,8 +12,7 @@ import {
 } from "../../../src/card/history/change.js";
 
 describe("TRACKED_FIELDS", () => {
-  // card-mod-history-0.20.0/lib/card/change.rb:25
-  // TRACKED_FIELDS = %w[name type_id db_content trash left_id right_id]
+
   it("lists the six tracked fields in Ruby order", () => {
     expect([...TRACKED_FIELDS]).toEqual([
       "name",
@@ -27,7 +25,7 @@ describe("TRACKED_FIELDS", () => {
   });
 
   it("maps field names to the 0-based index stored in card_changes.field", () => {
-    // change.rb:47-49 field_index / :60-63 field=
+
     expect(trackedFieldIndex("name")).toBe(0);
     expect(trackedFieldIndex("type_id")).toBe(1);
     expect(trackedFieldIndex("db_content")).toBe(2);
@@ -45,10 +43,7 @@ describe("TRACKED_FIELDS", () => {
 });
 
 describe("serializeChangeValue", () => {
-  // ActiveRecord serializes into the mediumtext value column via
-  // ActiveRecord::Type::Text < ActiveModel::Type::String
-  // (activemodel-7.2.3.2/lib/active_model/type/immutable_string.rb:48-56):
-  // Numeric -> to_s, true -> "t", false -> "f", String -> as-is, nil -> NULL.
+
   it("serializes booleans the way AR's string type does: t / f", () => {
     expect(serializeChangeValue(true)).toBe("t");
     expect(serializeChangeValue(false)).toBe("f");
@@ -68,9 +63,7 @@ describe("serializeChangeValue", () => {
 });
 
 describe("changeValueForField", () => {
-  // cards.trash is tinyint(1); ActiveRecord casts it to true/false before the
-  // change value serializes (ActiveModel::Type::Boolean#cast_value — 0 is in
-  // FALSE_VALUES, boolean.rb:15-45 — then Type::Text#serialize -> "t"/"f").
+
   it("casts the raw trash 0/1 to the boolean serialization t/f", () => {
     expect(changeValueForField("trash", 0)).toBe("f");
     expect(changeValueForField("trash", 1)).toBe("t");
@@ -96,7 +89,7 @@ describe("diffTrackedFields", () => {
   });
 
   it("returns changed fields in TRACKED_FIELDS order (Ruby & preserves receiver order)", () => {
-    // set/all/history.rb:51-53: TRACKED_FIELDS & (changed | saved)
+
     const changed = diffTrackedFields(
       full({ db_content: "a", name: "Old", trash: 0 }),
       full({ db_content: "b", name: "New", trash: 1 }),

@@ -1,19 +1,4 @@
-/**
- * Test environment mirroring the deck facts of the live oracle app
- * (tools/oracle/decko-oracle-app), as captured in
- * set-pattern-oracle-capture.json / set-pattern-oracle-capture2.json.
- *
- * Every id below is a CAPTURED id from the oracle deck (deck-specific; the
- * production port resolves them through the DB-backed lexicon and codename
- * registries from src/card/fetch).
- *
- * Note the RichText cardtype: the oracle deck's "RichText" card carries the
- * codename "basic" (the historical Basic cardtype was renamed RichText while
- * keeping its codename). Oracle evidence: the type pattern's module key for a
- * RichText card is "Type::Basic" (capture2, cards["Oracle Junction"]
- * .module_keys[1]) while its safe key is "TYPE-rich_text" (safe keys use the
- * NAME).
- */
+
 
 import { afterEach, beforeEach } from "vitest";
 import { DeckoName } from "../../../src/card/name.js";
@@ -26,7 +11,6 @@ interface CardFact {
   codename?: string;
 }
 
-/** Captured card facts: id, canonical name, codename where present. */
 export const ORACLE_CARD_FACTS: readonly CardFact[] = [
   { id: 2, name: "RichText", codename: "basic" },
   { id: 4, name: "List", codename: "list" },
@@ -58,7 +42,6 @@ for (const fact of ORACLE_CARD_FACTS) {
 }
 const factById = new Map<number, CardFact>(ORACLE_CARD_FACTS.map((f) => [f.id, f]));
 
-/** NameEnvironment over the captured facts (cardname-0.20.0 key semantics). */
 export const ORACLE_ENV: NameEnvironment = {
   lexicon: {
     id: (key) => factByKey.get(key)?.id,

@@ -1,5 +1,4 @@
-// Unit tests for the Card::Action type port (src/card/history/action.ts).
-// Every expectation cites the Ruby file it derives from.
+
 
 import { describe, expect, it } from "vitest";
 import {
@@ -10,8 +9,7 @@ import {
 } from "../../../src/card/history/action.js";
 
 describe("action type codes", () => {
-  // card-mod-history-0.20.0/lib/card/action.rb:42
-  // TYPE_OPTIONS = %i[create update delete]; action_type= stores the index.
+
   it("stores create=0, update=1, delete=2 (action.rb:90-92)", () => {
     expect(ACTION_TYPE_CODES).toEqual({ create: 0, update: 1, delete: 2 });
     expect(actionTypeCode("create")).toBe(0);
@@ -28,10 +26,7 @@ describe("action type codes", () => {
 });
 
 describe("identifyAction", () => {
-  // card-1.110.0/lib/card/director/all.rb:19-28:
-  //   if trash && trash_changed? then :delete
-  //   elsif new_card? then :create
-  //   else :update
+
   it("maps a trash flip 0 -> 1 to :delete", () => {
     expect(identifyAction({ trashBefore: 0, trashAfter: 1, isNewCard: false })).toBe("delete");
   });
@@ -45,7 +40,7 @@ describe("identifyAction", () => {
   });
 
   it("keeps the Ruby check order: the delete check outranks the create check", () => {
-    // trash && trash_changed? is evaluated first even for a new record
+
     expect(identifyAction({ trashBefore: 0, trashAfter: 1, isNewCard: true })).toBe("delete");
   });
 

@@ -1,10 +1,4 @@
-// schema-map.test.ts — the source-to-target column mapping for the
-// generalized migration tool.
-//
-// DATA RULE: zero real content. The test source tables are SYNTHETIC
-// decko-shaped schemas (built in-test with better-sqlite3, never read
-// from a real dump). Asserts that the schema-map classifies tables and
-// translates columns correctly across the variants we've seen.
+
 
 import { describe, it, expect, afterAll } from "vitest";
 import { mkdtempSync } from "node:fs";
@@ -63,12 +57,12 @@ function makeDb(): string {
 afterAll(() => {
   for (const d of dirs) {
     try {
-      // best-effort cleanup; SQLite WAL files may still be open briefly
+
       const Database = require("better-sqlite3");
-      // no-op; tmpdir cleanup is OS-managed on Windows
+
       void Database;
     } catch {
-      // ignore
+
     }
   }
 });
@@ -116,11 +110,10 @@ describe("mapRowToTarget — the corpus-v2 case", () => {
       tgtCols,
     );
     expect(columns).toEqual(tgtCols);
-    // the source `content` lands in the target `db_content` column
+
     const dbContentIdx = tgtCols.indexOf("db_content");
     expect(values[dbContentIdx]).toBe("<p>atom body</p>");
-    // `current_revision_id` and `references_expired` were not in the
-    // source schema; the importer fills them with NULL and emits a warning
+
     const curRevIdx = tgtCols.indexOf("current_revision_id");
     const refExpIdx = tgtCols.indexOf("references_expired");
     expect(values[curRevIdx]).toBeNull();
@@ -152,8 +145,7 @@ describe("mapRowToTarget — the mysqldump case", () => {
     );
     expect(columns).toEqual(tgtCols);
     expect(values[tgtCols.indexOf("db_content")]).toBe("page body");
-    // nothing dropped, nothing filled with NULL: warnings only mention
-    // expected coincidences, no missing/extra columns.
+
     const dropped = warnings.find((w) => w.includes("dropped"));
     expect(dropped ?? "").not.toContain("db_content");
     const filled = warnings.find((w) => w.includes("filled with NULL"));
@@ -176,9 +168,7 @@ describe("getColumnMap", () => {
 
 describe("mapRowToTarget — settings-shaped tables are classified, not mapped", () => {
   it("the settings classifier reports meta / settings / setting without attempting to map them", () => {
-    // The classifier and the importer share the same settings list.
-    // This is the gate that keeps settings rows out of the decko-ts
-    // world (settings are cards in decko).
+
     expect(SETTINGS_TABLE_VARIANTS).toContain("meta");
     expect(SETTINGS_TABLE_VARIANTS).toContain("settings");
     expect(SETTINGS_TABLE_VARIANTS).toContain("setting");

@@ -1,6 +1,6 @@
 # Testing the Decko TypeScript Port
 
-This package ships the complete TypeScript test suite (`tests/`, 218 test files across 188 test suites) and test gate tooling (`tools/test-gates.mjs`) used during port development and verification.
+This package ships the included test collection (`tests/`, 216 test files across 188 test suites) and test gate tooling (`tools/test-gates.mjs`). The original benchmark was the ~12k full test suite run on the Linux VM (12,072 passed / 75 failed / 194 skipped); this package ships the included test collection.
 
 ---
 
@@ -30,8 +30,8 @@ npx vitest
 
 # Run tests in a specific subsystem
 npx vitest run tests/card/name
-npx vitest run tests/query
-npx vitest run tests/render
+npx vitest run tests/cql
+npx vitest run tests/card/render
 ```
 
 ### Running Test Gates (`tools/test-gates.mjs`)

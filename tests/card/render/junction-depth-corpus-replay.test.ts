@@ -1,21 +1,4 @@
-// Corpus proof for the depth-3+ junction closure fix (deploy-notes finding 2):
-// replays the captured Ruby views of corpus entries whose content nests a
-// depth-3+ junction reference (the exact class the replay driver used to
-// classify as the "nest gap" - failures containing 'nest target not found')
-// and requires byte-identical HTML.
-//
-// Entry 19334 (shard-000014, "almrctncpf+fsxqechglhqd") is a depth-3
-// junction card whose content nests the depth-3 junction
-// "almrctncpf+fsxqechglhqd+fmassslzrfd" — the exact class the prefetcher
-// used to throw `nest target not found` on (NULL-key junction rows deeper
-// than two parts) and Ruby rendered successfully (all four captured views
-// are real HTML, verified at capture time). Entry 19209 nests a different
-// depth-3 junction for a second independent proof.
-//
-// NOTE (why not entry 3360/shard-000002): Ruby's own capture of that card
-// recorded CAPTURE_ERROR views ("card not found") — Ruby failed there too,
-// so it proves nothing about junction RESOLUTION; it belongs to the
-// unknown-nest class (wave 3).
+
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -43,11 +26,6 @@ interface ShardLine {
   views?: Record<string, string>;
 }
 
-/** The replay entries: corpus line ids whose content nests a depth-3+
- *  junction reference, with the views their capture recorded. Entry 19209
- *  was dropped: Ruby's capture of it is PERMISSION-DENIED spans (read-rule
- *  enforcement, a distinct pending class) — it proves nothing about
- *  junction resolution. */
 const PROOF_ENTRIES: Array<{ id: number; views: readonly string[] }> = [
   { id: 19334, views: ["closed", "content", "open", "title"] },
 ];
@@ -66,11 +44,7 @@ describe("corpus replay: depth-3+ junction inclusion chains render byte-identica
       const storage = await createRenderTestStorage();
       const registry = new HandlerRegistry();
       try {
-        // Seed the shard exactly like the replay driver (cards + type cards
-        // that sit outside the shard), PLUS the transitive side cards of
-        // every seeded junction: a compound card's name resolves through
-        // its sides (the Lexicon walk), and junction sides commonly sit in
-        // EARLIER shards — without them even the root card is "not found".
+
         const corpus = new Database(CORPUS_DB, { readonly: true });
         const ids = lines.map((l) => l.id);
         const seeded = new Set<number>(ids);
@@ -89,7 +63,7 @@ describe("corpus replay: depth-3+ junction inclusion chains render byte-identica
           }
           return out;
         };
-        // fixpoint: shard ids, then sides of every junction pulled in
+
         rows.push(...fetchRows(ids));
         for (let round = 0; round < 40; round++) {
           const need: number[] = [];

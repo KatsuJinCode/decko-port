@@ -1,9 +1,4 @@
-// Integration test for the coordinator wiring between the two landed
-// streams: SessionStore (auth) -> Actor -> CardActionEngine (actions).
-// Round trip: seed an account card, create a session, resolve the engine
-// from the token, perform a create, and assert the act is attributed to the
-// session's account — plus the anonymous outcomes (no token, unknown token,
-// expired token).
+
 
 import { describe, expect, it } from "vitest";
 import {
@@ -25,8 +20,7 @@ async function bootDeckWithAuth() {
   const storage = await createActionsTestStorage();
   await runAuthMigrations(storage.driver);
   const deck = await seedStandardDeck(storage);
-  // The account card the session will bind to (id 90: ids up to the seed's
-  // auto-assigned junction row are taken by seedStandardDeck).
+
   const joe = await seedCard(storage, { id: 90, name: "Joe User" });
   return { storage, deck, joe };
 }
@@ -79,7 +73,7 @@ describe("engine-for-session: token -> actor -> attributed write", () => {
           CardActionError,
         );
       }
-      // And nothing was written.
+
       expect(await storage.count("cards")).toBe(
         (await storage.selectOne<{ n: number }>("SELECT COUNT(*) AS n FROM cards"))?.n ?? 0,
       );
@@ -91,9 +85,7 @@ describe("engine-for-session: token -> actor -> attributed write", () => {
   it("expired token degrades to anonymous (auth/current.rb:58-63 shape)", async () => {
     const { storage, joe } = await bootDeckWithAuth();
     try {
-      // Created 10 days ago with the default TTL: genuinely expired in real
-      // time, so ANY conforming store (including the one inside the engine
-      // factory) must resolve it to null.
+
       const pastClock = () => new Date(Date.now() - 10 * 24 * 3600 * 1000);
       const creator = new SessionStore({ driver: storage.driver, now: pastClock });
       const { token } = await creator.createSession(joe.id);

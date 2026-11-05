@@ -84,7 +84,7 @@ describe("loader against the real committed fixtures", () => {
 });
 
 describe("smoke schema validation (fail loudly on shape mismatch)", () => {
-  // Deliberately `any`: each test mutates one field into an invalid shape.
+
   const cloneSmoke = (): any => JSON.parse(JSON.stringify(loadRealSmoke()));
 
   it("accepts the real fixture", () => {

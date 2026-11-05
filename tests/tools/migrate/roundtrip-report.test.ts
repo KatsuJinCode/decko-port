@@ -1,8 +1,4 @@
-// roundtrip-report.test.ts — counts-per-table in vs out for the
-// generalized migration tool.
-//
-// Asserts the shape of the round-trip report (one row per source AND
-// per target table; never content; settings rows visible as settings).
+
 
 import { describe, it, expect } from "vitest";
 import { mkdtempSync } from "node:fs";
@@ -42,9 +38,7 @@ describe("buildRoundtripReport", () => {
     const path = makeSourceDb();
     const db = new Database(path, { readonly: true });
     try {
-      // simulate the import's outcome: cards and card_references landed;
-      // meta is settings (not imported); unknown_legacy is unknown
-      // (not imported); the other target tables are target-only.
+
       const targetCounts = {
         cards: 5,
         card_references: 3,
@@ -65,24 +59,24 @@ describe("buildRoundtripReport", () => {
         targetCounts,
         targetTableNames: TARGET_TABLES,
       });
-      // expected rows: 4 source tables + 10 target-only = 14
+
       expect(report.rows.length).toBe(4 + 10);
-      // cards: imported (5/5, delta 0)
+
       const cardsRow = report.rows.find((r) => r.sourceTable === "cards");
       expect(cardsRow?.target).toBe(5);
       expect(cardsRow?.delta).toBe(0);
       expect(cardsRow?.map).toBe("core");
-      // meta: settings (1 row, not imported)
+
       const metaRow = report.rows.find((r) => r.sourceTable === "meta");
       expect(metaRow?.map).toBe("settings");
       expect(metaRow?.target).toBe(0);
       expect(metaRow?.delta).toBe(1);
-      // unknown_legacy: unknown (2 rows, not imported)
+
       const unkRow = report.rows.find((r) => r.sourceTable === "unknown_legacy");
       expect(unkRow?.map).toBe("unknown");
       expect(unkRow?.target).toBe(0);
       expect(unkRow?.delta).toBe(2);
-      // totals
+
       expect(report.totals.source).toBe(5 + 3 + 1 + 2);
       expect(report.totals.target).toBe(5 + 3);
       expect(report.dropCount).toBe(2);
@@ -109,10 +103,10 @@ describe("renderRoundtripMd", () => {
       const md = renderRoundtripMd(report);
       expect(md).toMatch(/Round-trip report/);
       expect(md).toMatch(/cards/);
-      // content-rule: card content strings do not appear in the markdown
+
       expect(md).not.toContain("n1");
       expect(md).not.toContain("b1");
-      // content-rule: settings VALUES do not appear (only the table name `meta`)
+
       expect(md).not.toContain("synth");
     } finally {
       db.close();

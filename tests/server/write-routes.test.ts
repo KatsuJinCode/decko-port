@@ -1,15 +1,15 @@
-// End-to-end tests for the HTTP write surface (src/server/write-routes.ts):
-// sign in (token issued DIRECTLY via the SessionStore — the password front
-// door is the sign-in lane's slice), POST an update over real HTTP, watch
-// the read side reflect it, and watch the act/action/changes rows land.
-// Plus the write-permission walks through the HTTP layer: the three
-// ok_to_* denials, the ok_to_update? type-change clause, and the CSRF +
-// anonymous gates.
-//
-// Ruby truth under test (see the module header citations in
-// src/server/write-routes.ts): engine_routes.rb grammar, rest.rb
-// create/update/delete, permission.rb ok_to_* (403), error.rb statuses
-// (404/422), Rails 7.2 forgery protection (422).
+
+
+
+
+
+
+
+
+
+
+
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import http from "node:http";
@@ -44,26 +44,8 @@ let sideDenyServer: http.Server;
 let baseUrl = "";
 let sideDenyBaseUrl = "";
 
-/**
- * The rule deck (mirrors tests/card/permissions/view-task-verdicts.test.ts,
- * plus the account/session cards and the *all+*default rule the create
- * path's Card.default_type_id needs):
- *   1  *all codename all (Set-typed anchor)     2  Set codename set
- *   3  *update   4  *create   5  *delete        6  Anyone codename anyone
- *   7  Anyone Signed In codename anyone_signed_in
- *   8  *type codename type   9  *self codename self
- *   18 *default codename default
- *   10 *all+*update   [[Anyone Signed In]] + ref -> 7
- *   11 *all+*create   [[Anyone Signed In]] + ref -> 7
- *   12 *all+*delete   [[Anyone Signed In]] + ref -> 7
- *   13 Widget typeId 14   14 Basic   15 Basic+*type (Set-typed)
- *   16 RichText (a second type for type-change saves)
- *   17 *all+*default (typeId 2 — Card.default_type_id)
- *   30 Editor (a party Joe is NOT in)
- *   40 Locked   41 Locked+*self   42 Locked+*self+*update [[Editor]]
- *   43 Widget+*self  44 Widget+*self+*create [[Editor]]
- *   90 Joe User (the account card)
- */
+
+
 async function seedRuleDeck(s: RenderTestStorage): Promise<void> {
   const byId = async (
     id: number,
@@ -114,7 +96,7 @@ async function makeServer(
     const pathname = url.pathname.replace(/\/+$/, "") || "/";
     let response: { status: number; headers: Record<string, string>; body: string };
     if (req.method === "GET") {
-      // the staging server's read surface, minimal: .json record + html render
+
       if (pathname.endsWith(".json")) {
         const name = decodeURIComponent(pathname.slice(1, -".json".length)).replace(/_/g, " ");
         const record = await s.fetcher.fetchByKey(DeckoName.parse(name).key);
@@ -222,8 +204,8 @@ beforeAll(async () => {
 
   const sessions = new SessionStore({ driver: storage.counting });
   joeToken = (await sessions.createSession(JOE_ID)).token;
-  // Each deck has its OWN auth_sessions table — the side-deny deck's Joe
-  // needs a session issued against THAT storage.
+
+
   const sideDenySessions = new SessionStore({ driver: sideDenyStorage.counting });
   sideDenyJoeToken = (await sideDenySessions.createSession(JOE_ID)).token;
 
@@ -242,15 +224,8 @@ afterAll(() => {
   sideDenyStorage?.close();
 });
 
-/** The side-deny deck: *all+*create -> [[Editor]] (denies Joe), but
- *  Set+*type+*create -> [[Anyone Signed In]] (cards of the deck's DEFAULT
- *  type pass — new cards resolve *all+*default to type id 2, the "Set"
- *  codename card in this seed). A junction "Trunk+Ghost Part" then passes
- *  permit(:create) through its *type rule, while the MISSING right part
- *  resolves as a virtual NEW card with no type -> its ok?(:create) falls
- *  to the Editor-only *all rule -> ok_to_create_side denies
- *  (permissions.rb:127-137). The side walk is thereby proven through HTTP:
- *  trunk allowed, side denied. */
+
+
 async function seedSideDenyDeck(s: RenderTestStorage): Promise<void> {
   await seedCard(s, { id: 1, name: "*all", codename: "all", typeId: SET_TYPE_ID });
   await seedCard(s, { id: 2, name: "Set", codename: "set" });
@@ -277,21 +252,21 @@ async function seedSideDenyDeck(s: RenderTestStorage): Promise<void> {
   await seedCard(s, { id: JOE_ID, name: "Joe User" });
 }
 
-// -----------------------------------------------------------------------
+
 
 describe("signed-in save over HTTP (the full write path)", () => {
   it("form update with a valid session + CSRF token: redirect, content rendered, rows written", async () => {
-    // A real decko edit form POSTs with the Rails _method override (patch).
+
     const csrf = csrfTokenFor(ctx, joeToken);
     const res = await call(baseUrl, "POST", "/Widget", {
       form: { "card[content]": "widget body v2 — saved over HTTP", _method: "patch" },
       token: joeToken,
       csrf,
     });
-    expect(res.status, `DBG1 status=${res.status} headers=${JSON.stringify(res.headers)} body=${res.body.slice(0,200)}`).toBe(302); // Ruby cud_success redirect
+    expect(res.status, `DBG1 status=${res.status} headers=${JSON.stringify(res.headers)} body=${res.body.slice(0,200)}`).toBe(302);
     expect(res.headers["location"]).toBe("/Widget");
 
-    // READ side reflects the save: the record and the RENDER carry v2.
+
     const record = await call(baseUrl, "GET", "/Widget.json", {});
     expect(record.status).toBe(200);
     expect(record.json().dbContent).toBe("widget body v2 — saved over HTTP");
@@ -299,9 +274,9 @@ describe("signed-in save over HTTP (the full write path)", () => {
     expect(page.status).toBe(200);
     expect(page.body).toContain("widget body v2 — saved over HTTP");
 
-    // EVENT rows: one act attributed to Joe, an update action, a db_content
-    // change with the new value (the ActWriter shapes the write path tests
-    // pin; here through the HTTP layer).
+
+
+
     const driver = storage!.counting;
     const act = await driver.query<{ actor_id: number; ip_address: string | null }>(
       `SELECT a.actor_id, a.ip_address FROM card_acts a
@@ -385,17 +360,17 @@ describe("the permission gates through HTTP (ok_to_* walks)", () => {
       json: { card: { content: "should not land" } },
       token: joeToken,
     });
-    expect(res.status).toBe(403); // Card::Error::PermissionDenied.status_code
-    // nothing landed
+    expect(res.status).toBe(403);
+
     const record = await call(baseUrl, "GET", "/Locked.json", {});
     expect(record.json().dbContent).toBe("locked body");
   });
 
   it("ok_to_update? type-change clause: update allowed, create denied -> type change is 403", async () => {
-    // Widget: *all+*update -> Anyone Signed In (Joe passes), but
-    // Widget+*self+*create -> [[Editor]] (Joe fails). Content-only saves
-    // pass; a type-changing save additionally needs permitted?(:create)
-    // (permissions.rb:148-153).
+
+
+
+
     const contentOnly = await call(baseUrl, "PUT", "/Widget.json", {
       json: { card: { content: "still allowed" } },
       token: joeToken,
@@ -407,14 +382,14 @@ describe("the permission gates through HTTP (ok_to_* walks)", () => {
     });
     expect(typeChange.status).toBe(403);
     const record = await call(baseUrl, "GET", "/Widget.json", {});
-    expect(record.json().dbContent).toBe("still allowed"); // the retype never landed
+    expect(record.json().dbContent).toBe("still allowed");
   });
 
   it("ok_to_create? denial rides the junction sides: trunk allowed, missing part denied (403)", async () => {
-    // Trunk (typed Basic) passes permit(:create) through
-    // Basic+*type+*create -> [[Anyone Signed In]]; the MISSING right part
-    // resolves as a virtual new card with no type -> its ok?(:create) falls
-    // to *all+*create -> [[Editor]] (Joe is not one) -> denied.
+
+
+
+
     const res = await call(sideDenyBaseUrl, "POST", "/Trunk+Ghost Part.json", {
       json: { card: { content: "junction" } },
       token: sideDenyJoeToken,

@@ -1,68 +1,12 @@
-/**
- * CQL <-> card/name stream reconciliation tests.
- *
- * Closes the documented seam between wave-1 CQL (docs/cql-port-notes.md) and
- * the landed name algebra (docs/name-port-notes.md):
- * 1. name -> key goes through the REAL DeckoName.key semantics (ActiveSupport
- *    singularize inflection included), replacing the no-inflection
- *    approximation of the old defaultNameToKey.
- * 2. relative-name absolutization delegates to DeckoName.absolute (port of
- *    cardname lib/cardname/contextual.rb#absolute), covering _main/_user/_L*R
- *    and the absolutize_extremes guard that the CQL-side approximation lacked.
- *
- * Oracle basis (live `ruby -e` against the installed gems, per the preload
- * trick in docs/name-port-notes.md — `require "active_support/all";
- * require "htmlentities"; require "cardname";` plus
- * cardname-0.20.0/lib/core_ext.rb, with `Cardname.params = {}` to emulate the
- * app context where `Card::Name.params` is overridden to `Card::Env.params`,
- * card-1.110.0 lib/card/name.rb#params):
- *
- *   "Magnus".to_name.key            => "magnu"
- *   "Admins".to_name.key            => "admin"
- *   "Octopi".to_name.key            => "octopus"
- *   "Joe Admin+*self".to_name.key   => "joe_admin+*self"
- *   "A &amp; B".to_name.key         => "a_b"
- *   "_user".to_name.key             => "user"        (session unset)
- *   "_self".absolute("A+B+C")       => "A+B+C"
- *   "_left".absolute("A+B+C")       => "A+B"          (trunk)
- *   "_right".absolute("A+B+C")      => "C"            (tag)
- *   "_left+_right".absolute("A+B+C")=> "A+B+C"
- *   "_left +_right".absolute("A+B") => "A+B"          (joint whitespace)
- *   "_SELF".absolute("A+B")         => "A+B"          (/i branches)
- *   "_Left".absolute("A+B")         => "A"
- *   "_main".absolute("A+B")         => "A+B"  (main_name unset -> "" part ->
- *                                              absolutize_extremes fills with
- *                                              the context)
- *   "_main".absolute("A+B") with params {main_name: "Home Page"} => "Home Page"
- *   "_user".absolute("A+B") with session "Joe Admin"             => "Joe Admin"
- *   "_user+_left".absolute("A+B")   => "Joe Admin+A"
- *   "_main+_right".absolute("A+B")  => "Home Page+B"
- *
- * _N ordinals and _L*R partmaps crash the UNPATCHED cardname 0.20.0 gem
- * ($LAST_MATCH_INFO is nil in the case/when dispatch — docs/name-port-notes.md
- * upstream bug 1), so their values were oracle-verified by probing the gem's
- * own private methods directly (no dispatch involved):
- *
- *   "A+B+C".to_name.send(:ordinal_part, 2, ctx)   => "B"
- *   "A+B+C".to_name.send(:ordinal_part, 4, ctx)   => nil  (string-length clamp)
- *   "A+B+C".to_name.send(:partmap_part, /_LR/ match, ctx) => "B"
- *   "A+B+C".to_name.send(:partmap_part, /_LLR/ match, ctx) => "A"
- *
- * An ordinal that misses the context parts resolves to "" and a blank extreme
- * part then falls back to the context (absolutize_extremes) — the same chain
- * the live _main row above demonstrates.
- */
+
 
 import { afterEach, describe, expect, it } from "vitest";
 import { parseCql } from "../../src/cql/parser.js";
 import { absolutizeName, defaultNameToKey } from "../../src/cql/normalize.js";
 import { setNameEnvironment } from "../../src/card/name/environment.js";
 
-/** The name environment is process-global; every test starts clean. */
 afterEach(() => setNameEnvironment(undefined));
 
-/** name-condition values are key-ified (Value#standard_sql), so most
- *  assertions read the condition's `values` after a full parseCql round. */
 function nameCondition(statement: unknown, options = {}) {
   const root = parseCql(statement, options);
   return root.conditions[0];
@@ -112,7 +56,7 @@ describe("name -> key through the real inflections (ParseOptions.nameToKey defau
   });
 
   it("complete keys its LIKE prefix (match_attributes.rb#complete:26)", () => {
-    // complete also adds the key IS NOT NULL condition (name_not_null)
+
     const like = parseCql({ complete: "Magnus" }).conditions.find((c) => c.kind === "like");
     expect(like).toMatchObject({ kind: "like", field: "key", value: "magnu" });
   });
@@ -150,9 +94,7 @@ describe("relative-name absolutization via DeckoName.absolute (contextual.rb#abs
     });
 
     it("_N past the parts resolves to '' and the blank extreme falls back to the context", () => {
-      // oracle: ordinal_part(4, "A+B+C") => nil (string-length clamp quirk,
-      // docs/name-port-notes.md); "" extreme -> absolutize_extremes fills the
-      // context — the same chain the live _main row demonstrates.
+
       expect(nameCondition({ name: "_4" }, { context: "A+B+C" })).toMatchObject({ values: ["a+b+c"] });
     });
 
@@ -173,7 +115,7 @@ describe("relative-name absolutization via DeckoName.absolute (contextual.rb#abs
     it("_main resolves through the environment main name [oracle: params {main_name: 'Home Page'} => 'Home Page']", () => {
       setNameEnvironment({ mainName: "Home Page", session: "Joe Admin" });
       expect(nameCondition({ name: "_main" }, { context: "A+B" })).toMatchObject({ values: ["home_page"] });
-      // oracle: '_main+_right'.absolute('A+B') => 'Home Page+B'
+
       expect(nameCondition({ name: "_main+_right" }, { context: "A+B" })).toMatchObject({
         values: ["home_page+b"],
       });
@@ -182,7 +124,7 @@ describe("relative-name absolutization via DeckoName.absolute (contextual.rb#abs
     it("_user resolves through the environment session [oracle: session 'Joe Admin' => 'Joe Admin']", () => {
       setNameEnvironment({ mainName: "Home Page", session: "Joe Admin" });
       expect(nameCondition({ name: "_user" }, { context: "A+B" })).toMatchObject({ values: ["joe_admin"] });
-      // oracle: '_user+_left'.absolute('A+B') => 'Joe Admin+A'
+
       expect(nameCondition({ name: "_user+_left" }, { context: "A+B" })).toMatchObject({
         values: ["joe_admin+a"],
       });
@@ -205,7 +147,7 @@ describe("relative-name absolutization via DeckoName.absolute (contextual.rb#abs
     });
 
     it("names without relative parts pass through untouched (normalization.rb /\\b_/ gate)", () => {
-      // oracle: 'get_user_name'.to_name.key => 'get_user_name'
+
       expect(defaultNameToKey("get_user_name")).toBe("get_user_name");
     });
   });
@@ -231,7 +173,7 @@ describe("relative-name absolutization via DeckoName.absolute (contextual.rb#abs
       const warnings: string[] = [];
       expect(
         nameCondition({ name: "_user" }, { onWarning: (w: string) => warnings.push(w) }),
-      ).toMatchObject({ values: ["user"] }); // oracle: '_user'.to_name.key => 'user'
+      ).toMatchObject({ values: ["user"] });
       expect(warnings.join("\n")).toMatch(/_user/);
     });
 

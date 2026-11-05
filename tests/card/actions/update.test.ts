@@ -1,7 +1,4 @@
-// Action-layer tests — SAVE/UPDATE (Card#update!): content changes, no-op
-// saves, renames (simple + junction rewire), rename guards, trash-name
-// obstacles, and cycle rejection. Ruby cites inline; trail in
-// docs/actions-port-notes.md. Synthetic fixtures only.
+
 
 import { describe, expect, it } from "vitest";
 import { DeckoName } from "../../../src/card/name.js";
@@ -45,34 +42,34 @@ describe("updateCard — content saves", () => {
 
     const card = await cardRow(f, f.joeCard.id);
     expect(card).toMatchObject({ db_content: "v2", updater_id: JOE.id, name: "Pudding" });
-    expect(card.updated_at).not.toBe(FIXED_TS); // the save bumped the stamp
+    expect(card.updated_at).not.toBe(FIXED_TS);
 
     const actions = await f.storage.selectAll<Row>("SELECT * FROM card_actions ORDER BY id");
     expect(actions).toHaveLength(1);
     expect(actions[0]).toMatchObject({
       card_id: f.joeCard.id,
-      action_type: 1, // update — identify_action (director/all.rb:19-28)
+      action_type: 1,
       draft: 0,
       super_action_id: null,
     });
     const acts = await f.storage.selectAll<Row>("SELECT * FROM card_acts");
     expect(acts).toHaveLength(1);
     expect(acts[0]).toMatchObject({ card_id: f.joeCard.id, actor_id: JOE.id });
-    // store_card_changes (events.rb:102-106): only changed fields, after-values
+
     expect(await changesFor(f, (actions[0] as { id: number }).id)).toEqual([
-      { field: 2, value: "v2" }, // db_content = TRACKED_FIELDS[2] (change.rb:25)
+      { field: 2, value: "v2" },
     ]);
   });
 
   it("no-op saves persist nothing (idempotency — events.rb:34-37)", async () => {
     const f = await fresh();
     const engine = actionEngine(f.storage);
-    const result = await engine.updateCard({ cardId: f.joeCard.id, content: "v1" }); // unchanged
+    const result = await engine.updateCard({ cardId: f.joeCard.id, content: "v1" });
     expect(result).toBeNull();
     expect(await f.storage.count("card_actions")).toBe(0);
     expect(await f.storage.count("card_acts")).toBe(0);
     const card = await cardRow(f, f.joeCard.id);
-    expect(card.updated_at).toBe(FIXED_TS); // stamps untouched (AR skips no-op saves)
+    expect(card.updated_at).toBe(FIXED_TS);
   });
 
   it("throws for missing and trashed cards (fetch adds trash = 0)", async () => {
@@ -103,9 +100,9 @@ describe("updateCard — simple rename", () => {
     const actions = await f.storage.selectAll<Row>("SELECT * FROM card_actions");
     expect(actions).toHaveLength(1);
     expect(await changesFor(f, (actions[0] as { id: number }).id)).toEqual([
-      { field: 0, value: "Souffle" }, // name only — key is not in TRACKED_FIELDS (change.rb:25)
+      { field: 0, value: "Souffle" },
     ]);
-    // the old name is gone from the live namespace; fetch reflects it
+
     await expect(f.engine.fetchByName("Pudding")).resolves.toBeUndefined();
     await expect(f.engine.fetchByName("Souffle")).resolves.toMatchObject({ id: f.joeCard.id });
   });
@@ -115,7 +112,7 @@ describe("updateCard — simple rename", () => {
     await expect(
       engine.updateCard({ cardId: f.joeCard.id, name: "Souffle", content: "v9" }),
     ).rejects.toMatchObject({ code: "rename-conflict" });
-    // nothing written
+
     expect(await f.storage.count("card_actions")).toBe(0);
   });
 
@@ -125,8 +122,7 @@ describe("updateCard — simple rename", () => {
     await expect(
       engine.updateCard({ cardId: f.joeCard.id, name: "Souffle" }),
     ).rejects.toMatchObject({ code: "name-conflict" });
-    // variant of the same key: validate_renaming's skip branch
-    // (`name_before_act == name` is key equality) — still writes the column
+
     const result = await engine.updateCard({ cardId: f.joeCard.id, name: "PUDDING" });
     expect(result).not.toBeNull();
     await expect(cardRow(f, f.joeCard.id)).resolves.toMatchObject({ name: "PUDDING", key: "pudding" });
@@ -135,7 +131,7 @@ describe("updateCard — simple rename", () => {
   it("rejects simple->compound when the card is in use as a tag (name_events.rb:90-101)", async () => {
     const { f, engine } = await renameFixture();
     const waffle = await seedCard(f.storage, { name: "waffle" });
-    // Pudding is the RIGHT (tag) of waffle+Pudding
+
     await seedCard(f.storage, { leftId: waffle.id, rightId: f.joeCard.id });
     await expect(
       engine.updateCard({ cardId: f.joeCard.id, name: "Pudding+cake" }),
@@ -148,8 +144,6 @@ describe("updateCard — simple rename", () => {
     const obstacle = await seedCard(f.storage, { name: "Souffle", trash: true });
     await engine.updateCard({ cardId: f.joeCard.id, name: "Souffle" });
 
-    // obstacle renamed "<name>*trash" (name_events.rb:76-81), same act,
-    // own action without super_action_id (@supercard nil)
     await expect(cardRow(f, obstacle.id)).resolves.toMatchObject({
       name: "Souffle*trash",
       trash: 1,
@@ -165,25 +159,20 @@ describe("updateCard — simple rename", () => {
 
   it("renaming a part cascades VIRTUALLY: zero row writes for junction descendants", async () => {
     const { f, engine } = await renameFixture();
-    const junction = await seedCard(f.storage, { leftId: f.joeCard.id, rightId: 8 }); // Pudding+*default
+    const junction = await seedCard(f.storage, { leftId: f.joeCard.id, rightId: 8 });
     const junctionRowBefore = await cardRow(f, junction.id);
-    // warm the fetch + lexicon caches with the pre-rename composition
+
     await expect(f.engine.fetchByName("Pudding+*default")).resolves.toMatchObject({
       id: junction.id,
     });
 
     await engine.updateCard({ cardId: f.joeCard.id, name: "Cake" });
 
-    // the junction ROW is untouched (virtual names —
-    // 20200718051236_compound_names_do_not_store_name_and_key.rb; only
-    // caches/lexicon entries refresh, rename_as_descendant
-    // reference_events.rb:40-47)
     const junctionRowAfter = await cardRow(f, junction.id);
     expect(junctionRowAfter).toEqual(junctionRowBefore);
     const actions = await f.storage.selectAll<Row>("SELECT * FROM card_actions");
-    expect(actions).toHaveLength(1); // only the renamed card's own action
+    expect(actions).toHaveLength(1);
 
-    // ...but the composed name follows everywhere, including warm caches
     const fresh = await f.engine.fetchByName("Cake+*default");
     expect(fresh?.name?.s).toBe("Cake+*default");
   });
@@ -205,16 +194,16 @@ describe("updateCard — junction rewire", () => {
     const card = await cardRow(f, junction.id);
     expect(card).toMatchObject({ name: null, key: null, left_id: f.joeCard.id });
     const cake = await f.storage.selectOne<Row>("SELECT id FROM cards WHERE key = ?", ["cake"]);
-    expect(card.right_id).toBe((cake as { id: number }).id); // "cake" was created as a side
+    expect(card.right_id).toBe((cake as { id: number }).id);
 
     const actions = await f.storage.selectAll<Row>("SELECT * FROM card_actions ORDER BY id");
-    // rename action + the new side card's create action, one act
+
     expect(actions).toHaveLength(2);
     const rename = actions.find((a) => a.card_id === junction.id) as Row;
     expect(await changesFor(f, rename.id as number)).toEqual([
-      { field: 5, value: String((cake as { id: number }).id) }, // right_id = TRACKED_FIELDS[5]
+      { field: 5, value: String((cake as { id: number }).id) },
     ]);
-    // the created side is a subcard of the rewired junction
+
     const sideAction = actions.find((a) => a.card_id !== junction.id) as Row;
     expect(sideAction).toMatchObject({ super_action_id: rename.id, action_type: 0 });
   });
@@ -222,21 +211,18 @@ describe("updateCard — junction rewire", () => {
   it("rejects renames that would make the card its own DIRECT ancestor", async () => {
     const f = await fresh();
     const banana = await seedCard(f.storage, { name: "banana" });
-    await seedCard(f.storage, { leftId: f.joeCard.id, rightId: banana.id }); // Pudding+banana
+    await seedCard(f.storage, { leftId: f.joeCard.id, rightId: banana.id });
     const engine = actionEngine(f.storage);
-    // renaming Pudding to "Pudding+x": its own id would become its left side
-    // (Ruby instead restructures via prepare_obstructed_side,
-    // name_events.rb:143-150 — the port rejects; see the notes doc)
+
     await expect(
       engine.updateCard({ cardId: f.joeCard.id, name: "Pudding+x" }),
     ).rejects.toMatchObject({ code: "cycle" });
-    await engine.createCard({ name: "Pudding+x" }); // sanity: the name is still free
+    await engine.createCard({ name: "Pudding+x" });
   });
 
   it("rejects INDIRECT cycles through the junction graph", async () => {
     const f = await fresh();
-    // X(=Pudding) + waffle = J; rename Pudding to "Pudding+waffle+cake":
-    // its left side would be J, whose left side is Pudding itself.
+
     const waffle = await seedCard(f.storage, { name: "waffle" });
     const junction = await seedCard(f.storage, { leftId: f.joeCard.id, rightId: waffle.id });
     const engine = actionEngine(f.storage);
@@ -248,7 +234,7 @@ describe("updateCard — junction rewire", () => {
     } catch (e) {
       expect((e as CardActionError).code).toBe("cycle");
     }
-    expect(junction.id).toBeGreaterThan(0); // the graph is unchanged
+    expect(junction.id).toBeGreaterThan(0);
     expect(await f.storage.count("card_actions")).toBe(0);
   });
 

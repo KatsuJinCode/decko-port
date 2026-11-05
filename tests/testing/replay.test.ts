@@ -39,7 +39,6 @@ const allEntries = collectReplayEntries([
   { path: CQL_PATH, kind: "cql-basic", data: cql },
 ]);
 
-/** Simulates an engine: stamps a fresh random slot id into every placeholder. */
 function stampRandomSlotIds(html: string): string {
   return html.replace(RANDOMIZED_SLOT_ATTRIBUTE, () => {
     const id = Array.from({ length: 20 }, () => "0123456789abcdef"[(Math.random() * 16) | 0]).join("");
@@ -48,13 +47,13 @@ function stampRandomSlotIds(html: string): string {
 }
 
 interface FakeEngines {
-  /** Fresh registry when omitted. */
+
   registry?: HandlerRegistry;
-  /** Mutate the render output before it is returned (for failure cases). */
+
   mutateRender?: (cardName: string, view: string, html: string) => string;
-  /** Replace the cql result for mutation cases. */
+
   cqlOverride?: (query: { [key: string]: unknown }) => HandlerOutcome;
-  /** Replace the name outcome for strictness cases. */
+
   nameOverride?: (name: string) => HandlerOutcome;
 }
 
@@ -74,15 +73,13 @@ function fakeEngines(options: FakeEngines = {}): HandlerRegistry {
   registry.register("card-engine", ({ name }) => {
     const record = smoke.cards[name];
     if (!record) throw new Error(`fake card-engine: unexpected card ${name}`);
-    return jsonValue(record); // includes the informational id; the harness strips it
+    return jsonValue(record);
   });
   registry.register("cql-engine", ({ query }) => {
     if (options.cqlOverride) return options.cqlOverride(query);
     const result = cqlResultByQuery.get(canonicalJson(query));
     if (result === undefined) throw new Error(`fake cql-engine: unexpected query ${canonicalJson(query)}`);
-    // Mirror a real engine: the query either returns names or raises. A
-    // recorded sentinel replays as raisedError - wrapping the sentinel
-    // string as json output is NOT the same outcome (strict harness rule).
+
     if (isCaptureErrorSentinel(result)) {
       const { errorClass, message } = parseCapturedError(result);
       return raisedError(errorClass, message);
@@ -91,7 +88,7 @@ function fakeEngines(options: FakeEngines = {}): HandlerRegistry {
   });
   registry.register("render-engine", ({ cardName, view }) => {
     if (view === UNKNOWN_VIEW_INPUT) {
-      // The recorded sentinel: CAPTURE_ERROR: Card::Error::UserError: view (...) not supported ...
+
       return raisedError(
         "Card::Error::UserError",
         `view (${view}) not supported for ${cardName}`
@@ -128,7 +125,7 @@ describe("replay machinery over real smoke.json / cql-basic.json entries", () =>
     expect(byArea.get("render-engine")).toBe(20);
     expect(byArea.get("rules-engine")).toBe(1);
     expect(byArea.get("cql-engine")).toBe(11);
-    // smoke.cql_search has no canonical query input and is deliberately not replayable
+
     expect(allEntries.some((entry) => entry.id.includes("cql_search"))).toBe(false);
   });
 
@@ -139,8 +136,7 @@ describe("replay machinery over real smoke.json / cql-basic.json entries", () =>
   });
 
   it("matches engine output with fresh random slot ids against fixture placeholder bytes", async () => {
-    // The #open entry carries data-slot-id="RANDOMIZED" in the fixture; the fake
-    // handler emits a real 20-hex id. Only the mirrored normalization closes that gap.
+
     const entry = allEntries.find((e) => e.id === "smoke:rendered:Oracle Basics#open");
     expect(entry).toBeDefined();
     expect(smoke.rendered["Oracle Basics#open"]).toContain(RANDOMIZED_SLOT_ATTRIBUTE);
@@ -168,20 +164,20 @@ describe("replay machinery over real smoke.json / cql-basic.json entries", () =>
     expect(failed.diff!.equal).toBe(false);
     expect(first.expectedChar).toBe('"e"');
     expect(first.actualChar).toBe('"z"');
-    expect(first.byteOffset).toBe(first.codeUnitOffset); // ASCII prefix
+    expect(first.byteOffset).toBe(first.codeUnitOffset);
 
     const message = formatReplayFailure(failed);
     expect(message).toContain(`FAIL ${failed.id} (render-engine)`);
     expect(message).toMatch(/first difference at code-unit offset 22 \(byte offset 22\): expected "e" but got "z"/);
     expect(message).toContain("expected excerpt:");
     expect(message).toContain("actual excerpt:");
-    expect(message).toMatch(/card-title/); // expected side shows the recorded bytes
-    expect(message).toMatch(/card-titlz/); // actual side shows the mutation
+    expect(message).toMatch(/card-title/);
+    expect(message).toMatch(/card-titlz/);
     expect(message).toMatch(/sizes: expected \d+ bytes, actual \d+ bytes/);
   });
 
   it("reports PENDING for areas with no handler and never fails on them", async () => {
-    const registry = new HandlerRegistry(); // nothing registered
+    const registry = new HandlerRegistry();
     const report = await replayEntries(sampleEntries(), registry);
     expect(report.summary).toEqual({ total: 6, pass: 0, fail: 0, pending: 6 });
     expect(report.entries.every((entry) => entry.pendingReason === 'no handler registered for area "name-engine"'
@@ -212,14 +208,14 @@ describe("replay machinery over real smoke.json / cql-basic.json entries", () =>
     expect(failed.detail).toBe(
       "handler raised RuntimeError: %{func} not implemented but the fixture expects a successful result"
     );
-    // The diff still compares the reconstructed sentinel bytes against the fixture's array
+
     expect(failed.diff!.equal).toBe(false);
     expect(failed.diff!.actualBytes).toBe(
-      failed.diff!.actualBytes // self-consistent; real content asserted via message below
+      failed.diff!.actualBytes
     );
     const message = formatReplayFailure(failed);
     expect(message).toContain("handler raised RuntimeError: %{func} not implemented");
-    // the reconstructed sentinel bytes were diffed against the fixture's array
+
     expect(failed.diff!.actualBytes).toBe(
       "CAPTURE_ERROR: RuntimeError: %{func} not implemented".length
     );
@@ -258,14 +254,11 @@ describe("replay machinery over real smoke.json / cql-basic.json entries", () =>
     const record = smoke.cards["Oracle Basics"];
     const entry = allEntries.find((e) => e.id === "smoke:cards:Oracle Basics:record")!;
 
-    // a fake returning a record whose only difference is the id passes
-    // (the harness strips the informational id from BOTH sides)
     const idOnlyRegistry = new HandlerRegistry();
     idOnlyRegistry.register("card-engine", () => jsonValue({ ...record, id: 999999 }));
     const idOnlyReport = await replayEntries([entry], idOnlyRegistry);
     expect(idOnlyReport.summary.pass).toBe(1);
 
-    // a fake returning mutated content fails with a visible diff
     const contentRegistry = new HandlerRegistry();
     contentRegistry.register("card-engine", () => jsonValue({ ...record, content: "mutated" }));
     const contentReport = await replayEntries([entry], contentRegistry);
@@ -274,10 +267,7 @@ describe("replay machinery over real smoke.json / cql-basic.json entries", () =>
   });
 
   it("replays the whole committed fixture set with fakes: 51 pass, 1 pending (rules-engine)", async () => {
-    // DEFAULT_FIXTURE_PATHS are already absolute (cwd-independence fix,
-    // commit 1ec2761); joining repoRoot onto an absolute path CONCATENATES
-    // on win32 (path.join does not reset) and produced the doubled
-    // C:\…decko-ts\C:\…decko-ts\fixtures\… path this test used to choke on.
+
     const report = await replayFixtureFiles(DEFAULT_FIXTURE_PATHS, fakeEngines());
     expect(report.summary).toEqual({ total: 52, pass: 51, fail: 0, pending: 1 });
     const pending = report.entries.find((entry) => entry.status === "pending")!;
@@ -306,7 +296,7 @@ describe("replay machinery over real smoke.json / cql-basic.json entries", () =>
     const sentinelEntries = allEntries.filter(
       (entry) => entry.area === "render-engine" && isCaptureErrorSentinel(entry.expected as string)
     );
-    expect(sentinelEntries).toHaveLength(4); // one unknown-view sentinel per rendered card
+    expect(sentinelEntries).toHaveLength(4);
     const report = await replayEntries(sentinelEntries, fakeEngines());
     expect(report.summary).toEqual({ total: 4, pass: 4, fail: 0, pending: 0 });
   });

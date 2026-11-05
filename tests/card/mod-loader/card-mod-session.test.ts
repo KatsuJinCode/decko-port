@@ -1,24 +1,4 @@
-// The card-mod-session mod loader test: the mod loaded through the loader
-// registers its two set modules (all/location_history, type/session) and
-// contributes ZERO views - the compat report's entry for this gem declares
-// htmlViewsDeclared: 0 / htmlViewsMissingNames: [] (its only format block
-// is a before :core hook, not a view), so the mod must leave the render
-// path byte-identical. The pure card-method semantics of set/type/session.rb
-// and the lib config value are proven against their Ruby lines.
-//
-// Proof shape (A/B on the loader tables, not on views - there are none):
-//   WITHOUT the mod load: the set-module basket carries no session entries
-//     and the loader has not touched the live views record.
-//   WITH the mod load: the basket records All::LocationHistory (base
-//     bucket) and Type::Session (nonbase), the load report lists zero
-//     registered views, the views record's key set is unchanged, and a
-//     Session-typed card's :content render is unchanged.
-//
-// Probe cards (mirroring the gem's data/real.yml:1-4 seed shape):
-//   - Cardtype (id 5) - the cardtype cardtype
-//   - Session (id 80, codename "session", typeId 5) - the Session
-//     cardtype card data/real.yml seeds
-//   - Test Session Card (id 81, typeId 80) - a session-typed probe card
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import {
@@ -52,14 +32,10 @@ beforeAll(async () => {
   storage = await createRenderTestStorage();
   const s = storage;
 
-  // the cardtype cardtype (so Session's typeId means "cardtype")
   await seedCard(s, { id: 5, name: "Cardtype" });
 
-  // the Session cardtype card - data/real.yml:1-4 (:name: Session,
-  // :type: :cardtype, :codename: session)
   await seedCard(s, { id: 80, name: "Session", codename: "session", typeId: 5 });
 
-  // a session-typed probe card (type Session => typeId 80)
   await seedCard(s, {
     id: 81,
     name: "Test Session Card",
@@ -82,9 +58,7 @@ describe("card-mod-session through the mod loader (A/B)", () => {
     const nonbaseShortnames = [...basket.nonbase.values()].flat().map((m) => m.shortname);
     expect(baseShortnames).not.toContain("All::LocationHistory");
     expect(nonbaseShortnames).not.toContain("Type::Session");
-    // the views snapshot the WITH tests compare against (the loader
-    // mutates the LIVE HTML_VIEWS record on registration; this mod must
-    // register nothing)
+
     viewsKeysBeforeLoad = Object.keys(HTML_VIEWS);
   });
 
@@ -92,34 +66,27 @@ describe("card-mod-session through the mod loader (A/B)", () => {
     const s = storage!;
     loader = loader ?? new ModLoader([{ manifest: cardModSession }]);
     report = loader.load();
-    await loader.installInto(modEngineHost(s.engine, s.fetcher)); // prepare phase; this mod's manifest has none
+    await loader.installInto(modEngineHost(s.engine, s.fetcher));
 
-    // set/all/location_history.rb -> All::LocationHistory, base bucket
-    // ("all" is the base pattern; mod-loader.ts#kindOfSetPath)
     const base = loader.setModules().base.find((m) => m.shortname === "All::LocationHistory");
     expect(base).toBeDefined();
     expect(base?.kind).toBe("base");
     expect(base?.modName).toBe("session");
 
-    // set/type/session.rb -> Type::Session, nonbase bucket
     const nonbaseLists = [...loader.setModules().nonbase.values()].flat();
     const session = nonbaseLists.find((m) => m.shortname === "Type::Session");
     expect(session).toBeDefined();
     expect(session?.kind).toBe("nonbase");
     expect(session?.modName).toBe("session");
 
-    // the load report names both modules (loader.ts registeredSetModules)
     expect(report.registeredSetModules).toContain("All::LocationHistory");
     expect(report.registeredSetModules).toContain("Type::Session");
   });
 
   it("WITH the mod load: the mod registers ZERO views (compat htmlViewsDeclared: 0) and the views record is unchanged", () => {
-    // the gem's only format block is `before :core` HOOK
-    // (set/type/session.rb:59-63), which has no ModFormatBlock slot; the
-    // registeredViews list must stay empty for this mod
+
     expect(report!.registeredViews).toEqual([]);
-    // and the live views record carries exactly the keys it carried
-    // before the load (no session view leaked into HTML_VIEWS)
+
     expect(Object.keys(HTML_VIEWS).sort()).toEqual([...viewsKeysBeforeLoad!].sort());
   });
 
@@ -146,8 +113,7 @@ describe("card-mod-session through the mod loader (A/B)", () => {
   });
 
   it("set/type/session.rb:21-23 def session_key; \"_card_#{key}\" - the session-hash key rides the card key", () => {
-    // the prefix joins the CANONICAL key (DeckoName.key): "Test Session
-    // Card" -> "test_session_card"
+
     const cardKey = DeckoName.parse("Test Session Card").key;
     expect(cardKey).toBe("test_session_card");
     expect(sessionKey(cardKey)).toBe("_card_test_session_card");
@@ -157,7 +123,7 @@ describe("card-mod-session through the mod loader (A/B)", () => {
     const args = { id: 81, skip_permissions: true };
     const merged = sessionAddToTrash(args);
     expect(merged).toEqual({ id: 81, skip_permissions: true, trash: true });
-    // the receiver is untouched (Ruby's merge does not mutate)
+
     expect(args).toEqual({ id: 81, skip_permissions: true });
   });
 
@@ -167,9 +133,7 @@ describe("card-mod-session through the mod loader (A/B)", () => {
 
   it("WITH the mod: a Session-typed card's :content render is unchanged (the mod alters no render path)", async () => {
     const s = storage!;
-    // :content is a base-format view (views.ts#contentView); the mod
-    // defines no views (its before :core hook is unported), so the
-    // Session-typed probe renders exactly the baseline bytes
+
     const html = await s.engine.render("Test Session Card", "content");
     expect(typeof html).toBe("string");
     expect(html.length).toBeGreaterThan(0);

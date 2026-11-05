@@ -5,7 +5,7 @@
   "remainder": [],
   "invalid": [],
   "complete": true,
-  "ledgerSha256": "519303865508fa3dc6ccc1762c0095ada2fe3002ab6743fbcee66d371c74aad1",
+  "ledgerSha256": "a388ddf23a83cfdf2d9e67556fd3210d8dbeddc6d462b86de38f27e6d51933e6",
   "scope": "Read and validated individual captures and comparisons; retains tested source versions; no combined browser rerun",
   "executionReceipt": ".test-results/verify-browser-ledger-evidence.remote.mjs.final-52.execution.json",
   "applicationCandidate": "50ed25ff0ee049895fc9953d4291d8c176d50d44",

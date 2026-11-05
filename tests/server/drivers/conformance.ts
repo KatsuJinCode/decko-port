@@ -1,17 +1,11 @@
-// Shared conformance suite for SQLDatabaseDriver implementations.
-// Every storage adapter must pass this suite — that is the contract that
-// lets the engine stay vendor-agnostic (src/server/driver.ts).
-//
-// A driver under test is supplied as a factory so each suite owns its
-// resource lifecycle (temp files, running servers, miniflare instances).
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import type { SQLDatabaseDriver, SQLQueryResult } from "../../../src/server/driver.js";
 
 export interface DriverUnderTest {
   driver: SQLDatabaseDriver;
-  /** Release the driver's resources (close db, stop server, dispose
-   *  miniflare). Called once after the suite finishes. */
+
   dispose?: () => void | Promise<void>;
 }
 
@@ -43,8 +37,7 @@ export function runDriverConformance(suiteName: string, factory: DriverFactory):
       );
       expect(ins.rows).toEqual([]);
       expect(ins.rowsAffected).toBe(1);
-      // lastInsertRowId arrives as number (better-sqlite3, D1) or bigint
-      // (@libsql/client); normalize with BigInt before comparing.
+
       expect(ins.lastInsertRowId).toBeDefined();
       expect(BigInt(ins.lastInsertRowId as number | bigint)).toBe(1n);
 
@@ -54,10 +47,7 @@ export function runDriverConformance(suiteName: string, factory: DriverFactory):
       );
       expect(sel.rows).toEqual([{ id: 1, n: 42, f: 1.5, s: "hello", z: null }]);
       expect(sel.rowsAffected).toBe(0);
-      // For reads, whether lastInsertRowId is reported is provider-dependent:
-      // SQLite tracks it per connection, so some drivers could legitimately
-      // surface the previous insert's rowid here. Absent is the norm; a
-      // present value must be the last inserted rowid, not garbage.
+
       if (sel.lastInsertRowId !== undefined) {
         expect(BigInt(sel.lastInsertRowId)).toBe(1n);
       }
@@ -99,8 +89,7 @@ export function runDriverConformance(suiteName: string, factory: DriverFactory):
     });
 
     it("leaves the schema usable after failed statements", async () => {
-      // A driver that swallows or half-applies failures would corrupt engine
-      // state; a clean throw must leave the connection usable.
+
       const after = await driver.query<Record<string, unknown>>("SELECT COUNT(*) AS c FROM conf_batch", []);
       expect(after.rows[0].c).toBe(2);
     });

@@ -1,35 +1,4 @@
-// CQL match oracle parity: replays the 30 captured query entries in
-// fixtures/captured/cql-mysql-match.json through the REAL execution path —
-// executeQuery (parseCql -> generateSql -> LocalSqliteDriver with the
-// REGEXP UDF, src/cql/sqlite-regexp.ts) — against a seeded reconstruction
-// of the MySQL-rung probe deck (tools/oracle/cql_match_capture.rb), and
-// name-SET-compares each result against Ruby's recording.
-//
-// PROVENANCE: the fixture was captured on the MySQL rung of the oracle
-// harness — the same oracle app as cql-basic.json but running on a scratch
-// MariaDB 11.4.5 server (utf8mb4_general_ci), where card 1.110's CQL `match`
-// compiles to `name REGEXP ? OR db_content REGEXP ?` and actually executes
-// (on SQLite the oracle can only record the raise — see the match_sentinel
-// in cql-basic.json). docs/oracle-harness.md "MySQL rung" has the full
-// mechanism chain with citations.
-//
-// KNOWN DIVERGENCES (pinned, not swept aside): the JS RegExp behind the UDF
-// does not speak the full PCRE/ICU dialect MariaDB/MySQL accept. Three
-// `~~` raw-regex entries diverge TODAY with three distinct failure shapes:
-//   - raw_posix_alpha: JS has no [[:alpha:]] — silently mismatches (compiles
-//     as a character class of the literal chars) instead of erroring;
-//   - raw_mysql57_wordstart: [[:<:]] silently mismatches the same way
-//     (MariaDB accepts it; MySQL 8 ICU errors on it — server-side variance);
-//   - raw_unicode_class: \p{Han} without the `u` flag degrades to a literal
-//     "p{Han}" match (the `u` flag is not available: the escaped-literal
-//     shape relies on Annex-B identity escapes).
-// Each pin asserts the exact TS result against the Ruby result; upgrading
-// the UDF to translate these constructs fails the pin and the test must be
-// upgraded with it. Everything else is strict set parity, 27/30.
-//
-// rendered_match_search is in the fixture but not replayed here: it is the
-// byte oracle for the render stream's Search-result views (slot-id and
-// card-id normalized per house rules), not a CQL result set.
+
 
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
@@ -52,8 +21,6 @@ interface CapturedMatch {
 
 const REPO_ROOT = fileURLToPath(new URL("../..", import.meta.url));
 
-/** Result names recomposed through the fetch layer's Lexicon walk, sorted:
- *  the comparison is name-SET parity (same contract as oracle-replay). */
 async function resultNames(lexicon: DbLexicon, rows: CardsRow[]): Promise<string[]> {
   const names: string[] = [];
   for (const row of rows) {
@@ -68,11 +35,6 @@ async function warmDeckLexicon(storage: CqlTestStorage): Promise<void> {
   await storage.fetcher.warmLexicon(result.rows.map((row) => row.id));
 }
 
-// ---------------------------------------------------------------------------
-// The MySQL-rung probe deck, modeled (tools/oracle/cql_match_capture.rb
-// SEEDS; ids 700+ — above every modeled standard card, preserving the
-// id-order sort windows the standard deck's entries depend on).
-// ---------------------------------------------------------------------------
 export const MATCHPROBE_DECK_CARDS: CqlSeedCard[] = [
   { id: 700, name: "Matchprobe Alpha", typeId: 2, dbContent: "the quick brown fox jumps over the lazy dog" },
   { id: 701, name: "Matchprobe Beta", typeId: 2, dbContent: "a calm brown cow grazes quietly" },
@@ -87,14 +49,6 @@ export const MATCHPROBE_DECK_CARDS: CqlSeedCard[] = [
   { id: 710, name: "Matchprobe Search", typeId: 98, dbContent: '{"match":"matchprobe","sort":"name"}' },
 ];
 
-// db_content corrections on the modeled standard deck, required by two
-// captured entries (nullness is the load-bearing property, read off the
-// capture deck's own rows):
-// - *all+*read matched raw_posix_alpha's [[:alpha:]]+ through CONTENT
-//   (its name column is NULL) -> db_content non-null ("Anyone", the real
-//   rule value per docs/oracle-harness.md).
-// - *all+*default did NOT match it (absent from Ruby's result despite the
-//   lowest ids) -> its db_content is NULL in the capture deck. NULL stays.
 const STANDARD_CONTENT_PATCH: Record<number, string> = {
   10: "Anyone",
   14: "Cardtype description body",
@@ -129,7 +83,7 @@ async function seedMatchprobeDeck(storage: CqlTestStorage): Promise<void> {
       card.dbContent ?? null,
     ]);
   }
-  // patch standard-deck contents the captured entries depend on
+
   for (const [id, content] of Object.entries(STANDARD_CONTENT_PATCH)) {
     await storage.driver.query("UPDATE cards SET db_content = ? WHERE id = ?", [
       content,
@@ -138,7 +92,6 @@ async function seedMatchprobeDeck(storage: CqlTestStorage): Promise<void> {
   }
 }
 
-// The three pinned dialect divergences: entry name -> why (see header).
 const KNOWN_DIVERGENCES = new Set([
   "raw_posix_alpha",
   "raw_mysql57_wordstart",
@@ -209,12 +162,7 @@ describe("oracle replay: CQL match (MySQL rung, 30 entries)", () => {
         const tsNames = await resultNames(storage.fetcher.lexicon, result.rows);
         const same =
           tsNames.length === rubyNames.length && tsNames.every((n, i) => n === rubyNames[i]);
-        // The pin holds only while the TS side silently returns less than
-        // Ruby. Three failure shapes are all "silent no-match" today — the
-        // most dangerous kind for a search engine (no error, just missing
-        // rows). An upgrade that translates these constructs (see
-        // docs/cql-match-decision.md) flips `same` to true and fails here;
-        // upgrade this test together with the UDF.
+
         expect(same, `${name}: pin stale — TS now matches Ruby`).toBe(false);
       }
     } finally {

@@ -1,8 +1,4 @@
-// SessionStore tests against REAL storage: in-memory better-sqlite3 with the
-// CORE schema (db/schema.sqlite.sql) plus the auth layer's own migration
-// (db/migrations/001-auth-sessions.sql) applied through the real runner.
-// Each expectation cites the Ruby file:method it derives from; the full
-// trail lives in docs/auth-port-notes.md.
+
 
 import { beforeEach, describe, expect, it } from "vitest";
 import {
@@ -43,7 +39,7 @@ describe("SessionStore round trip (create -> store -> resolve)", () => {
 
     const actor = await store.lookupSession(token);
     expect(actor).toEqual({ id: USER.id, name: USER.name });
-    // expires_at = create instant + ttl (canonical UTC TEXT, schema convention)
+
     expect(expiresAt).toBe("2026-09-20 13:00:00.000");
   });
 
@@ -248,7 +244,7 @@ describe("SessionStore constant-time compare seam", () => {
   it("the default comparator is tokensEqual (constant time)", async () => {
     const store = new SessionStore({ driver: storage.driver, now: clock });
     const { token } = await store.createSession(USER.id, { ttlSeconds: 3600 });
-    // Round trip through the default (constant-time) comparator.
+
     expect(await store.lookupSession(token)).toEqual({ id: USER.id, name: USER.name });
   });
 });

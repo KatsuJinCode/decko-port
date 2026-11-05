@@ -1,24 +1,4 @@
-// Conformance + behavior tests for BunnyDbDriver.
-//
-// Three things this file asserts:
-//
-//   1. The same SQL battery, run against a BunnyDbDriver and against a
-//      fresh in-memory LocalSqliteDriver, returns IDENTICAL rows. The
-//      two drivers must agree on what SQLite means on the wire — this is
-//      the cross-driver conformance contract that lets the engine be
-//      vendor-agnostic (src/server/driver.ts).
-//
-//   2. BunnyDbDriver passes the shared runDriverConformance suite, so it
-//      satisfies the same surface contract as the other adapters.
-//
-//   3. The query-count instrumentation hook (BunnyDbQueryCounter) tracks
-//      one count per query() call and one count per statement inside
-//      batch(). This is the first-class DB-operations-per-page metric
-//      the harness needs.
-//
-// The whole describe block is skipped when BUNNY_DB_URL is unset, so CI
-// without credentials passes. The local-sqlite leg of the cross-driver
-// comparison still runs (LocalSqliteDriver needs no env).
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { LocalSqliteDriver } from "../../../src/server/drivers/local-sqlite.js";
@@ -61,7 +41,6 @@ describe("BunnyDbDriver (cross-driver conformance + behavior)", () => {
       local.close();
     });
 
-    // -- (1) cross-driver conformance: identical rows for the same battery --
     describe("same SQL battery against both drivers -> identical rows", () => {
       it("CREATE TABLE + INSERT + SELECT round-trip", async () => {
         await Promise.all([
@@ -85,8 +64,7 @@ describe("BunnyDbDriver (cross-driver conformance + behavior)", () => {
             [42, 1.5, "hello", null],
           ),
         ]);
-        // lastInsertRowId is a number on both for this range; coerce via
-        // BigInt to be safe across runtimes that surface bigint.
+
         expect(BigInt(ins[0].lastInsertRowId as number | bigint)).toBe(
           BigInt(ins[1].lastInsertRowId as number | bigint),
         );
@@ -158,9 +136,7 @@ describe("BunnyDbDriver (cross-driver conformance + behavior)", () => {
             [],
           ),
         ]);
-        // Use distinct SQL text from the conformance suite so the tables
-        // don't collide (the conformance suite runs below in the same
-        // describe).
+
         const stmtBatches = [
           { sql: "INSERT INTO cross_batch (s) VALUES (?)", params: ["alpha"] },
           { sql: "INSERT INTO cross_batch (s) VALUES (?)", params: ["beta"] },
@@ -170,13 +146,13 @@ describe("BunnyDbDriver (cross-driver conformance + behavior)", () => {
           bunny.batch(stmtBatches),
           local.batch(stmtBatches),
         ]);
-        // Batch length must match.
+
         expect(bBunny).toHaveLength(bLocal.length);
-        // Each batch result's rows[] must match across drivers.
+
         for (let i = 0; i < bBunny.length; i += 1) {
           expect(bBunny[i].rows).toEqual(bLocal[i].rows);
         }
-        // rowsAffected must agree on the writes.
+
         expect(bBunny[0].rowsAffected).toBe(bLocal[0].rowsAffected);
         expect(bBunny[1].rowsAffected).toBe(bLocal[1].rowsAffected);
       });
@@ -225,12 +201,10 @@ describe("BunnyDbDriver (cross-driver conformance + behavior)", () => {
       });
     });
 
-    // -- (2) shared runDriverConformance: standard surface contract --
     runDriverConformance("conformance: BunnyDbDriver (live)", () => ({
       driver: bunny,
     }));
 
-    // -- (3) query-count instrumentation hook: DB-operations-per-page --
     describe("query-count instrumentation hook", () => {
       it("counts one per query() call", async () => {
         const counter = new BunnyDbQueryCounter();
@@ -306,8 +280,6 @@ describe("BunnyDbDriver (cross-driver conformance + behavior)", () => {
     });
   });
 
-  // -- Tests that do NOT need network / credentials --
-
   describe("without credentials (no network, offline)", () => {
     it("throws BunnyDbError when neither options nor env provides a URL", () => {
       const savedUrl = process.env[ENV_URL];
@@ -330,7 +302,7 @@ describe("BunnyDbDriver (cross-driver conformance + behavior)", () => {
         process.env[ENV_URL] = "https://example-db.lite.bunnydb.net";
         process.env[ENV_TOKEN] = "test-token-abc";
         const driver = new BunnyDbDriver({});
-        // Constructor succeeded; we just verify the env read worked.
+
         expect(driver).toBeInstanceOf(BunnyDbDriver);
         expect(driver.queryCount()).toBe(0);
       } finally {
@@ -342,11 +314,7 @@ describe("BunnyDbDriver (cross-driver conformance + behavior)", () => {
     });
 
     it("rejects unsupported parameter types before issuing a request", async () => {
-      // A mock fetch is supplied so the constructor-validated driver
-      // never actually makes a network call. We don't invoke query()
-      // because the mock would still need to fake a Hrana response;
-      // the unsupported-type guard fires synchronously before any
-      // fetch is attempted.
+
       const noopFetch: typeof fetch = (() =>
         Promise.reject(new Error("fetch should not be called"))) as typeof fetch;
       const driver = new BunnyDbDriver({

@@ -1,8 +1,4 @@
-// Ambient declarations for better-sqlite3 v13, which ships no TypeScript
-// types and @types/better-sqlite3 is not installed (deps are frozen for
-// wave agents — no npm install). Only the API surface the schema tests use
-// is declared. If a fuller surface is needed later, prefer adding the
-// @types package over growing this file.
+
 
 declare module "better-sqlite3" {
   interface RunResult {

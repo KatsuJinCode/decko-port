@@ -1,16 +1,4 @@
-// tests/card/notify/transport-and-dispatch.test.ts — the transport seam
-// and the dispatcher.
-//
-// What this test proves:
-//   - CaptureTransport records every send, in order, with seq numbers.
-//   - CaptureTransport.drain() clears; tests can isolate scenarios.
-//   - LoggingTransport delegates to its inner transport and ALSO emits
-//     a log line per send (matching Ruby's Net::SMTPError rescue path's
-//     "log and continue" pattern).
-//   - runIntegrationHooks() iterates events × hooks, gates each by the
-//     hook's `notable`, and yields a receipt per (hook, event).
-//   - runIntegrationHooks() catches per-hook errors (a failing hook
-//     does not abort other hooks for the same event).
+
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
@@ -139,9 +127,9 @@ describe("runIntegrationHooks", () => {
       context: makeNotifyContext(transport),
     });
 
-    expect(transport.count()).toBe(1); // hook1 sent one mail
+    expect(transport.count()).toBe(1);
     expect(hook2.fire).toHaveBeenCalledOnce();
-    // 2 hooks × 1 event = 2 receipts
+
     expect(receipts).toHaveLength(2);
     expect(receipts.map((r) => r.status)).toEqual(["fired", "fired"]);
   });
@@ -200,7 +188,7 @@ describe("runIntegrationHooks", () => {
         seen.push({ hook: hook.name ?? "?", status: "caught" });
       },
     });
-    expect(transport.count()).toBe(1); // goodHook still fires
+    expect(transport.count()).toBe(1);
     expect(seen).toEqual([{ hook: "boom", status: "caught" }]);
   });
 });

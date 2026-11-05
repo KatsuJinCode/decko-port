@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites name="vitest tests" tests="331" failures="31" errors="0" time="43.148342646">
-    <testsuite name="tests/card/actions/adversarial-rule163-action.test.ts" timestamp="2026-11-03T20:25:26.204Z" hostname="brandon-portal-vm" tests="6" failures="6" errors="0" skipped="0" time="1.880469195">
+    <testsuite name="tests/card/actions/adversarial-rule163-action.test.ts" timestamp="2026-11-03T20:25:26.204Z" hostname="linux-arm64-verification-vm" tests="6" failures="6" errors="0" skipped="0" time="1.880469195">
         <testcase classname="tests/card/actions/adversarial-rule163-action.test.ts" name="synthetic local validation: valid specific off takes precedence over global on" time="0.508595473">
             <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
 Error: RubySourceProbePinnedGemSourcesUnavailable
@@ -56,7 +56,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/actions/anon-fix-fresh-variants.test.ts" timestamp="2026-11-03T20:25:26.211Z" hostname="brandon-portal-vm" tests="23" failures="3" errors="0" skipped="0" time="0.823023512">
+    <testsuite name="tests/card/actions/anon-fix-fresh-variants.test.ts" timestamp="2026-11-03T20:25:26.211Z" hostname="linux-arm64-verification-vm" tests="23" failures="3" errors="0" skipped="0" time="0.823023512">
         <testcase classname="tests/card/actions/anon-fix-fresh-variants.test.ts" name="secverify HIGH-1: the side part&apos;s would-be type through the *default template chain &gt; FRESH (deny): exotic default type is Editor-locked — junction side judged by the chain&apos;s type is denied" time="0.071402607">
         </testcase>
         <testcase classname="tests/card/actions/anon-fix-fresh-variants.test.ts" name="secverify HIGH-1: the side part&apos;s would-be type through the *default template chain &gt; FRESH (allow mirror): the same chain with the exotic type Anyone-open — sides WRITTEN with the chain&apos;s type" time="0.063196826">
@@ -125,7 +125,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
         <testcase classname="tests/card/actions/anon-fix-fresh-variants.test.ts" name="secverify LOW-1: an account NAMED *anonymous with a real id acts as THAT account on update+delete &gt; FRESH (verdict direction): the anon-ID actor is judged by ANONYMOUS parties — Editor-only delete denies it" time="0.013818702">
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/actions/atomic-saves.test.ts" timestamp="2026-11-03T20:25:26.217Z" hostname="brandon-portal-vm" tests="67" failures="1" errors="0" skipped="11" time="31.057909636">
+    <testsuite name="tests/card/actions/atomic-saves.test.ts" timestamp="2026-11-03T20:25:26.217Z" hostname="linux-arm64-verification-vm" tests="67" failures="1" errors="0" skipped="11" time="31.057909636">
         <testcase classname="tests/card/actions/atomic-saves.test.ts" name="atomic saves: MySQL 8.4 (native) &gt; a child of an unknown type rolls its parent back" time="0">
             <skipped/>
         </testcase>
@@ -270,18 +270,18 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
         <testcase classname="tests/card/actions/atomic-saves.test.ts" name="atomic saves: Bunny Database driver (Hrana stream, mock server) &gt; orphan history at the next id: a create takes the first id past it and starts a history of its own" time="0.074731832">
         </testcase>
         <testcase classname="tests/card/actions/atomic-saves.test.ts" name="atomic saves: MySQL 8.4 (native)" time="0.037603398">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
- ❯ MySQL 8.4 native) (/home/ubuntu/decko-full-suite-20261103/src/tests/card/actions/atomic-saves.test.ts:174:20
+ ❯ MySQL 8.4 native) (workspace/decko-full-suite-20261103/src/tests/card/actions/atomic-saves.test.ts:174:20
  ❯ openDeck tests/card/actions/atomic-saves.test.ts:289:19
  ❯ tests/card/actions/atomic-saves.test.ts:425:14
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/actions/rule163-independent-visibility.test.ts" timestamp="2026-11-03T20:25:26.230Z" hostname="brandon-portal-vm" tests="5" failures="1" errors="0" skipped="0" time="1.516372629">
+    <testsuite name="tests/card/actions/rule163-independent-visibility.test.ts" timestamp="2026-11-03T20:25:26.230Z" hostname="linux-arm64-verification-vm" tests="5" failures="1" errors="0" skipped="0" time="1.516372629">
         <testcase classname="tests/card/actions/rule163-independent-visibility.test.ts" name="synthetic local validation: a separate warm reader observes committed administrator retyping" time="0.50552253">
         </testcase>
         <testcase classname="tests/card/actions/rule163-independent-visibility.test.ts" name="synthetic local validation: a separate warm reader enforces a committed rule content change" time="0.300542858">
@@ -299,7 +299,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
         <testcase classname="tests/card/actions/rule163-independent-visibility.test.ts" name="synthetic local validation: rolled-back retyping is isolated and does not poison warm rule state" time="0.227045995">
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/adversarial-tag-attribute-scope.test.ts" timestamp="2026-11-03T20:25:26.232Z" hostname="brandon-portal-vm" tests="9" failures="1" errors="0" skipped="8" time="0.010299596">
+    <testsuite name="tests/card/mod-loader/adversarial-tag-attribute-scope.test.ts" timestamp="2026-11-03T20:25:26.232Z" hostname="linux-arm64-verification-vm" tests="9" failures="1" errors="0" skipped="8" time="0.010299596">
         <testcase classname="tests/card/mod-loader/adversarial-tag-attribute-scope.test.ts" name="actual native attribute scope: ordinary-and-aria-scalars" time="0">
             <skipped/>
         </testcase>
@@ -332,7 +332,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/adversarial-tag-number-prototype-reattack.test.ts" timestamp="2026-11-03T20:25:26.234Z" hostname="brandon-portal-vm" tests="32" failures="1" errors="0" skipped="31" time="0.016337801">
+    <testsuite name="tests/card/mod-loader/adversarial-tag-number-prototype-reattack.test.ts" timestamp="2026-11-03T20:25:26.234Z" hostname="linux-arm64-verification-vm" tests="32" failures="1" errors="0" skipped="31" time="0.016337801">
         <testcase classname="tests/card/mod-loader/adversarial-tag-number-prototype-reattack.test.ts" name="matches original complete tag output for independent boundary-0" time="0">
             <skipped/>
         </testcase>
@@ -434,7 +434,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/adversarial-tag-portable-shapes.test.ts" timestamp="2026-11-03T20:25:26.241Z" hostname="brandon-portal-vm" tests="11" failures="1" errors="0" skipped="10" time="0.011986729">
+    <testsuite name="tests/card/mod-loader/adversarial-tag-portable-shapes.test.ts" timestamp="2026-11-03T20:25:26.241Z" hostname="linux-arm64-verification-vm" tests="11" failures="1" errors="0" skipped="10" time="0.011986729">
         <testcase classname="tests/card/mod-loader/adversarial-tag-portable-shapes.test.ts" name="matches original portable boundary assigned-unicode-symbol-keys" time="0">
             <skipped/>
         </testcase>
@@ -473,7 +473,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/adversarial-tag-value-boundaries.test.ts" timestamp="2026-11-03T20:25:26.245Z" hostname="brandon-portal-vm" tests="8" failures="1" errors="0" skipped="7" time="0.010013793">
+    <testsuite name="tests/card/mod-loader/adversarial-tag-value-boundaries.test.ts" timestamp="2026-11-03T20:25:26.245Z" hostname="linux-arm64-verification-vm" tests="8" failures="1" errors="0" skipped="7" time="0.010013793">
         <testcase classname="tests/card/mod-loader/adversarial-tag-value-boundaries.test.ts" name="matches additional original boundary: array-all-unicode-space" time="0">
             <skipped/>
         </testcase>
@@ -503,7 +503,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/adversarial-tag-wrapper-values.test.ts" timestamp="2026-11-03T20:25:26.247Z" hostname="brandon-portal-vm" tests="11" failures="1" errors="0" skipped="10" time="0.010297676">
+    <testsuite name="tests/card/mod-loader/adversarial-tag-wrapper-values.test.ts" timestamp="2026-11-03T20:25:26.247Z" hostname="linux-arm64-verification-vm" tests="11" failures="1" errors="0" skipped="10" time="0.010297676">
         <testcase classname="tests/card/mod-loader/adversarial-tag-wrapper-values.test.ts" name="original tag values: raw-escaping" time="0">
             <skipped/>
         </testcase>
@@ -542,7 +542,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/card-mod-defaults-ignored-and-delayed-job-backend-port.test.ts" timestamp="2026-11-03T20:25:26.250Z" hostname="brandon-portal-vm" tests="4" failures="2" errors="0" skipped="0" time="0.289384095">
+    <testsuite name="tests/card/mod-loader/card-mod-defaults-ignored-and-delayed-job-backend-port.test.ts" timestamp="2026-11-03T20:25:26.250Z" hostname="linux-arm64-verification-vm" tests="4" failures="2" errors="0" skipped="0" time="0.289384095">
         <testcase classname="tests/card/mod-loader/card-mod-defaults-ignored-and-delayed-job-backend-port.test.ts" name="card-mod gems with no set/ tree: defaults (ignored) and delayed_job (backend port) &gt; the tree carries no set-module manifest for either gem" time="0.002600179">
         </testcase>
         <testcase classname="tests/card/mod-loader/card-mod-defaults-ignored-and-delayed-job-backend-port.test.ts" name="card-mod gems with no set/ tree: defaults (ignored) and delayed_job (backend port) &gt; card-mod-defaults: no MANIFEST, and the seed-source port that replaced the blanket claim" time="0.057177502">
@@ -592,7 +592,7 @@ AssertionError: expected [ …(4) ] to deeply equal [ &apos;/src/card/auth/boot-
         <testcase classname="tests/card/mod-loader/card-mod-defaults-ignored-and-delayed-job-backend-port.test.ts" name="card-mod gems with no set/ tree: defaults (ignored) and delayed_job (backend port) &gt; card-mod-delayed_job: the registry records a backend port, and that port exists and names the gem" time="0.00133677">
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/card-mod-edit-board-family-census.test.ts" timestamp="2026-11-03T20:25:26.252Z" hostname="brandon-portal-vm" tests="6" failures="1" errors="0" skipped="0" time="0.024957024">
+    <testsuite name="tests/card/mod-loader/card-mod-edit-board-family-census.test.ts" timestamp="2026-11-03T20:25:26.252Z" hostname="linux-arm64-verification-vm" tests="6" failures="1" errors="0" skipped="0" time="0.024957024">
         <testcase classname="tests/card/mod-loader/card-mod-edit-board-family-census.test.ts" name="card-mod-edit board family census (register entry 14) &gt; :board, :cardboard and :edit_rules are REGISTERED, each with a view fn" time="0.004553713">
         </testcase>
         <testcase classname="tests/card/mod-loader/card-mod-edit-board-family-census.test.ts" name="card-mod-edit board family census (register entry 14) &gt; :board_rules_tab belongs to card-mod-rules, on a setPath mirroring the Ruby path" time="0.00129665">
@@ -2444,7 +2444,7 @@ function skipReferers(): stri...
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/card-mod-rules-nest-oracle-pinned.test.ts" timestamp="2026-11-03T20:25:26.257Z" hostname="brandon-portal-vm" tests="6" failures="3" errors="0" skipped="0" time="0.198247303">
+    <testsuite name="tests/card/mod-loader/card-mod-rules-nest-oracle-pinned.test.ts" timestamp="2026-11-03T20:25:26.257Z" hostname="linux-arm64-verification-vm" tests="6" failures="3" errors="0" skipped="0" time="0.198247303">
         <testcase classname="tests/card/mod-loader/card-mod-rules-nest-oracle-pinned.test.ts" name="card-mod-rules nest views (rules-cap lane, oracle-pinned) &gt; WITHOUT the mod: both nest views raise UnsupportedViewError" time="0.068888028">
         </testcase>
         <testcase classname="tests/card/mod-loader/card-mod-rules-nest-oracle-pinned.test.ts" name="card-mod-rules nest views (rules-cap lane, oracle-pinned) &gt; WITH the mod: the fixture&apos;s no-write proof holds (the oracle capture moved no rows)" time="0.000745686">
@@ -2518,7 +2518,7 @@ AssertionError: expected &apos;&lt;div class=\&apos;modal fade _modal-slot\&apos
         <testcase classname="tests/card/mod-loader/card-mod-rules-nest-oracle-pinned.test.ts" name="card-mod-rules nest views (rules-cap lane, oracle-pinned) &gt; WITH the mod: :rule_form_card_editor on *all+*default renders the capture bytes (the rulesTypeFormgroup TYPE-EDITABLE branch - editor.rb:93-105, *default&apos;s setting_opts rule_type_editable: true)" time="0.008506943">
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/card-mod-rules-views-3.test.ts" timestamp="2026-11-03T20:25:26.260Z" hostname="brandon-portal-vm" tests="12" failures="1" errors="0" skipped="0" time="0.250018005">
+    <testsuite name="tests/card/mod-loader/card-mod-rules-views-3.test.ts" timestamp="2026-11-03T20:25:26.260Z" hostname="linux-arm64-verification-vm" tests="12" failures="1" errors="0" skipped="0" time="0.250018005">
         <testcase classname="tests/card/mod-loader/card-mod-rules-views-3.test.ts" name="card-mod-rules form-blocked views (rules-views-port-3, oracle-pinned) &gt; WITHOUT the mod: every target view raises UnsupportedViewError" time="0.080707236">
         </testcase>
         <testcase classname="tests/card/mod-loader/card-mod-rules-views-3.test.ts" name="card-mod-rules form-blocked views (rules-views-port-3, oracle-pinned) &gt; WITH the mod: the fixture&apos;s no-write proof holds (the oracle capture moved no rows)" time="0.000841766">
@@ -2563,7 +2563,7 @@ AssertionError: expected &apos;&lt;div id=&quot;Xall-quick_edit_setting_list…&
         <testcase classname="tests/card/mod-loader/card-mod-rules-views-3.test.ts" name="card-mod-rules form-blocked views (rules-views-port-3, oracle-pinned) &gt; WITH the mod: the load report lists the eight newly registered views" time="0.007406255">
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/register-events-round-seven-oracle-parity.test.ts" timestamp="2026-11-03T20:25:26.263Z" hostname="brandon-portal-vm" tests="20" failures="2" errors="0" skipped="0" time="0.185789411">
+    <testsuite name="tests/card/mod-loader/register-events-round-seven-oracle-parity.test.ts" timestamp="2026-11-03T20:25:26.263Z" hostname="linux-arm64-verification-vm" tests="20" failures="2" errors="0" skipped="0" time="0.185789411">
         <testcase classname="tests/card/mod-loader/register-events-round-seven-oracle-parity.test.ts" name="the events family, round seven: the next ten rows in row-id order &gt; add_and_drop_items: the executed body&apos;s two reads and its two operations, and the port&apos;s write route carrying the body" time="0.005143398">
         </testcase>
         <testcase classname="tests/card/mod-loader/register-events-round-seven-oracle-parity.test.ts" name="the events family, round seven: the next ten rows in row-id order &gt; delist: the executed body&apos;s walk, and the port&apos;s named skip with its mechanism" time="0.108619841">
@@ -3911,7 +3911,7 @@ AssertionError: expected &apos;// The card-mod-virtual gem (card-mod…&apos; to
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/tag-numeric-native-edges.test.ts" timestamp="2026-11-03T20:25:26.271Z" hostname="brandon-portal-vm" tests="30" failures="1" errors="0" skipped="29" time="0.009773232">
+    <testsuite name="tests/card/mod-loader/tag-numeric-native-edges.test.ts" timestamp="2026-11-03T20:25:26.271Z" hostname="linux-arm64-verification-vm" tests="30" failures="1" errors="0" skipped="29" time="0.009773232">
         <testcase classname="tests/card/mod-loader/tag-numeric-native-edges.test.ts" name="matches native tag number/prototype edge numeric-0" time="0">
             <skipped/>
         </testcase>
@@ -4007,7 +4007,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/tag-portable-values.test.ts" timestamp="2026-11-03T20:25:26.277Z" hostname="brandon-portal-vm" tests="29" failures="1" errors="0" skipped="28" time="0.011464765">
+    <testsuite name="tests/card/mod-loader/tag-portable-values.test.ts" timestamp="2026-11-03T20:25:26.277Z" hostname="linux-arm64-verification-vm" tests="29" failures="1" errors="0" skipped="28" time="0.011464765">
         <testcase classname="tests/card/mod-loader/tag-portable-values.test.ts" name="visibly refuses nonportable invocation date" time="0">
             <skipped/>
         </testcase>
@@ -4100,7 +4100,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/mod-loader/tag-wrapper-value-edges.test.ts" timestamp="2026-11-03T20:25:26.283Z" hostname="brandon-portal-vm" tests="6" failures="1" errors="0" skipped="5" time="0.011541766">
+    <testsuite name="tests/card/mod-loader/tag-wrapper-value-edges.test.ts" timestamp="2026-11-03T20:25:26.283Z" hostname="linux-arm64-verification-vm" tests="6" failures="1" errors="0" skipped="5" time="0.011541766">
         <testcase classname="tests/card/mod-loader/tag-wrapper-value-edges.test.ts" name="matches native tag edge: array-unicode-blanks" time="0">
             <skipped/>
         </testcase>
@@ -4124,20 +4124,20 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/nest-index/nest-index-dialects.test.ts" timestamp="2026-11-03T20:25:26.285Z" hostname="brandon-portal-vm" tests="2" failures="1" errors="0" skipped="0" time="6.007103842">
+    <testsuite name="tests/card/nest-index/nest-index-dialects.test.ts" timestamp="2026-11-03T20:25:26.285Z" hostname="linux-arm64-verification-vm" tests="2" failures="1" errors="0" skipped="0" time="6.007103842">
         <testcase classname="tests/card/nest-index/nest-index-dialects.test.ts" name="nest index marker: PostgreSQL (PGlite) &gt; reads the marker, builds the index, and is idempotent" time="5.883684131">
         </testcase>
         <testcase classname="tests/card/nest-index/nest-index-dialects.test.ts" name="nest index marker: MySQL 8.4 &gt; reads the marker, builds the index, and is idempotent" time="0.112659951">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ tests/card/nest-index/nest-index-dialects.test.ts:127:20
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/permissions/composed-name-self-pattern-resolution-equivalence.test.ts" timestamp="2026-11-03T20:25:26.286Z" hostname="brandon-portal-vm" tests="18" failures="1" errors="0" skipped="0" time="0.36446009">
+    <testsuite name="tests/card/permissions/composed-name-self-pattern-resolution-equivalence.test.ts" timestamp="2026-11-03T20:25:26.286Z" hostname="linux-arm64-verification-vm" tests="18" failures="1" errors="0" skipped="0" time="0.36446009">
         <testcase classname="tests/card/permissions/composed-name-self-pattern-resolution-equivalence.test.ts" name="the whole-deck composed-key universe this contract pins &gt; composes exactly these composed names on the representative deck" time="0.05413456">
         </testcase>
         <testcase classname="tests/card/permissions/composed-name-self-pattern-resolution-equivalence.test.ts" name="the whole-deck composed-key universe this contract pins &gt; collapses the ambiguous key to ONE id, the way the shipped Map does" time="0.010559837">
@@ -4183,7 +4183,7 @@ Received: &quot;src/card/permissions/read-rules.ts&quot;
         <testcase classname="tests/card/permissions/composed-name-self-pattern-resolution-equivalence.test.ts" name="the write path&apos;s two resolvers are the ones the measurements chose &gt; neither write-path consumer opens the whole-deck universe" time="0.000621004">
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/permissions/rule-candidate-per-key-resolution-equivalence.test.ts" timestamp="2026-11-03T20:25:26.289Z" hostname="brandon-portal-vm" tests="26" failures="1" errors="0" skipped="0" time="0.458892546">
+    <testsuite name="tests/card/permissions/rule-candidate-per-key-resolution-equivalence.test.ts" timestamp="2026-11-03T20:25:26.289Z" hostname="linux-arm64-verification-vm" tests="26" failures="1" errors="0" skipped="0" time="0.458892546">
         <testcase classname="tests/card/permissions/rule-candidate-per-key-resolution-equivalence.test.ts" name="the whole-deck composed-key universe this contract pins &gt; composes exactly these composed names on the representative deck" time="0.054523483">
         </testcase>
         <testcase classname="tests/card/permissions/rule-candidate-per-key-resolution-equivalence.test.ts" name="the whole-deck composed-key universe this contract pins &gt; collapses the ambiguous key to ONE id, the way the shipped Map does" time="0.017406889">

@@ -1,8 +1,4 @@
-// determinism.test.ts — the determinism proof (import twice, prove
-// byte-identical output via per-row hashes).
-//
-// Asserts the contract: same source + same importer = same target.
-// Uses synthetic databases built in-test (DATA RULE: zero real content).
+
 
 import { describe, it, expect } from "vitest";
 import { mkdtempSync } from "node:fs";
@@ -32,7 +28,7 @@ function makeSourceDb(): string {
 }
 
 const REPO_ROOT = mkdtempSync(join(tmpdir(), "decko-det-repo-"));
-const DDL_PATH = process.env.DECKO_MIGRATE_DDL ?? "C:/localProjects/decko-ts/db/schema.sqlite.sql";
+const DDL_PATH = process.env.DECKO_MIGRATE_DDL ?? "db/schema.sqlite.sql";
 
 describe("hashTable", () => {
   it("produces a deterministic per-row hash and a single total hash", () => {
@@ -85,7 +81,7 @@ describe("proveDeterminism", () => {
       expect(result.tables["card_references"]?.countA).toBe(20);
       expect(result.tables["card_references"]?.hashesMatch).toBe(true);
     } finally {
-      // best-effort cleanup (no rm: leave the temp dirs; they are OS-managed)
+
       void LocalSqliteToolDriver;
     }
   }, 120_000);

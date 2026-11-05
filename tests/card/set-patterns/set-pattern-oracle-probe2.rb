@@ -1,9 +1,3 @@
-# set-pattern-oracle-probe2.rb - second read-only probe: module_key values,
-# per-instance safe keys, set-card labels/short labels, type-assigning module
-# keys. Output cited in tests/card/set-patterns comments.
-#
-# Run (from tools/oracle/decko-oracle-app):
-#   RAILS_ENV=development bundle exec decko runner C:/localProjects/decko-ts/tests/card/set-patterns/set-pattern-oracle-probe2.rb
 
 require "json"
 

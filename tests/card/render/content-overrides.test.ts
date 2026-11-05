@@ -1,8 +1,4 @@
-// Surface 1 — per-set content-override registry.
-// Validates the seam the mod loader uses to substitute a registered
-// ContentFn for a card's dbContent at renderRaw time. The corpus suites
-// under tests/card/render/ pin the bytes for cards WITHOUT an override;
-// this suite exercises the OVERRIDE path the ask adds.
+
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { DeckoName } from "../../../src/card/name.js";
@@ -16,8 +12,6 @@ import {
   type ContentFn,
 } from "../../../src/card/render/content-overrides.js";
 
-/** Minimal stub engine (the render path only reads engine methods that
- *  the format's renderRaw doesn't touch). */
 function stubEngine(): RenderEngineLike {
   return {
     views: {},
@@ -28,8 +22,6 @@ function stubEngine(): RenderEngineLike {
   };
 }
 
-/** Build a synthetic RenderCard - the engine enrichment the format layer
- *  consumes (dbContent + the DeckoName fields the format reads). */
 function makeCard(name: string, dbContent: string, typeName?: string): RenderCard {
   const dn = DeckoName.parse(name);
   return {
@@ -116,7 +108,7 @@ describe("ContentOverrideRegistry", () => {
     expect(registry.size()).toBe(0);
     registry.register({ setPath: "right/a", modName: "x", fn: () => "" });
     registry.register({ setPath: "right/b", modName: "x", fn: () => "" });
-    registry.register({ setPath: "right/a", modName: "y", fn: () => "" }); // replaces
+    registry.register({ setPath: "right/a", modName: "y", fn: () => "" });
     expect(registry.size()).toBe(2);
   });
 });

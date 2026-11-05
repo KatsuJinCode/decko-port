@@ -1,15 +1,4 @@
-// parse-dump.test.ts — the streaming mysqldump INSERT parser.
-//
-// The core contract under test (the lesson from the 1.2 GB SourceDeck
-// migration): parsing must be LINEAR, ANCHORED, QUOTE-AWARE and STREAMING.
-// The sharpest expression of that contract is FEED-SIZE INVARIANCE: the
-// same dump fed whole, in 7-char slices, or one character at a time must
-// produce byte-identical rows. Every adversarial case runs at multiple
-// feed sizes.
-//
-// Ground truth: the production dump grammar (mysqldump 10.13, MySQL 8.0 —
-// verified patterns documented in docs/migration-tool-notes.md) and
-// MySQL's string-literal escape rules.
+
 
 import { describe, it, expect } from "vitest";
 import {
@@ -21,7 +10,6 @@ import { BS, dumpFile, sqlTuple } from "./synthetic-dump.js";
 
 type Row = { table: string; values: unknown[]; columns: string[] | undefined };
 
-/** Parse with a fixed feed size; collect rows. */
 function parseWith(dumpText: string, feedSize: number, opts = {}): Row[] {
   const p = new MysqldumpInsertParser(opts);
   const rows: Row[] = [];
@@ -58,15 +46,15 @@ describe("mysqldump INSERT parser", () => {
     expect(decodeMysqlEscapes(`x${BS}ny${BS}tz${BS}r`)).toBe("x\ny\tz\r");
     expect(decodeMysqlEscapes(`n${BS}0t${BS}Z`)).toBe("n\0t\x1a");
     expect(decodeMysqlEscapes(`q${BS}"d`)).toBe('q"d');
-    // \% and \_ KEEP the backslash (pattern-matching sequences)
+
     expect(decodeMysqlEscapes(`50${BS}%_of${BS}_x`)).toBe(`50${BS}%_of${BS}_x`);
-    // unknown escapes drop the backslash
+
     expect(decodeMysqlEscapes(`${BS}w`)).toBe("w");
-    // doubled quotes collapse
+
     expect(decodeMysqlEscapes("don''t")).toBe("don't");
-    // \'\' stays two quotes (escape wins before doubling is considered)
+
     expect(decodeMysqlEscapes(`${BS}'${BS}'`)).toBe("''");
-    // no escapes: same string
+
     expect(decodeMysqlEscapes("plain")).toBe("plain");
   });
 
@@ -85,7 +73,7 @@ describe("mysqldump INSERT parser", () => {
       "INSERT INTO `cards` (`id`,`name`) VALUES (3,'col-listed');",
     ]);
     const results = FEED_SIZES.map((size) => parseWith(dump, size));
-    // two cards INSERT statements: one multi-tuple, one column-list form
+
     for (const rows of results) {
       expect(rows.map((r) => r.table)).toEqual(["cards", "cards"]);
     }
@@ -113,9 +101,9 @@ describe("mysqldump INSERT parser", () => {
       BS + BS + BS + "'",
       "line1\nline2\ttabbed\rCRLF",
       "nul" + BS + "0 and Z" + BS + "Z",
-      "", // empty string literal
-      "'", // a single quote as the whole value
-      "''", // two quotes as the whole value
+      "",
+      "'",
+      "''",
     ];
     const tuples = content.map((c, i) => sqlTuple(i, c)).join(",");
     const dump = dumpFile([`INSERT INTO \`cards\` VALUES ${tuples};`]);
@@ -123,7 +111,7 @@ describe("mysqldump INSERT parser", () => {
     const base = canon(results[0]);
     for (const rows of results) expect(canon(rows)).toBe(base);
     expect(results[0].length).toBe(content.length);
-    // spot-decode: values come back as the original JS strings
+
     const values = results[0].map((r) => r.values[1]);
     expect(values).toEqual(content);
   });
@@ -142,8 +130,7 @@ describe("mysqldump INSERT parser", () => {
   });
 
   it("handles very long lines with many tuples (no whole-line assumption)", () => {
-    // 2000 tuples on ONE physical line, ~10 chars each + separators:
-    // exercises the compaction path within a single INSERT statement.
+
     const tuples: string[] = [];
     for (let i = 0; i < 2000; i++) {
       tuples.push(sqlTuple(i, `sess_${i}_${"x".repeat(30)}`, null, null));
@@ -195,14 +182,13 @@ describe("mysqldump INSERT parser", () => {
   });
 
   it("rejects malformed rows with loud errors instead of silent data loss", () => {
-    // bare backslash outside a string
+
     const bad = dumpFile(["INSERT INTO `cards` VALUES (1" + BS + ",2);"]);
     expect(() => parseWith(bad, 1 << 20)).toThrow(/unexpected character/);
-    // missing VALUES keyword: a "(" starts a column list, then digits
+
     const bad2 = dumpFile(["INSERT INTO `cards` (1,2);"]);
     expect(() => parseWith(bad2, 1 << 20)).toThrow(/malformed column list/);
-    // a character that starts no SQL literal (not quote, digit, sign,
-    // identifier, separator or paren) inside a tuple
+
     const bad3 = dumpFile(["INSERT INTO `cards` VALUES (1 @ 2);"]);
     expect(() => parseWith(bad3, 1 << 20)).toThrow(/unexpected character/);
   });

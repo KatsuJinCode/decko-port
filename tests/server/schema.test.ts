@@ -1,12 +1,4 @@
-// Schema tests: prove db/schema.sqlite.sql is (a) in sync with the
-// src/server/schema.ts inventory and (b) actually executable on SQLite,
-// with a full insert/select round-trip through cards and card_actions.
-// The DDL is the wave-2 fetch layer's foundation; these tests are its
-// foundation permit.
-//
-// Ground truth: db/schema.mysql-reference.sql (verbatim production MySQL)
-// and the card-1.110.0 / decko-0.20.0 core migrations. Mapping decisions:
-// docs/schema-notes.md.
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { readFileSync, rmSync, mkdtempSync } from "node:fs";
@@ -27,16 +19,11 @@ const REPO_ROOT = fileURLToPath(new URL("../..", import.meta.url));
 const DDL_PATH = join(REPO_ROOT, "db", "schema.sqlite.sql");
 const DDL = readFileSync(DDL_PATH, "utf8");
 
-// ---------------------------------------------------------------------------
-// DDL parsing — the inventory side of the schema.ts <-> DDL sync check.
-// ---------------------------------------------------------------------------
-
 interface ParsedTable {
   name: string;
   columns: string[];
 }
 
-/** Extract `CREATE TABLE "x" (...);` blocks and their quoted column names. */
 function parseDdlTables(ddl: string): ParsedTable[] {
   const tables: ParsedTable[] = [];
   const createRe = /CREATE TABLE "([a-z_]+)"\s*\(([\s\S]*?)\n\);/g;
@@ -45,8 +32,7 @@ function parseDdlTables(ddl: string): ParsedTable[] {
     const body = match[2] as string;
     const columns: string[] = [];
     for (const line of body.split("\n")) {
-      // A column definition line starts with a quoted identifier; constraint
-      // lines (PRIMARY KEY, UNIQUE, CHECK, FOREIGN KEY) do not.
+
       const colMatch = line.match(/^\s*"([a-z_]+)"\s+(TEXT|INTEGER)/);
       if (colMatch) columns.push(colMatch[1] as string);
     }
@@ -55,7 +41,6 @@ function parseDdlTables(ddl: string): ParsedTable[] {
   return tables;
 }
 
-/** Extract `CREATE [UNIQUE] INDEX name ON "table" ("col", ...)` targets. */
 function parseDdlIndexes(ddl: string): { name: string; table: string; columns: string[] }[] {
   const out: { name: string; table: string; columns: string[] }[] = [];
   const indexRe = /CREATE (?:UNIQUE )?INDEX "([a-z_0-9]+)"\s+ON "([a-z_]+)"\s*\(([^)]+)\)/g;
@@ -68,10 +53,6 @@ function parseDdlIndexes(ddl: string): { name: string; table: string; columns: s
   }
   return out;
 }
-
-// ---------------------------------------------------------------------------
-// Executable database — a fresh temp-file DB per test run.
-// ---------------------------------------------------------------------------
 
 let dir: string;
 let dbPath: string;
@@ -104,14 +85,7 @@ describe("schema.sqlite.sql vs src/server/schema.ts inventory", () => {
   });
 
   it("declares an index for every index the production MySQL schema carries", () => {
-    // Verbatim inventory from db/schema.mysql-reference.sql (KEY / UNIQUE KEY
-    // lines). card_virtuals' swapped names are production truth. The two
-    // *_binary_index entries are the ONLY engine-side additions (NOT MySQL
-    // truth): BINARY-collation seek twins of the NOCASE key/codename unique
-    // indexes — the engine's lookups compare BINARY and cannot seek a NOCASE
-    // index, which made every point lookup probe cards_trash_index (whole
-    // deck) on D1. Diagnosis + measurement: db/schema.sqlite.sql cards index
-    // block and tools/cf-cost/measure-render-reads.test.ts.
+
     const mysqlIndexes: Record<string, string[]> = {
       cards: [
         "cards_key_index",
@@ -146,7 +120,7 @@ describe("schema.sqlite.sql vs src/server/schema.ts inventory", () => {
       delayed_jobs: ["delayed_jobs_priority"],
       sessions: ["sessions_session_id_index"],
       schema_migrations: ["unique_schema_migrations"],
-      ar_internal_metadata: [], // PRIMARY KEY("key") — in-table constraint
+      ar_internal_metadata: [],
       transform_migrations: ["unique_schema_migrations_cards"],
     };
     const ddlIndexes = parseDdlIndexes(DDL);
@@ -169,7 +143,7 @@ describe("schema.sqlite.sql executes on better-sqlite3", () => {
 
   it("round-trips a cards row (insert -> select -> field-for-field equality)", () => {
     const card: CardsRow = {
-      id: 0, // 0 lets AUTOINCREMENT assign; asserted below
+      id: 0,
       name: "Schema Round Trip",
       key: "schema_round_trip",
       codename: "round_trip",
@@ -184,7 +158,7 @@ describe("schema.sqlite.sql executes on better-sqlite3", () => {
       read_rule_id: null,
       references_expired: null,
       trash: 0,
-      type_id: 2, // Ruby's Card::BasicID in production data
+      type_id: 2,
       db_content: "round-trip body **content**",
     };
     const result = db
@@ -219,8 +193,7 @@ describe("schema.sqlite.sql executes on better-sqlite3", () => {
 
     const back = db.prepare(`SELECT * FROM "cards" WHERE "id" = ?`).get(id) as CardsRow;
     expect(back).toEqual({ ...card, id });
-    // Storage-shape spot checks: INTEGER columns come back numbers,
-    // datetime TEXT comes back as the exact string written.
+
     expect(typeof back.type_id).toBe("number");
     expect(back.created_at).toBe("2026-09-19 13:45:00.000");
     expect(back.trash).toBe(0);
@@ -271,8 +244,7 @@ describe("schema.sqlite.sql executes on better-sqlite3", () => {
   });
 
   it("enforces the production unique constraints", () => {
-    // cards.key is UNIQUE (cards_key_index) — production rejects a second
-    // row with the same key.
+
     expect(() =>
       db
         .prepare(`INSERT INTO "cards" ("key","created_at","updated_at","creator_id","updater_id","trash","type_id")
@@ -280,9 +252,6 @@ describe("schema.sqlite.sql executes on better-sqlite3", () => {
         .run("schema_round_trip", "2026-09-19 13:45:02.000", "2026-09-19 13:45:02.000", 1, 1, 0, 2)
     ).toThrow(/UNIQUE/);
 
-    // The collation parity decision: MySQL's utf8mb3_unicode_ci uniqueness is
-    // reproduced with COLLATE NOCASE on the unique indexes, so a case-variant
-    // duplicate is rejected too.
     expect(() =>
       db
         .prepare(`INSERT INTO "cards" ("key","created_at","updated_at","creator_id","updater_id","trash","type_id")
@@ -290,7 +259,6 @@ describe("schema.sqlite.sql executes on better-sqlite3", () => {
         .run("SCHEMA_ROUND_TRIP", "2026-09-19 13:45:03.000", "2026-09-19 13:45:03.000", 1, 1, 0, 2)
     ).toThrow(/UNIQUE/);
 
-    // (left_id, right_id) pair is UNIQUE on cards.
     db.prepare(
       `INSERT INTO "cards" ("name","key","left_id","right_id","created_at","updated_at","creator_id","updater_id","trash","type_id")
        VALUES (?,?,?,?,?,?,?,?,?,?)`

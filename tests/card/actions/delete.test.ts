@@ -1,6 +1,4 @@
-// Action-layer tests — DELETE (Card#delete! = trash flip): action typing,
-// the protected-card guard, the child cascade, and idempotency. Ruby cites
-// inline; trail in docs/actions-port-notes.md. Synthetic fixtures only.
+
 
 import { describe, expect, it } from "vitest";
 import { CardActionError } from "../../../src/card/actions/index.js";
@@ -37,17 +35,16 @@ describe("deleteCard — trash flip", () => {
     const card = await f.storage.selectOne<Row>("SELECT trash FROM cards WHERE id = ?", [
       f.joeCard.id,
     ]);
-    expect(card).toMatchObject({ trash: 1 }); // the row stays, flipped
+    expect(card).toMatchObject({ trash: 1 });
 
     const actions = await f.storage.selectAll<Row>("SELECT * FROM card_actions");
     expect(actions).toHaveLength(1);
     expect(actions[0]).toMatchObject({
       card_id: f.joeCard.id,
-      action_type: 2, // :delete — identify_action's trash branch fires FIRST
+      action_type: 2,
       super_action_id: null,
     });
-    // one change row: trash, serialized "t" (changeValueForField —
-    // change.ts; AR Boolean cast + Type::Text serialize)
+
     expect(await changesFor(f, (actions[0] as { id: number }).id)).toEqual([
       { field: 3, value: "t" },
     ]);
@@ -55,7 +52,6 @@ describe("deleteCard — trash flip", () => {
     expect(acts).toHaveLength(1);
     expect(acts[0]).toMatchObject({ card_id: f.joeCard.id, actor_id: JOE.id });
 
-    // fetch now misses it; look_in_trash finds it (retrieve adds trash = 0)
     await expect(f.engine.fetchByName("Pudding")).resolves.toBeUndefined();
     await expect(f.engine.fetchByName("Pudding", { lookInTrash: true })).resolves.toMatchObject({
       trash: true,
@@ -76,7 +72,7 @@ describe("deleteCard — trash flip", () => {
     const engine = actionEngine(f.storage);
     await expect(engine.deleteCard({ cardId: 2 })).rejects.toMatchObject({
       code: "protected-card",
-    }); // RichText carries codename "basic"
+    });
     expect(await f.storage.count("card_actions")).toBe(0);
   });
 
@@ -96,13 +92,12 @@ describe("deleteCard — child cascade (delete_children, trash.rb:52-59)", () =>
     const f = await fresh();
     const banana = await seedCard(f.storage, { name: "banana" });
     const junction = await seedCard(f.storage, { leftId: f.joeCard.id, rightId: banana.id });
-    const nested = await seedCard(f.storage, { leftId: junction.id, rightId: 8 }); // (Pudding+banana)+*default
+    const nested = await seedCard(f.storage, { leftId: junction.id, rightId: 8 });
     const engine = actionEngine(f.storage);
     const result = await engine.deleteCard({ cardId: f.joeCard.id });
 
     expect(result?.subactions.map((s) => s.cardId).sort()).toEqual([junction.id, nested.id].sort());
-    // the part "banana" is NOT a child of Pudding — only junctions are
-    // (descendants.rb:26-31: left_id/right_id edges); it survives
+
     await expect(
       f.storage.selectOne<Row>("SELECT trash FROM cards WHERE id = ?", [banana.id]),
     ).resolves.toMatchObject({ trash: 0 });
@@ -110,8 +105,7 @@ describe("deleteCard — child cascade (delete_children, trash.rb:52-59)", () =>
     const actions = await f.storage.selectAll<Row>("SELECT * FROM card_actions ORDER BY id");
     expect(actions).toHaveLength(3);
     expect(actions[0]).toMatchObject({ card_id: f.joeCard.id, action_type: 2 });
-    // every child's super_action_id points at its DIRECT parent's action
-    // (super_action = @supercard.current_action — events.rb:85-92)
+
     expect(actions[1]).toMatchObject({
       card_id: junction.id,
       action_type: 2,
@@ -122,30 +116,28 @@ describe("deleteCard — child cascade (delete_children, trash.rb:52-59)", () =>
       action_type: 2,
       super_action_id: (actions[1] as { id: number }).id,
     });
-    // one act for the whole cascade
+
     expect(await f.storage.count("card_acts")).toBe(1);
   });
 
   it("deletes each diamond child exactly once (visited set)", async () => {
     const f = await fresh();
     const banana = await seedCard(f.storage, { name: "banana" });
-    await seedCard(f.storage, { leftId: f.joeCard.id, rightId: banana.id }); // Pudding+banana
-    await seedCard(f.storage, { leftId: banana.id, rightId: f.joeCard.id }); // banana+Pudding
+    await seedCard(f.storage, { leftId: f.joeCard.id, rightId: banana.id });
+    await seedCard(f.storage, { leftId: banana.id, rightId: f.joeCard.id });
     const engine = actionEngine(f.storage);
     const result = await engine.deleteCard({ cardId: f.joeCard.id });
-    expect(result?.subactions).toHaveLength(2); // not 3, not duplicated
+    expect(result?.subactions).toHaveLength(2);
     expect(await f.storage.count("card_actions")).toBe(3);
   });
 
   it("subcard deletes skip validate_delete down the tree (validate: false)", async () => {
     const f = await fresh();
-    // a codenamed card as the RIGHT side of a junction with Pudding
-    await seedCard(f.storage, { leftId: f.joeCard.id, rightId: 2 }); // Pudding+RichText
+
+    await seedCard(f.storage, { leftId: f.joeCard.id, rightId: 2 });
     const engine = actionEngine(f.storage);
     const result = await engine.deleteCard({ cardId: f.joeCard.id });
-    // RichText itself survives (it is a PART), but the junction is deleted
-    // without its own codename check — Ruby: director/store.rb:70-73
-    // (`@card.save! validate: false, as_subcard: true`)
+
     expect(result?.subactions).toHaveLength(1);
     const junction = await f.storage.selectOne<Row>(
       "SELECT trash FROM cards WHERE left_id = ? AND right_id = ?",

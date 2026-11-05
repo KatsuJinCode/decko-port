@@ -1,15 +1,4 @@
-// import.test.ts — the dump-to-SQLite importer against SYNTHETIC fixtures.
-//
-// Covers the import contract from the M4 deliverable:
-//   - id preservation (same ids as source)
-//   - trash handling (trash=1 rows import as-is)
-//   - junctions as-is (left_id/right_id land untouched; the fetch layer's
-//     Lexicon composes names from them at read time)
-//   - name/key column rules per src/card/fetch (columns copied as-is; the
-//     ONLY repair: a simple card missing its key column gets
-//     deriveKey(name) — supplied here by the REAL DeckoName algebra)
-//   - unknown-table skip + reporting, checksums, fresh-target guard,
-//     per-row error isolation.
+
 
 import { describe, it, expect, afterAll } from "vitest";
 import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
@@ -42,12 +31,12 @@ function makeDir(): string {
   return dir;
 }
 afterAll(() => {
-  // best-effort cleanup; Windows may still hold a handle briefly
+
   for (const dir of dirs) {
     try {
       rmSync(dir, { recursive: true, force: true });
     } catch {
-      // leftover %TEMP% dirs are acceptable
+
     }
   }
 });
@@ -114,7 +103,6 @@ describe("importDump", () => {
     expect(stats.skippedTables["some_site_custom_table"]).toBe(2);
     expect(stats.errors).toEqual([]);
 
-    // id preservation + trash as-is + junctions as-is
     const rows = await driver.query<CardsRowLike>(
       "SELECT id, name, key, left_id, right_id, trash FROM cards ORDER BY id",
       [],
@@ -125,9 +113,8 @@ describe("importDump", () => {
     const junction = rows.rows.find((r) => r.id === 4);
     expect(junction?.left_id).toBe(1);
     expect(junction?.right_id).toBe(5);
-    // post-2020 convention: compound rows carry NULL name/key columns and
-    // the importer must not invent values for them
-    expect(junction?.name).toBe("Compound Parent+child"); // came from the dump
+
+    expect(junction?.name).toBe("Compound Parent+child");
     expect(junction?.key).toBe(null);
 
     const history = await driver.query<{ n: number }>(
@@ -148,9 +135,9 @@ describe("importDump", () => {
       ddlPath: DDL_PATH,
       deriveKey: (name: string) => DeckoName.parse(name).key,
     });
-    // card 6 "No Key Simple" (simple: left_id NULL, key NULL) -> repaired
+
     expect(stats.keyRepair.derived).toBe(1);
-    // card 4 (compound with NULL key) must NOT be touched
+
     const row = await driver.query<{ key: string | null }>(
       "SELECT key FROM cards WHERE id = 6",
       [],
@@ -188,7 +175,7 @@ describe("importDump", () => {
 
   it("isolates per-row failures and reports them content-free", async () => {
     const dir = makeDir();
-    // a duplicate id violates the primary key on the second row
+
     const dump = dumpFile([
       cardsInsert([
         { id: 1, name: "Dupe A" },
@@ -207,8 +194,8 @@ describe("importDump", () => {
     expect(stats.errors.length).toBe(1);
     expect(stats.errors[0]?.table).toBe("cards");
     expect(stats.errors[0]?.rowId).toBe(1);
-    expect(stats.counts["cards"]).toBe(3); // source-side count still counts
-    // the surviving rows are the non-duplicate ones
+    expect(stats.counts["cards"]).toBe(3);
+
     const rows = await driver.query<{ id: number }>(
       "SELECT id FROM cards ORDER BY id",
       [],
@@ -249,9 +236,9 @@ describe("importDump", () => {
     const stats = await importDump({ dumpPath, driver, ddlPath: DDL_PATH });
     const report = JSON.stringify(stats.checksums);
     expect(report.length).toBeGreaterThan(2);
-    // (the verify stream checks these against the target tables directly)
+
     driver.close();
-    // content-free checksum JSON guard: no card content strings
+
     expect(report).not.toContain("the alpha body");
   }, 30000);
 });

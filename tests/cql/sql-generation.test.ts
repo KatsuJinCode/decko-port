@@ -1,14 +1,4 @@
-/**
- * SQL generation tests: QueryNode AST -> parameterized SQLite SQL.
- *
- * Every expected SQL string was captured from the REAL card-1.110.0 code by
- * loading lib/card/query/** standalone with a stubbed Card/ActiveRecord
- * environment and running Card::Query.new(statement).sql ("live oracle").
- * The port parameterizes values (the oracle inlines quoted literals) and
- * normalizes whitespace (the oracle emits comment-slot double spaces and
- * "LIMIT  10 " quirks) — the oracle output is quoted per case with those
- * two mechanical differences applied.
- */
+
 
 import { describe, expect, it } from "vitest";
 import { parseCql } from "../../src/cql/parser.js";
@@ -40,9 +30,7 @@ describe("single-table queries", () => {
   });
 
   it("hash-valued type ties with conditions in WHERE and trash in ON [oracle]", () => {
-    // oracle:
-    // SELECT DISTINCT c0.* FROM cards c0
-    //  JOIN cards c1 ON c0.type_id = c1.id AND c1.trash is false  WHERE c1.codename = 'type' AND c0.trash is false
+
     expect(sql({ type: { codename: "type" } })).toEqual({
       sql:
         "SELECT DISTINCT c0.* FROM cards c0 JOIN cards c1 ON c0.type_id = c1.id AND c1.trash is false WHERE c1.codename = ? AND c0.trash is false",
@@ -177,10 +165,7 @@ describe("sorting", () => {
   });
 
   it("sort hash builds the LEFT JOIN and orders by the joined field [oracle]", () => {
-    // oracle:
-    // SELECT DISTINCT c0.*, c1.db_content FROM cards c0
-    //  LEFT JOIN (cards c1
-    //  JOIN cards c2 ON c1.right_id = c2.id AND c2.trash is false ) ON c0.id = c1.left_id AND c1.trash is false WHERE c0.trash is false ORDER BY c1.db_content asc
+
     expect(sql({ sort: { right: {} } }).sql).toBe(
       "SELECT DISTINCT c0.*, c1.db_content FROM cards c0 " +
         "LEFT JOIN (cards c1 JOIN cards c2 ON c1.right_id = c2.id AND c2.trash is false) " +
@@ -206,10 +191,7 @@ describe("plus relational", () => {
   });
 
   it("right_plus with part + junction clause [oracle]", () => {
-    // oracle: right_plus: [{codename: "point"}, {type: "Number"}] ->
-    //   JOIN cards c1 ON c0.id = c1.left_id AND c1.trash is false
-    //   JOIN cards c2 ON c1.right_id = c2.id AND c2.trash is false
-    //   WHERE (c1.type_id = '-999' AND c2.codename = 'point') AND c0.trash is false
+
     expect(sql({ right_plus: [{ codename: "point" }, { type: "Number" }] })).toEqual({
       sql:
         "SELECT DISTINCT c0.* FROM cards c0 " +
@@ -229,9 +211,7 @@ describe("plus relational", () => {
 
 describe("negation", () => {
   it("not with a hash value [oracle]", () => {
-    // oracle:
-    // SELECT DISTINCT c0.* FROM cards c0
-    //  LEFT JOIN cards c1 ON c0.id = c1.id AND c1.type_id = '-999' AND c1.trash is false  WHERE c1.id is null AND c0.trash is false
+
     expect(sql({ not: { type: "User" } })).toEqual({
       sql:
         "SELECT DISTINCT c0.* FROM cards c0 " +
@@ -252,7 +232,7 @@ describe("negation", () => {
   });
 
   it("nested not inside an or group [oracle]", () => {
-    // oracle: {not: {type: "User"}, or: [{created_by: "A"}, {not: {created_by: "B"}}]}
+
     expect(sql({ not: { type: "User" }, or: [{ created_by: "A" }, { not: { created_by: "B" } }] }).sql).toBe(
       "SELECT DISTINCT c0.* FROM cards c0 " +
         "LEFT JOIN cards c1 ON c0.id = c1.id AND c1.type_id = ? AND c1.trash is false " +
@@ -282,10 +262,7 @@ describe("conjunction groups", () => {
   });
 
   it("joins inside an or group go LEFT and nest in parens [oracle]", () => {
-    // oracle: any: [{edited_by: "Joe"}] ->
-    //  LEFT JOIN (card_actions cn1
-    //  JOIN card_acts cx2 ON cn1.card_act_id = cx2.id
-    //  JOIN cards c3 ON cx2.actor_id = c3.id AND c3.trash is false ) ON c0.id = cn1.card_id WHERE c3.id = '-2' AND c0.trash is false
+
     expect(sql({ any: [{ edited_by: "Joe" }] })).toEqual({
       sql:
         "SELECT DISTINCT c0.* FROM cards c0 " +
@@ -299,11 +276,7 @@ describe("conjunction groups", () => {
 
 describe("editor / act chains", () => {
   it("edited_by [oracle]", () => {
-    // oracle:
-    // SELECT DISTINCT c0.* FROM cards c0
-    //  JOIN card_actions cn1 ON c0.id = cn1.card_id
-    //  JOIN card_acts cx2 ON cn1.card_act_id = cx2.id
-    //  JOIN cards c3 ON cx2.actor_id = c3.id AND c3.trash is false  WHERE c3.id = '-2' AND c0.trash is false
+
     expect(sql({ edited_by: "Joe" })).toEqual({
       sql:
         "SELECT DISTINCT c0.* FROM cards c0 " +
@@ -450,8 +423,7 @@ describe("statement shorthand", () => {
   });
 
   it("context flows through junction ties into name conditions", () => {
-    // right_plus: {name: "_left"} in context "A+B": the part resolves to "A",
-    // ties c2 via c1.right_id, and c2's name condition matches the key form
+
     const result = generateSql(parseCql({ right_plus: { name: "_left" } }, { context: "A+B" }));
     expect(result.sql).toContain("c2.key = ?");
     expect(result.params).toContain("a");
@@ -470,19 +442,17 @@ describe("oracle-pinned edge cases", () => {
   });
 
   it("nil name renders IS NULL (divergence: Ruby 1.110 emits broken 'c0.key is ()')", () => {
-    // oracle: {name: nil} -> WHERE c0.key is () AND c0.trash is false
-    // (Array.wrap(nil) collapses to [] and sqlize emits "()" — invalid SQL).
-    // The port renders the sane NULL comparison; flagged in the notes.
+
     expect(sql({ name: null as unknown as string }).sql).toContain("c0.key is NULL");
   });
 
   it("conj interpreted BEFORE a tie key flips the join to LEFT [oracle]", () => {
-    // oracle: {conj: "or", type: {codename: "type"}} -> LEFT JOIN cards c1 ...
+
     expect(sql({ conj: "or", type: { codename: "type" } }).sql).toContain("LEFT JOIN cards c1");
   });
 
   it("conj interpreted AFTER a tie key keeps the inner join [oracle]", () => {
-    // oracle: {type: {codename: "type"}, conj: "or"} -> JOIN cards c1 ...
+
     expect(sql({ type: { codename: "type" }, conj: "or" }).sql).toMatch(/JOIN cards c1(?!.*LEFT)/);
     expect(sql({ type: { codename: "type" }, conj: "or" }).sql).not.toContain("LEFT JOIN");
   });

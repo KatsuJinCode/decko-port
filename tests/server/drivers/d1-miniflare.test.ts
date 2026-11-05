@@ -1,15 +1,4 @@
-// CloudflareD1Adapter integration tests under miniflare's local D1
-// emulation (workerd runs for real; no Cloudflare account involved).
-//
-// Miniflare 5 alpha note (2026-09-19, miniflare@5.20260918.0-alpha): the
-// classic single-worker options shape ({modules, script, d1Databases}) is
-// REJECTED by the v5 zod schema ("workers: undefined — expected array"),
-// and the `workers: [{...}]` array shape is also rejected ("config:
-// undefined — expected object") because v5 moved to wrangler-config-style
-// worker options. The package exports convertV4MiniflareOptions(), which
-// converts classic v4 options into the v5 shape; feeding that converter's
-// output to the constructor boots workerd cleanly on Windows, including D1.
-// Documented in docs/driver-notes.md.
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Miniflare, convertV4MiniflareOptions } from "miniflare";
@@ -41,7 +30,7 @@ describe("CloudflareD1Adapter (miniflare local D1)", () => {
   }));
 
   it("rejects bigint bind values the way real D1 does (documented limitation)", async () => {
-    // Verified against workerd locally: D1_TYPE_ERROR for bigint bindings.
+
     await expect(driver!.query("SELECT ?", [10n])).rejects.toThrow();
   });
 

@@ -1,17 +1,8 @@
-# set-pattern-oracle-probe.rb - read-only probe of the set-pattern registry
-# for the decko-ts set-patterns port (wave 2 stream 9). No writes, no saves:
-# fetches and in-memory Card.new only. Its output is committed verbatim as
-# set-pattern-oracle-capture.json next to this file.
-#
-# Run (from tools/oracle/decko-oracle-app):
-#   RAILS_ENV=development bundle exec decko runner C:/localProjects/decko-ts/tests/card/set-patterns/set-pattern-oracle-probe.rb
 
 require "json"
 
 OUT = {}
 
-# 1. The ordered concrete pattern table (registration-order claim:
-#    insert-at-0 makes lookup order the REVERSE of file load order 01..09).
 OUT["concrete"] = Card::Set::Pattern.concrete.map do |k|
   {
     "pattern_code"        => k.pattern_code.to_s,
@@ -30,11 +21,9 @@ OUT["codes"] = Card::Set::Pattern.codes.to_a.map(&:to_s)
 OUT["grouped_codes"] = Card::Set::Pattern.grouped_codes.map { |g| g.map(&:to_s) }
 OUT["grouped_codes_no_all"] = Card::Set::Pattern.grouped_codes(with_all: false).map { |g| g.map(&:to_s) }
 
-# 2. Pattern card ids via codename, for cross-check with ids
 OUT["pattern_card_ids_by_codename"] = %w[self type_plus_right right rule rstar star type all_plus all]
   .map { |c| [c, Card::Codename[c]&.to_s] }.to_h
 
-# 3. Per-card pattern instances: set names + rule lookup keys
 card_name = lambda do |name|
   c = Card.fetch(name)
   next { "name" => name, "missing" => true } unless c
@@ -55,7 +44,6 @@ OUT["cards"] = [
   "*all+*read"
 ].map { |n| card_name.call(n) }
 
-# 4. New-card behavior (patterns skips concrete_patterns[0] when new_card?)
 new_simple = Card.new(name: "Zz Probe New Simple")
 new_field  = Card.new(name: "Zz Probe New+field")
 OUT["new_cards"] = {
@@ -65,8 +53,6 @@ OUT["new_cards"] = {
                 "rule_lookup_keys" => new_field.rule_lookup_keys }
 }
 
-# 5. Rule-name algebra: rule names a card+setting consults, and the rule
-#    card the cache lookup actually returns.
 oj = Card.fetch("Oracle Junction")
 OUT["rule_name_check"] = {
   "candidate_rule_names" => oj.patterns.map { |p| "#{p}+*read" },
@@ -76,7 +62,6 @@ OUT["rule_name_check"] = {
                                              .first(12).to_h
 }
 
-# 6. Set-name reverse parsing (Set card -> pattern + anchor)
 set_probe = lambda do |name|
   s = Card.fetch(name)
   next { "set_name" => name, "missing" => true } unless s
@@ -104,7 +89,6 @@ OUT["set_cards"] = [
   "Oracle Junction+*self"
 ].map { |n| set_probe.call(n) }
 
-# 7. Labels (class-level, no card needed)
 OUT["labels"] = Card::Set::Pattern.concrete.map do |k|
   {
     "code" => k.pattern_code.to_s,
@@ -114,13 +98,11 @@ OUT["labels"] = Card::Set::Pattern.concrete.map do |k|
   }
 end
 
-# 8. Pattern find + module_key behaviors
 OUT["find"] = {
   "type"   => Card::Set::Pattern.find(:type)&.to_s,
   "bogus"  => Card::Set::Pattern.find(:nope).inspect
 }
 
-# 9. rule_class_name derivation (read_rule_class column source)
 type_read_card = (Card["RichText+*type+*read"] rescue nil)
 OUT["rule_class_name"] = {
   "all_read"   => Card.fetch("*all+*read").rule_class_name,

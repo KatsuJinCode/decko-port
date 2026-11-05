@@ -1,13 +1,4 @@
-// Registration-mechanics tests: view registration into the live HTML_VIEWS
-// record with Ruby's override semantics, idempotence/unload, the view-config
-// table (the _view_<x>__<setting> port), and the Card::Setting registry port
-// reconstructed against the oracle capture.
-//
-// Oracle anchors (fixtures/captured/help-mod-loader.json):
-// - "registered_views": which _view_* / _view_*__* methods the gem defined
-// - "setting_groups.editing": the group array WITH its nil holes - the exact
-//   output of setting.rb#set_position (101-110) across the bundle
-// - "setting_preferences": ["follow"]
+
 
 import { describe, it, expect, afterEach } from "vitest";
 import { readFileSync } from "node:fs";
@@ -36,11 +27,10 @@ const FIXTURE = JSON.parse(
 
 const sentinel: ViewFn = () => "SENTINEL";
 
-/** The loader over the LIVE record (one per test; afterEach undoes). */
 let liveLoader: ModLoader | undefined;
 
 afterEach(() => {
-  // keep the live record clean for the next test regardless of assertions
+
   liveLoader?.reset();
   liveLoader = undefined;
 });
@@ -59,7 +49,7 @@ function modWithView(name: string, view: string, fn: ViewFn): ModSource {
 describe("view registration into the live HTML_VIEWS record", () => {
   it("registers mod views where Ruby's define_method would (and unload restores)", () => {
     const before = "help" in HTML_VIEWS;
-    expect(before).toBe(false); // baseline: the port does not ship help views
+    expect(before).toBe(false);
 
     const loader = new ModLoader([{ manifest: cardModHelp }], HTML_VIEWS);
     liveLoader = loader;
@@ -77,16 +67,16 @@ describe("view registration into the live HTML_VIEWS record", () => {
   it("later mods override earlier views (module reopening) and reset restores exactly", () => {
     const customA: ViewFn = () => "A";
     const customB: ViewFn = () => "B";
-    HTML_VIEWS["titled"] = sentinel; // simulate an existing core view
+    HTML_VIEWS["titled"] = sentinel;
     const loader = new ModLoader(
       [modWithView("first", "titled", customA), modWithView("second", "titled", customB)],
       HTML_VIEWS,
     );
     liveLoader = loader;
     loader.load();
-    expect(HTML_VIEWS["titled"]).toBe(customB); // later mod wins
+    expect(HTML_VIEWS["titled"]).toBe(customB);
     loader.reset();
-    expect(HTML_VIEWS["titled"]).toBe(sentinel); // pre-load state restored
+    expect(HTML_VIEWS["titled"]).toBe(sentinel);
     delete HTML_VIEWS["titled"];
   });
 
@@ -98,9 +88,9 @@ describe("view registration into the live HTML_VIEWS record", () => {
     expect(second.registeredSetModules).toEqual(first.registeredSetModules);
     expect(second.registeredViews).toEqual(first.registeredViews);
     expect(second.registeredSettings).toEqual(first.registeredSettings);
-    // "all" is the base pattern: the basket dedupes the All::Help module
+
     expect(loader.setModules().base.filter((m) => m.shortname === "All::Help")).toHaveLength(1);
-    // the settings registry does not double-insert (load starts boot-clean)
+
     expect(loader.settingsRegistry().groups.get("editing") ?? []).toHaveLength(firstEditing);
     expect(loader.settingsRegistry().findByCodename("help")).toBeDefined();
   });
@@ -119,9 +109,6 @@ describe("the view-config table (_view_<x>__<setting>, view_opts.rb:59-64)", () 
     const loader = new ModLoader([{ manifest: cardModHelp }], { ...HTML_VIEWS });
     loader.load();
 
-    // oracle: unknown_config_help true, wrap_config_help true,
-    //         cache_config_help true, unknown_config_help_text true,
-    //         unknown_config_lead FALSE
     expect(FIXTURE.registered_views["unknown_config_help"]).toBe(true);
     expect(loader.viewConfigFor("help")).toEqual({
       unknown: true,
@@ -162,14 +149,12 @@ describe("the view-config table (_view_<x>__<setting>, view_opts.rb:59-64)", () 
 });
 
 describe("the Card::Setting registry port (setting.rb)", () => {
-  /** The editing-group settings the OTHER bundle mods register, with the
-   *  real opts from the gems (cited per entry). File-load order inside each
-   *  mod is byte order: content_option_view < content_options. */
+
   const listMod: DeckoModManifest = {
     name: "list",
     setModules: [
       {
-        // card-mod-list-0.20.0 set/self/content_option_view.rb
+
         setPath: "self/content_option_view",
         settingOpts: {
           group: "editing",
@@ -180,7 +165,7 @@ describe("the Card::Setting registry port (setting.rb)", () => {
         },
       },
       {
-        // card-mod-list-0.20.0 set/self/content_options.rb
+
         setPath: "self/content_options",
         settingOpts: {
           group: "editing",
@@ -196,7 +181,7 @@ describe("the Card::Setting registry port (setting.rb)", () => {
     name: "edit",
     setModules: [
       {
-        // card-mod-edit-0.20.0 set/self/input_type.rb
+
         setPath: "self/input_type",
         settingOpts: {
           group: "editing",
@@ -209,7 +194,7 @@ describe("the Card::Setting registry port (setting.rb)", () => {
   };
 
   it("reconstructs the oracle editing group array (nil holes included)", () => {
-    // Bundle order: list (index 4), help (7), edit (10) - from the capture.
+
     const loader = new ModLoader(
       [{ manifest: listMod }, { manifest: cardModHelp }, { manifest: editMod }],
       { ...HTML_VIEWS },
@@ -219,9 +204,7 @@ describe("the Card::Setting registry port (setting.rb)", () => {
     expect(editing.map((entry) => (entry === null ? null : entry.codename))).toEqual(
       FIXTURE.setting_groups["editing"],
     );
-    // [help, null, input_type, guide, null, content_options, content_option_view]
-    // help@1 and guide@3 land before edit's input_type@3 INSERTS before guide
-    // (set_position: occupied slot -> insert; free slot -> assign with holes)
+
     expect(report.registeredSettings).toEqual([
       "content_option_view",
       "content_options",

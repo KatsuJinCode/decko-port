@@ -1,10 +1,4 @@
-/**
- * Parser (interpretation) tests: CQL statement -> QueryNode AST.
- *
- * Every case cites the card-1.110.0 method whose behavior it pins. Cases
- * marked [oracle] were verified against the real Ruby code loaded standalone;
- * others are source-derived (cite given per case).
- */
+
 
 import { describe, expect, it } from "vitest";
 import { parseCql } from "../../src/cql/parser.js";
@@ -16,7 +10,7 @@ describe("clause normalization (Normalization#clause_to_hash)", () => {
   });
 
   it("string shorthand resolves through the card resolver, else -2 [oracle]", () => {
-    // oracle: not: "Foo" -> LEFT JOIN ... c1.id = '-2'
+
     const unresolved = parseCql("Foo");
     expect(unresolved.conditions[0]).toMatchObject({ kind: "value", op: "=", values: [-2] });
     const resolved = parseCql("Foo", { resolveCardId: () => 42 });
@@ -32,7 +26,7 @@ describe("clause normalization (Normalization#clause_to_hash)", () => {
     const ast = parseCql({ name: "$who", context: "A+B", vars: { who: "Joe Admin" } });
     expect(ast.context).toBe("A+B");
     expect(ast.conditions[0]).toMatchObject({ kind: "value", values: ["joe_admin"] });
-    // vars/context never become conditions
+
     expect(ast.conditions).toHaveLength(1);
   });
 
@@ -59,7 +53,7 @@ describe("clause normalization (Normalization#clause_to_hash)", () => {
     expect(parseCql({ name: "_1" }, { context: "A+B" }).conditions[0]).toMatchObject({
       values: ["a"],
     });
-    // no context -> empty (oracle: name: "_left" -> c0.key = '')
+
     expect(parseCql({ name: "_left" }).conditions[0]).toMatchObject({ values: [""] });
   });
 
@@ -75,7 +69,7 @@ describe("table aliases (QueryHelper#table_alias)", () => {
   });
 
   it("subqueries take sequential aliases from a shared counter [oracle]", () => {
-    // oracle: editor_of: "Joe" -> cx1 / cn2 / c3 (nested, one shared seq)
+
     const ast = parseCql({ editor_of: "Joe" });
     expect(ast.subqueries.map((s) => s.tableAlias)).toEqual(["cx1"]);
     expect(ast.subqueries[0].subqueries.map((s) => s.tableAlias)).toEqual(["cn2"]);
@@ -83,7 +77,7 @@ describe("table aliases (QueryHelper#table_alias)", () => {
   });
 
   it("direct subqueries share the superquery alias [oracle]", () => {
-    // oracle: any: [{type: "User"}] -> conditions on c0
+
     const ast = parseCql({ any: [{ type: "User" }] });
     expect(ast.subqueries[0].fasten).toBe("direct");
     expect(ast.subqueries[0].tableAlias).toBe("c0");
@@ -133,30 +127,28 @@ describe("conjunctions (CardQuery::Conjunctions)", () => {
   });
 
   it("all/and build AND groups; hash values expand per key [oracle]", () => {
-    // oracle: and: {right_plus: "B"} -> (c0.type_id = '-999' AND c1.right_id = '-999') for
-    // {type: "A", and: {right_plus: "B"}}
+
     const ast = parseCql({ all: { type: "A", created_by: "Joe" } });
     expect(ast.subqueries[0].conj).toBe("and");
     expect(ast.subqueries[0].conditions).toHaveLength(2);
   });
 
   it("multi-value relational lists shift a leading conjunction into a group [Interpretation#relate_multi_value] [oracle]", () => {
-    // oracle: type: ["or", "A", "B"] -> (c0.type_id = '-999' OR c0.type_id = '-999')
-    // via a :direct subcondition group sharing the root alias
+
     const ast = parseCql({ type: ["or", "A", "B"] });
     expect(ast.subqueries[0].conj).toBe("or");
     expect(ast.subqueries[0].conditions).toHaveLength(2);
   });
 
   it("multi-value lists without a conjunction AND flat [Interpretation#relate_multi_value] [oracle]", () => {
-    // same conjunction as the container -> flat, no subcondition
+
     const ast = parseCql({ type: ["A", "B"] });
     expect(ast.conditions).toHaveLength(2);
     expect(ast.subqueries).toHaveLength(0);
   });
 
   it("bare in: key is intercepted as a content operator [Interpretation#interpret_as_content?] [oracle]", () => {
-    // oracle: in: [{type: "A"}] -> BadQuery Invalid property value
+
     expect(() => parseCql({ in: [{ type: "A" }] })).toThrow(/Invalid property value/);
   });
 
@@ -180,7 +172,7 @@ describe("restrict-able relations (Tie#restrict, Tie#id_from_val)", () => {
   });
 
   it("hash values tie a card subquery on the id field [oracle]", () => {
-    // oracle: type: {codename: "type"} -> JOIN cards c1 ON c0.type_id = c1.id
+
     const ast = parseCql({ type: { codename: "type" } });
     expect(ast.joins).toHaveLength(1);
     expect(ast.joins[0]).toMatchObject({
@@ -202,8 +194,7 @@ describe("restrict-able relations (Tie#restrict, Tie#id_from_val)", () => {
 
 describe("plus relational (RelationalAttributes#junction)", () => {
   it("right_plus ties a junction subquery on left_id [oracle]", () => {
-    // oracle: right_plus: [{codename: "point"}, {type: "Number"}] ->
-    //   JOIN cards c1 ON c0.id = c1.left_id / (c1.type_id = '-999' AND c2.codename = 'point')
+
     const ast = parseCql({ right_plus: [{ codename: "point" }, { type: "Number" }] });
     expect(ast.joins[0]).toMatchObject({ fromField: "id", toField: "left_id", toAlias: "c1" });
     expect(ast.subqueries[0].conditions[0]).toMatchObject({ field: "type_id" });
@@ -220,7 +211,7 @@ describe("plus relational (RelationalAttributes#junction)", () => {
   });
 
   it("the junction part wins when the junction clause reuses the side key [oracle]", () => {
-    // oracle: right_plus: ["A", {right: "B"}] -> only c1.right_id = '-999' ("A" overwrote "B")
+
     const ast = parseCql({ right_plus: ["A", { right: "B" }] });
     const sub = ast.subqueries[0];
     expect(sub.conditions).toHaveLength(1);
@@ -230,7 +221,7 @@ describe("plus relational (RelationalAttributes#junction)", () => {
 
 describe("editor/act chains (RelationalAttributes + ActQuery/ActionQuery)", () => {
   it("edited_by chains action -> act -> card [oracle]", () => {
-    // oracle: edited_by: "Joe" -> cn1 / cx2 / c3 (nested subqueries)
+
     const ast = parseCql({ edited_by: "Joe" });
     expect(ast.subqueries.map((s) => [s.kind, s.tableAlias])).toEqual([["action", "cn1"]]);
     expect(ast.subqueries[0].subqueries.map((s) => [s.kind, s.tableAlias])).toEqual([
@@ -274,8 +265,7 @@ describe("editor/act chains (RelationalAttributes + ActQuery/ActionQuery)", () =
 
 describe("references (ReferenceAttributes#define_reference_method, ReferenceQuery)", () => {
   it("refer_to ties card_references on referer_id with L+I reftypes [oracle]", () => {
-    // oracle: refer_to: "A" -> JOIN card_references cr1 ON c0.id = cr1.referer_id /
-    //   (cr1.ref_type IN ('L','I') AND cr1.referee_id = -999)
+
     const ast = parseCql({ refer_to: "A" });
     expect(ast.joins[0]).toMatchObject({
       toTable: "card_references",
@@ -305,12 +295,12 @@ describe("references (ReferenceAttributes#define_reference_method, ReferenceQuer
   it("referred_to_by flips the tie to referee_id [oracle]", () => {
     const ast = parseCql({ referred_to_by: { right: "A" } });
     expect(ast.joins[0].toField).toBe("referee_id");
-    // the card subquery hangs off referer_id and interprets right: "A"
+
     expect(ast.subqueries[0].subqueries[0].conditions[0]).toMatchObject({ field: "right_id" });
   });
 
   it("id lists OR-optimized into a single reference join [Interpretation#as_list_of_ids?] [oracle]", () => {
-    // oracle: refer_to: ["or", 5, 6] -> one cr1 join, cr1.referee_id in (5, 6)
+
     const ast = parseCql({ refer_to: ["or", 5, 6] });
     expect(ast.joins).toHaveLength(1);
     expect(ast.subqueries[0].conditions[1]).toEqual({
@@ -330,7 +320,7 @@ describe("references (ReferenceAttributes#define_reference_method, ReferenceQuer
   it("member_of expands to referred_to_by with the members codename [ReferenceAttributes#member_of] [oracle]", () => {
     const ast = parseCql({ member_of: "A" });
     expect(ast.joins[0].toTable).toBe("card_references");
-    // right: {codename: "members"} ties a third card query on c2.right_id
+
     expect(ast.subqueries[0].subqueries[0].subqueries[0].conditions[0]).toMatchObject({
       field: "codename",
       values: ["members"],
@@ -346,8 +336,7 @@ describe("references (ReferenceAttributes#define_reference_method, ReferenceQuer
 
 describe("negation (Conjunctions#not + Tie#negate_join)", () => {
   it("not ties a negated card subquery and adds the is-null condition [oracle]", () => {
-    // oracle: not: {type: "User"} -> LEFT JOIN cards c1 ON c0.id = c1.id AND c1.type_id = '-999'
-    //   AND c1.trash is false WHERE c1.id is null
+
     const ast = parseCql({ not: { type: "User" } });
     expect(ast.subqueries[0].negate).toBe(true);
     expect(ast.subqueries[0].conditionsOnJoin).toBe(true);
@@ -363,7 +352,7 @@ describe("negation (Conjunctions#not + Tie#negate_join)", () => {
 
 describe("match attributes (CardQuery::MatchAttributes)", () => {
   it("top-level match builds a name OR content group [oracle]", () => {
-    // oracle: match: "joe" -> (c0.name REGEXP 'joe' OR c0.db_content REGEXP 'joe')
+
     const ast = parseCql({ match: "joe" });
     expect(ast.conditions[0].kind).toBe("group");
     if (ast.conditions[0].kind === "group") {
@@ -393,8 +382,7 @@ describe("match attributes (CardQuery::MatchAttributes)", () => {
 
   it("compound complete splits into left + right parts [MatchAttributes#complete_compound]", () => {
     const ast = parseCql({ complete: "A+B" });
-    // left: "A" restricts left_id directly (unresolved -> -999);
-    // right: {complete: "B"} ties a card subquery with the LIKE condition
+
     expect(ast.conditions[0]).toMatchObject({ kind: "value", field: "left_id", values: [-999] });
     expect(ast.subqueries).toHaveLength(1);
     expect(ast.subqueries[0].conditions[0]).toEqual({ kind: "like", field: "key", value: "b" });
@@ -430,8 +418,7 @@ describe("custom and deprecated (CardQuery::Custom)", () => {
 
 describe("sorting (CardQuery::Sorting)", () => {
   it("sort hash with item join builds a LEFT JOIN and sort_by mod [oracle]", () => {
-    // oracle: sort: {right: {}} -> LEFT JOIN (cards c1 ...) ON c0.id = c1.left_id,
-    //   ORDER BY c1.db_content asc
+
     const ast = parseCql({ sort: { right: {} } });
     expect(ast.joins[0]).toMatchObject({
       side: "LEFT",

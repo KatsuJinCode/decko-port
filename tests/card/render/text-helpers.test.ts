@@ -1,8 +1,4 @@
-// Surface 3 — Rails text helpers.
-// Validates time_ago_in_words / distance_of_time_in_words / truncate
-// against the byte-exact thresholds in
-// actionview-7.2.3.2/lib/action_view/helpers/date_helper.rb and the
-// ONE_LINE_CHARACTER_LIMIT in card-mod-format-0.20.0/set/all/content.rb:1.
+
 
 import { beforeEach, describe, expect, it } from "vitest";
 import {
@@ -13,8 +9,6 @@ import {
 } from "../../../src/card/render/text-helpers.js";
 import { loadLocaleFromString, resetI18n, setDefaultLocale } from "../../../src/card/i18n/i18n.js";
 
-/** Byte-for-byte copy of actionview en.yml's datetime.distance_in_words
- *  block (the date_helper tests need the plural keys loaded). */
 const ACTIONVIEW_DIST_YML = `en:
   datetime:
     distance_in_words:
@@ -76,9 +70,7 @@ describe("truncate - String#truncate (active_support/core_ext/string/filters.rb:
   });
 
   it("truncates to length and appends '...' when longer", () => {
-    // active_support example: 'Once upon a time in a world far far away'
-    // truncated to 27 = "Once upon a time in a wo..." (the omission takes
-    // 3 chars; the head is 24 chars).
+
     const text = "Once upon a time in a world far far away";
     expect(truncate(text, 27)).toBe("Once upon a time in a wo...");
   });
@@ -89,28 +81,21 @@ describe("truncate - String#truncate (active_support/core_ext/string/filters.rb:
   });
 
   it("respects a custom omission", () => {
-    // Active Support edge case: when length - omission.length < 0, Ruby's
-    // String#[0, stop] with a negative stop returns "" (Ruby doesn't
-    // produce a negative-length slice). The omission IS the entire output.
-    // (filters.rb:82 + Ruby String#[0, stop] semantics - tested via
-    // `ruby -e 'puts "x"[0, -1].inspect'` -> "").
+
     expect(truncate("Once upon a time", 12, "... (continued)")).toBe(
       "... (continued)",
     );
   });
 
   it("returns just the omission when the omission is longer than length (Rails edge case)", () => {
-    // active_support example: truncate(4, omission: '... (continued)')
-    // -> "... (continued)" - stop = 4 - 13 = -9, self[0, -9] = "" in Ruby,
-    // so the output is the omission alone (filters.rb:64-69).
+
     expect(truncate("And they found...", 4, "... (continued)")).toBe(
       "... (continued)",
     );
   });
 
   it("ONE_LINE_CHARACTER_LIMIT (60) truncation - the card-mod-format one_line_content shape", () => {
-    // 80-char input: 60-char head + '...' (the captured oracle's
-    // one_line_content length contract).
+
     const input = "a".repeat(80);
     expect(truncate(input, ONE_LINE_CHARACTER_LIMIT))
       .toBe("a".repeat(ONE_LINE_CHARACTER_LIMIT - 3) + "...");
@@ -123,7 +108,7 @@ describe("truncate - String#truncate (active_support/core_ext/string/filters.rb:
 });
 
 describe("distanceOfTimeInWords - date_helper.rb:95-165", () => {
-  // Reference times - one anchor, varying differences.
+
   const now = new Date("2026-09-22T12:00:00Z");
   const at = (secs: number): Date => new Date(now.getTime() + secs * 1000);
 
@@ -132,7 +117,7 @@ describe("distanceOfTimeInWords - date_helper.rb:95-165", () => {
   });
 
   it("30 seconds - 1 min 29 secs without include_seconds: 'less than a minute'", () => {
-    // distance_in_minutes rounds 60s to 1; x_minutes(1) -> "1 minute".
+
     expect(distanceOfTimeInWords(at(-60), now)).toBe("1 minute");
   });
 
@@ -193,27 +178,23 @@ describe("distanceOfTimeInWords - date_helper.rb:95-165", () => {
 
   it("1+ years -> 'about N years' / 'over N years' / 'almost N years'", () => {
     const oneYear = 365 * 24 * 60 * 60;
-    // ~1 year (just under the 525600 threshold) -> 'about 1 year'
+
     expect(distanceOfTimeInWords(at(-oneYear), now)).toBe("about 1 year");
-    // 2 years -> 'about 2 years' (the remainder after leap-year offset
-    // falls in the < 1/4 year range).
+
     expect(distanceOfTimeInWords(at(-2 * oneYear), now)).toBe("about 2 years");
-    // 3 years * 365 days = 1095 days which is just under 3 calendar years
-    // (the leap-year subtraction pushes the remainder past 3/4 year, so
-    // Ruby returns 'almost 3 years' - date_helper.rb:158-161).
+
     expect(distanceOfTimeInWords(at(-3 * oneYear), now)).toBe("almost 3 years");
   });
 
   it("swaps from/to when from > to (symmetric, date_helper.rb:102)", () => {
-    // from is later than to - the function should produce the same string
-    // as the inverse call.
-    const past = at(-3 * 60 * 60); // 3 hours ago
+
+    const past = at(-3 * 60 * 60);
     const future = now;
     expect(distanceOfTimeInWords(future, past)).toBe(distanceOfTimeInWords(past, future));
   });
 
   it("accepts Unix epoch seconds as numbers", () => {
-    const fromEpoch = Math.floor((now.getTime() - 60 * 60 * 1000) / 1000); // 1 hour ago
+    const fromEpoch = Math.floor((now.getTime() - 60 * 60 * 1000) / 1000);
     expect(distanceOfTimeInWords(fromEpoch, now)).toBe("about 1 hour");
   });
 

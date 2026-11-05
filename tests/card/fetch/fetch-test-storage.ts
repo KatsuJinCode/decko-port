@@ -1,15 +1,4 @@
-// Test storage for the fetch/cache-layer tests: an in-memory better-sqlite3
-// database (via the REAL LocalSqliteDriver) loaded with db/schema.sqlite.sql,
-// plus plain-INSERT seed helpers. Lives INSIDE tests/card/fetch per the
-// stream boundaries; seeded cards are written DIRECTLY as rows because the
-// write path is another stream - this mirrors how the capture's oracle DB
-// was seeded upstream.
-//
-// Why the DDL goes through driver.query one statement at a time:
-// LocalSqliteDriver owns its connection and exposes no exec(), and
-// better-sqlite3's prepare() rejects multi-statement strings. The schema
-// file is machine-generated DDL (no ";" inside literals - verified by scan),
-// so a quote-aware comment-stripping splitter is sufficient.
+
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -19,8 +8,6 @@ import type { CardsRow } from "../../../src/server/schema.js";
 import { DeckoName } from "../../../src/card/name.js";
 import { FetchEngine } from "../../../src/card/fetch.js";
 
-/** Split a DDL file into executable statements: strip `--` comments
- *  (quote-aware - the DDL carries no "--" inside literals) and split on ";". */
 export function splitSqlStatements(ddl: string): string[] {
   const statements: string[] = [];
   let current = "";
@@ -53,8 +40,6 @@ export function splitSqlStatements(ddl: string): string[] {
   return statements.filter((statement) => statement !== "");
 }
 
-/** Driver wrapper that counts queries - used to prove cache hits avoid the
- *  database (the point of the fetch cache). */
 export class CountingDriver implements SQLDatabaseDriver {
   queries = 0;
   readonly statements: string[] = [];
@@ -82,7 +67,7 @@ export interface FetchTestStorage {
   engine: FetchEngine;
   counting: CountingDriver;
   driver: SQLDatabaseDriver;
-  /** Direct row reads for asserting seeded DB state. */
+
   selectAll<T = Record<string, unknown>>(sql: string, params?: unknown[]): Promise<T[]>;
   selectOne<T = Record<string, unknown>>(sql: string, params?: unknown[]): Promise<T | undefined>;
   close(): void;
@@ -90,8 +75,6 @@ export interface FetchTestStorage {
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
-/** Fresh in-memory CORE-schema database behind the real LocalSqliteDriver.
- *  `engineOpts` passes through to FetchEngine (e.g. a shared store). */
 export async function createFetchTestStorage(
   engineOpts: ConstructorParameters<typeof FetchEngine>[1] = {},
 ): Promise<FetchTestStorage> {
@@ -120,7 +103,7 @@ const DEFAULT_ACTOR_ID = 1;
 export interface SeedCardOptions {
   id?: number;
   name: string;
-  /** Defaults to DeckoName.parse(name).key (what the Ruby write path stores). */
+
   key?: string;
   codename?: string | null;
   leftId?: number;
@@ -138,15 +121,6 @@ export interface SeedCardOptions {
   referencesExpired?: number | null;
 }
 
-/**
- * Insert one card row DIRECTLY (plain INSERT - the write path is another
- * stream). Column conventions follow the Ruby write path as the schema
- * records them (db/schema.sqlite.sql comments + lib/card/name/all.rb#name= /
- * #key=): simple cards store name + key columns; compound cards store NULL
- * name/key columns with left_id/right_id (the 2020 migration convention).
- * Side ids default to a lookup of already-seeded part rows by key - the
- * seed order must declare parts before junctions, like Lexicon.id would.
- */
 export async function seedCard(
   storage: FetchTestStorage,
   opts: SeedCardOptions,
@@ -158,7 +132,7 @@ export async function seedCard(
   let rightId = opts.rightId ?? null;
 
   if (name.isCompound) {
-    // compound rows carry NULL name/key columns; compose via side ids
+
     nameColumn = null;
     keyColumn = null;
     const leftKey = name.leftName?.key ?? "";

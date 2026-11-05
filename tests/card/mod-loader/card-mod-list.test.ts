@@ -1,23 +1,4 @@
-// The card-mod-list integration test: card-mod-list loaded through the mod
-// loader changes what a deck renders, and the changed bytes match the live
-// Ruby oracle exactly.
-//
-// Proof shape (A/B, mirroring help-mod-integration.test.ts):
-//   WITHOUT the mod: :list / :input / :one_line_content / :nest_list_input
-//     raise the unsupported-view error (render.rb#view_method) - the views
-//     do not exist. The baseline :content bytes already match the oracle.
-//   WITH the mod: :one_line_content / :list / :input / :nest_list_input
-//     render byte-identically to fixtures/captured/list-mod-loader.json
-//     "rendered" (captured from the live decko 0.20.0 oracle app via
-//     tests/card/mod-loader/oracle-capture-list-mod.rb; data-slot-id and
-//     data-card-id normalized to RANDOMIZED - SecureRandom/seed state by
-//     design). The set-scoped dispatch errors are oracle-pinned too: the
-//     capture records "view (list) not supported" UserErrors for the
-//     sibling list types that don't include Abstract::List.
-//
-// Seed deck = the capture's probe deck: five probes (List / Pointer /
-// Pointer+*input_type radio rule / Nest list / Link list), the shared item
-// card, the codename cards the type-code enrichment and the rule warm read.
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { readFileSync } from "node:fs";
@@ -47,18 +28,12 @@ const FIXTURE = JSON.parse(
   probe_format_configs: Record<string, boolean>;
 };
 
-/** The capture's normalizations: data-slot-id is SecureRandom by design
- *  (card-mod-format set/all/html/wrap.rb:45) and the probe cards'
- *  data-card-id advances every create/trash cycle (seed state, not mod
- *  semantics). The oracle capture applies the same two masks. */
 function normalize(html: string): string {
   return html
     .replace(/data-slot-id=(["'])[0-9a-fA-F]+\1/g, 'data-slot-id="RANDOMIZED"')
     .replace(/data-card-id=(["'])\d+\1/g, 'data-card-id="RANDOMIZED"');
 }
 
-/** The capture stores CAPTURE_ERROR lines for views that raised; the
- *  UserError message itself is the oracle string. */
 function captureError(view: string, name: string): string {
   return `view (${view}) not supported for ${name}`;
 }
@@ -70,9 +45,7 @@ beforeAll(async () => {
   storage = await createRenderTestStorage();
   const s = storage;
 
-  // codename / registry cards (the codename registry reads cards.codename;
-  // the rule warm join needs Set-typed (13) vs Setting-typed (14) cards)
-  await seedCard(s, { id: 2, name: "RichText" }); // the cardtypes' type card
+  await seedCard(s, { id: 2, name: "RichText" });
   await seedCard(s, { id: 10, name: "*all", codename: "all", typeId: 13 });
   await seedCard(s, { id: 12, name: "*self", codename: "self", typeId: 14 });
   await seedCard(s, { id: 13, name: "*set", codename: "set", typeId: 13 });
@@ -80,14 +53,14 @@ beforeAll(async () => {
   await seedCard(s, { id: 15, name: "*input_type", codename: "input_type", typeId: 14 });
   await seedCard(s, { id: 16, name: "*content_options", codename: "content_options", typeId: 14 });
   await seedCard(s, { id: 17, name: "by name", codename: "by_name", typeId: 2 });
-  // cardtypes - the engine's typeCode enrichment reads their codenames
+
   await seedCard(s, { id: 4, name: "List", codename: "list", typeId: 2 });
   await seedCard(s, { id: 56, name: "Pointer", codename: "pointer", typeId: 2 });
   await seedCard(s, { id: 57, name: "Nest list", codename: "nest_list", typeId: 2 });
   await seedCard(s, { id: 58, name: "Link list", codename: "link_list", typeId: 2 });
-  // the shared item card (known item in every probe's list)
+
   await seedCard(s, { id: 100, name: "Oracle Probe Child", dbContent: "probe item body" });
-  // the probes - content exactly as the capture seeded them
+
   await seedCard(s, {
     id: 101,
     name: "Oracle List Probe",
@@ -118,9 +91,7 @@ beforeAll(async () => {
     typeId: 58,
     dbContent: "[[Oracle Probe Child|link title]]\n[[Second Item]]",
   });
-  // the radio probe's rules: set card "Oracle Radio Probe+*self", then the
-  // *input_type rule ("radio") and the *content_options rule (List-typed,
-  // its items are the radio options)
+
   await seedCard(s, { id: 110, leftId: 103, rightId: 12, typeId: 13 });
   await seedCard(s, {
     id: 111,
@@ -139,7 +110,7 @@ beforeAll(async () => {
 }, 60_000);
 
 afterAll(() => {
-  loader?.reset(); // unregister the mod views from the live record
+  loader?.reset();
   storage?.close();
 });
 
@@ -158,16 +129,7 @@ describe("card-mod-list through the mod loader (A/B)", () => {
 
   it("WITHOUT the mod -> WITH the mod: :content bytes are UNCHANGED (the mod adds views, it does not alter core)", async () => {
     const s = storage!;
-    // A/A on the pointer/list :content view: identical bytes before and
-    // after the mod loads (data-slot-id normalized - it is per-render
-    // SecureRandom, render noise unrelated to the mod). (The captured
-    // List/Pointer probe :content bytes carry wanted-item sections the
-    // RENDER LAYER renders differently than the oracle - an unknown item
-    // renders an empty item div instead of the oracle's default-typed
-    // mini_bar slot. That is the render layer's unknown-item path,
-    // exercised by neither my mod's views nor the corpus pins and NOT this
-    // mod's surface - the mod views' own wanted-item bytes are
-    // oracle-verified in the one_line_content test below.)
+
     const before = normalize(await s.engine.render("Oracle List Probe", "content"));
     loader = new ModLoader([{ manifest: cardModList }]);
     loader.load();
@@ -177,7 +139,7 @@ describe("card-mod-list through the mod loader (A/B)", () => {
   });
 
   it("WITH the mod: the loader report carries the gem's file structure", () => {
-    const report = loader!.load(); // idempotent (the loader replays to a clean slate)
+    const report = loader!.load();
     expect(report.modNames).toEqual(["list"]);
     expect(report.registeredViews).toEqual([
       "one_line_content",
@@ -185,10 +147,7 @@ describe("card-mod-list through the mod loader (A/B)", () => {
       "input",
       "nest_list_input",
     ]);
-    // 18 set files in the gem -> 18 registrations. Ruby reopens ONE module
-    // for 01_list.rb + its three subfiles (the capture pins _view_view_list
-    // on Card::Set::Abstract::List::HtmlFormat from 01_list.rb:39); the TS
-    // bookkeeping shortname names each subfile distinctly.
+
     expect(report.registeredSetModules).toHaveLength(18);
     expect(report.registeredSetModules.filter((m) => m.startsWith("Abstract::List"))).toEqual([
       "Abstract::List",
@@ -200,15 +159,7 @@ describe("card-mod-list through the mod loader (A/B)", () => {
   });
 
   it("WITH the mod: event declarations pin all five gem events (the two :validate-stage events adopted this batch)", () => {
-    // Five events in the gem (set/abstract/01_list/events.rb:1,8,13,29 +
-    // set/abstract/delist.rb:2) - all five now pin into the manifest. The
-    // two :validate-stage events (events.rb:13 validate_item_type,
-    // events.rb:29 validate_item_uniqueness) were batch-1 blockers; this
-    // batch adopts them now that the ModEventStage union at
-    // mod-manifest.ts:152-163 carries the full Ruby director stage list
-    // including :validate.
-    // Load order within the abstract pattern group is bySetPath:
-    //   abstract/01_list/events (4 events) -> abstract/delist (1 event).
+
     const report = loader!.load();
     expect(report.registeredEvents).toEqual([
       "add_and_drop_items",
@@ -221,8 +172,6 @@ describe("card-mod-list through the mod loader (A/B)", () => {
     const events = loader!.eventRegistry();
     expect(events.size()).toBe(5);
 
-    // registration order is preserved; the file coordinates the SetLoader
-    // phase injected are setPath + modName (mod-loader.ts:283-292).
     expect(events.all().map((e) => `${e.modName}:${e.event}@${e.setPath}`)).toEqual([
       "list:add_and_drop_items@abstract/01_list/events",
       "list:insert_item_event@abstract/01_list/events",
@@ -231,9 +180,6 @@ describe("card-mod-list through the mod loader (A/B)", () => {
       "list:delist@abstract/delist",
     ]);
 
-    // forStage: same-stage execution order = registration order
-    // (Ruby runs same-stage events in definition load order;
-    // event.rb's stage runner).
     expect(
       events.forStage("prepare_to_validate").map((e) => e.event),
     ).toEqual(["add_and_drop_items", "insert_item_event"]);
@@ -244,15 +190,11 @@ describe("card-mod-list through the mod loader (A/B)", () => {
     expect(events.forStage("prepare_to_store").map((e) => e.event)).toEqual([
       "delist",
     ]);
-    // other stages = empty (no pinned events fire there)
+
     expect(events.forStage("integrate")).toEqual([]);
     expect(events.forStage("store")).toEqual([]);
     expect(events.forStage("finalize")).toEqual([]);
 
-    // forEvent: the verbatim at/on/when the gem declared
-    // (lib/card/set/event.rb). "save" stays as ["save"] verbatim -
-    // the execution seam applies :save -> [:create, :update] expansion
-    // (event.rb#deferred_conditions).
     const addDrop = events.forEvent("add_and_drop_items");
     expect(addDrop?.setPath).toBe("abstract/01_list/events");
     expect(addDrop?.modName).toBe("list");
@@ -286,8 +228,7 @@ describe("card-mod-list through the mod loader (A/B)", () => {
   });
 
   it("WITH the mod: the view-config registry matches the live _view_*__setting probe", () => {
-    // FIXTURE.probe_format_configs: method_defined? on the probe card's
-    // real format class (oracle-capture-list-mod.rb)
+
     expect(FIXTURE.probe_format_configs["_view_input__unknown"]).toBe(true);
     expect(FIXTURE.probe_format_configs["_view_input__cache"]).toBe(true);
     expect(FIXTURE.probe_format_configs["_view_one_line_content__unknown"]).toBe(true);
@@ -329,8 +270,7 @@ describe("card-mod-list through the mod loader (A/B)", () => {
     const s = storage!;
     const html = normalize(await s.engine.render("Oracle Radio Probe", "input"));
     expect(html).toBe(FIXTURE.rendered["Oracle Radio Probe#input"]);
-    // the radio editor's option labels come from the *content_options rule
-    // card's items; the selected item ("Option One") is the checked one
+
   });
 
   it("WITH the mod: :nest_list_input renders the nest editor (oracle bytes)", async () => {
@@ -349,22 +289,18 @@ describe("card-mod-list through the mod loader (A/B)", () => {
 
   it("WITH the mod: set-scoped dispatch - :list is unsupported on the sibling list types (oracle error bytes)", async () => {
     const s = storage!;
-    // the capture records these exact UserError messages (CAPTURE_ERROR
-    // lines): Nest list and Link list don't include Abstract::List.
-    // toThrow(string) does substring matching - the messages here are the
-    // oracle's error bytes verbatim
+
     await expect(s.engine.render("Oracle Link List Probe", "list")).rejects.toThrow(
       captureError("list", "Oracle Link List Probe"),
     );
     await expect(s.engine.render("Oracle Nest List Probe", "list")).rejects.toThrow(
       captureError("list", "Oracle Nest List Probe"),
     );
-    // :nest_list_input exists only on Type::NestList
+
     await expect(s.engine.render("Oracle List Probe", "nest_list_input")).rejects.toThrow(
       captureError("nest_list_input", "Oracle List Probe"),
     );
-    // :view_list is not ported (see the mod header: box/labeled item views
-    // + relative timestamps in the section bytes) -> unsupported view
+
     await expect(s.engine.render("Oracle List Probe", "view_list")).rejects.toThrow(
       captureError("view_list", "Oracle List Probe"),
     );
@@ -372,10 +308,7 @@ describe("card-mod-list through the mod loader (A/B)", () => {
 
   it("WITH the mod: non-family cards fail loudly for the unported base-format views", async () => {
     const s = storage!;
-    // Ruby renders card-mod-format's base :one_line_content (truncated
-    // core, text-muted wrap) and card-mod-edit's base editors on non-family
-    // cards; neither base surface is ported, so the mod fails loudly
-    // instead of emitting wrong bytes (see the mod header)
+
     await expect(s.engine.render("Oracle Probe Child", "one_line_content")).rejects.toThrow(
       /base-format view \(card-mod-format\/card-mod-edit\) is not ported/,
     );
@@ -386,9 +319,7 @@ describe("card-mod-list through the mod loader (A/B)", () => {
 
   it("WITH the mod: the setting_opts registrations match the oracle's Card::Setting state", () => {
     const registry = loader!.settingsRegistry();
-    // the oracle editing group (help/input_type/guide come from OTHER mods,
-    // absent from this single-mod load): my two settings occupy the same
-    // slots 5/6 the capture shows
+
     expect(
       registry.groups.get("editing")?.map((entry) => entry?.codename ?? null),
     ).toEqual([null, null, null, null, "content_options", "content_option_view"]);
@@ -403,9 +334,7 @@ describe("card-mod-list through the mod loader (A/B)", () => {
       FIXTURE.setting_opts_content_options["rule_type_editable"],
     );
     expect(options?.rawHelpText).toBe(FIXTURE.setting_opts_content_options["raw_help_text"]);
-    // the oracle stores restricted_to_type as type IDS ("4", "56", "481" =
-    // List, Pointer, Session in the shared oracle DB); the manifest schema
-    // keeps the setting_opts source's codenames
+
     expect(options?.restrictedToType).toEqual(["list", "pointer", "session"]);
 
     const optionView = registry.findByCodename("content_option_view");

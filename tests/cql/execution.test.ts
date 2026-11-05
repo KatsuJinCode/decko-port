@@ -1,23 +1,4 @@
-/**
- * CQL execution tests: the closed loop parseCql -> generateSql ->
- * LocalSqliteDriver -> typed rows, against a fresh in-memory better-sqlite3
- * database loaded with the CORE schema (db/schema.sqlite.sql) and a fixed
- * seed universe.
- *
- * Coverage mirrors the SQL families the generator emits (see
- * docs/cql-port-notes.md and tests/cql/sql-generation.test.ts for the
- * oracle-verified shapes these statements render to): basic field filters,
- * name/key conditions, match via the REGEXP UDF, conjunction groups, not,
- * junction/plus conditions, card_references joins, editor/act chains,
- * sort/limit/offset, and count semantics.
- *
- * The REGEXP UDF is the LOCAL-path answer (src/cql/sqlite-regexp.ts); the
- * tests also pin the DECIDED edge fallback (docs/cql-execution-notes.md
- * "The REGEXP decision", implemented 2026-09-24): a match query on a driver
- * WITHOUT the UDF post-filters in JS to the same set the UDF path returns,
- * limit/offset leave the SQL, counts post-filter, and a match inside a
- * subselect (unpost-filterable) refuses loudly as CqlBadQuery.
- */
+
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -32,20 +13,12 @@ import type { CardsRow } from "../../src/server/schema.js";
 
 const REPO_ROOT = fileURLToPath(new URL("../..", import.meta.url));
 
-// ---------------------------------------------------------------------------
-// Seed universe — every row explicit so result sets are computable by hand.
-// Timestamps use the canonical storage form ("YYYY-MM-DD HH:MM:SS.mmm",
-// db/schema.sqlite.sql mapping decision) so TEXT comparisons are
-// chronological.
-// ---------------------------------------------------------------------------
-
 interface SeedCard extends Partial<CardsRow> {
   id: number;
 }
 
 const T = (date: string): string => `${date} 00:00:00.000`;
 
-/** Created/updated/creator/updater defaults; every seed row overrides what matters. */
 function card(seed: SeedCard): CardsRow {
   return {
     name: null,
@@ -69,10 +42,10 @@ function card(seed: SeedCard): CardsRow {
 }
 
 const CARDS: CardsRow[] = [
-  // types (type_id 1; content NULL)
+
   card({ id: 1, name: "Basic", key: "basic", codename: "Basic" }),
   card({ id: 2, name: "User", key: "user", codename: "User", updated_at: T("2026-01-02") }),
-  // users (type_id 2)
+
   card({
     id: 10,
     name: "Joe Admin",
@@ -93,7 +66,7 @@ const CARDS: CardsRow[] = [
     created_at: T("2026-01-02"),
     updated_at: T("2026-01-03"),
   }),
-  // content cards (type_id 1)
+
   card({
     id: 20,
     name: "Home",
@@ -148,7 +121,7 @@ const CARDS: CardsRow[] = [
     created_at: T("2026-01-05"),
     updated_at: T("2026-01-20"),
   }),
-  // plus-card parts and junctions (compound rows carry name = key = NULL)
+
   card({
     id: 31,
     name: "Editor Notes",
@@ -184,9 +157,9 @@ const CARDS: CardsRow[] = [
 ];
 
 const REFERENCES = [
-  // About (21) links to Home (20)
+
   { id: 40, referer_id: 21, referee_key: "home", referee_id: 20, ref_type: "L", is_present: 1 },
-  // About includes missing_page (referee gone -> is_present 0, referee_id NULL)
+
   {
     id: 41,
     referer_id: 21,
@@ -195,7 +168,7 @@ const REFERENCES = [
     ref_type: "I",
     is_present: 0,
   },
-  // Home (20) links to Joe Admin (10)
+
   { id: 42, referer_id: 20, referee_key: "joe_admin", referee_id: 10, ref_type: "L", is_present: 1 },
 ];
 
@@ -206,13 +179,12 @@ const ACTS = [
 ];
 
 const ACTIONS = [
-  // update actions (action_type 1) for acts 50/51; a create (0) for act 52
+
   { id: 60, card_id: 20, card_act_id: 50, action_type: 1 },
   { id: 61, card_id: 21, card_act_id: 51, action_type: 1 },
   { id: 62, card_id: 22, card_act_id: 52, action_type: 0 },
 ];
 
-/** Name -> id resolver standing in for Card::Lexicon.id (ParseOptions). */
 const RESOLVER = (name: string): number => {
   const ids: Record<string, number> = {
     "Joe Admin": 10,
@@ -224,16 +196,8 @@ const RESOLVER = (name: string): number => {
   return ids[name] ?? -999;
 };
 
-// ---------------------------------------------------------------------------
-// Bootstrap
-// ---------------------------------------------------------------------------
-
 let driver: LocalSqliteDriver;
 
-/** Load db/schema.sqlite.sql through the same driver.query seam the engine
- *  uses: strip line comments, split on statement-terminating semicolons,
- *  run each DDL statement. The DDL is static repo truth with no semicolons
- *  inside comments or values, so the split is exact. */
 async function loadCoreSchema(target: LocalSqliteDriver): Promise<void> {
   const ddl = readFileSync(`${REPO_ROOT}db/schema.sqlite.sql`, "utf8");
   const statements = ddl
@@ -291,15 +255,8 @@ afterAll(() => {
   driver.close();
 });
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-/** Default execution options: names resolve during interpretation, so the
- *  parse-time resolver rides on every call (CqlExecuteOptions.parse). */
 const EXEC_OPTS = { parse: { resolveCardId: RESOLVER } };
 
-/** executeQuery narrowed to the rows shape (everything but count results). */
 async function runRows(statement: unknown, options: CqlExecuteOptions = EXEC_OPTS) {
   const result = await executeQuery(driver, statement, options);
   if ("count" in result) throw new Error(`unexpected count result for ${JSON.stringify(statement)}`);
@@ -311,13 +268,7 @@ async function ids(statement: unknown, options: CqlExecuteOptions = EXEC_OPTS): 
   return result.rows.map((row) => row.id).sort((a, b) => a - b);
 }
 
-/** The full non-trashed type_id-1 set: type cards 1 and 2, content cards
- *  20-25 minus trashed 23, junctions 30-33. */
 const ALL_TYPE_1 = [1, 2, 20, 21, 22, 24, 25, 30, 31, 32, 33];
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
 
 describe("execution bootstrap and row typing", () => {
   it("returns full card rows typed as CardsRow for the default select", async () => {
@@ -366,9 +317,7 @@ describe("basic field filters", () => {
   });
 
   it("created_at gt comparison (canonical TEXT form compares chronologically)", async () => {
-    // '2026-01-07 00:00:00.000' > '2026-01-07' string-wise, so the Jan 7
-    // card is included — the fixed-width format keeps TEXT ordering equal
-    // to time ordering for full-form values on both sides of the operator.
+
     expect(await ids({ created_at: ["gt", "2026-01-07"] })).toEqual([
       22, 24, 25, 30, 31, 32, 33,
     ]);
@@ -411,9 +360,7 @@ describe("match via the REGEXP UDF", () => {
   });
 
   it("name match hits the name column; NULL names never match", async () => {
-    // name contains 'a': Basic, Joe Admin, Sara Sample, About, Zebra,
-    // Alpha Page, status ("restricted"/"Editor Notes" have no letter 'a');
-    // junction rows have NULL names and never match.
+
     expect(await ids({ name: ["~", "a"] })).toEqual([1, 10, 11, 21, 22, 24, 33]);
   });
 
@@ -454,8 +401,7 @@ describe("conjunctions and negation", () => {
   });
 
   it("any with a join condition renders the parenthesized LEFT JOIN group and runs", async () => {
-    // the generator's riskiest shape for SQLite: LEFT JOIN (card_actions cn1
-    // JOIN card_acts cx2 ... JOIN cards c3 ...) ON ...
+
     expect(await ids({ any: [{ edited_by: "Sara Sample" }] })).toEqual([21, 22]);
   });
 });
@@ -470,8 +416,7 @@ describe("junction / plus conditions", () => {
   });
 
   it("left_plus finds right parts of junctions anchored at the given left part", async () => {
-    // left_plus: X -> "X+C exists": junctions Home+Editor Notes and
-    // Home+status make the right parts 31 and 33
+
     expect(await ids({ left_plus: { name: "Home" } })).toEqual([31, 33]);
   });
 });
@@ -500,7 +445,7 @@ describe("card_references joins", () => {
 
 describe("editor / act chains", () => {
   it("edited_by follows actions regardless of action_type", async () => {
-    // Sara acted on About (update) and Zebra (create)
+
     expect(await ids({ edited_by: "Sara Sample" })).toEqual([21, 22]);
   });
 
@@ -518,12 +463,9 @@ describe("editor / act chains", () => {
 });
 
 describe("sort / limit / offset", () => {
-  // names containing 'a' (case-insensitive), junction NULL names excluded:
-  // Basic, Joe Admin, Sara Sample, About, Zebra, Alpha Page, status
-  // ("restricted" has no letter 'a').
+
   const NAME_MATCH_SET = [1, 10, 11, 21, 22, 24, 33];
-  // keys in binary order: about < alpha_page < basic < joe_admin
-  // < sara_sample < status < zebra
+
   const NAME_ASC_ORDER = [21, 24, 1, 10, 11, 33, 22];
 
   it("sort by name asc orders by key", async () => {
@@ -606,15 +548,12 @@ describe("REGEXP without the UDF: the JS post-filter fallback (the REGEXP decisi
       await loadCoreSchema(bare);
       await insertCards(bare);
       const viaUdf = await ids({ match: "home" });
-      // First query on the bare driver: the statement fails UDF-missing and
-      // the executor flips to the post-filter (one failed attempt, then the
-      // match-free SQL + JS filtering).
+
       const first = await executeQuery(bare, { match: "home" }, EXEC_OPTS);
       expect(rowIds(first)).toEqual(viaUdf);
       expect(viaUdf.length).toBeGreaterThan(0);
       expect(first.sql).not.toContain("REGEXP");
-      // The driver memo: a SECOND match query routes straight to the
-      // post-filter (no second failed attempt) and still matches.
+
       const again = await executeQuery(bare, { match: "about" }, EXEC_OPTS);
       expect(rowIds(again)).toEqual(await ids({ match: "about" }));
       expect(again.sql).not.toContain("REGEXP");
@@ -633,8 +572,7 @@ describe("REGEXP without the UDF: the JS post-filter fallback (the REGEXP decisi
       expect(all.sql).toContain(`LIMIT ${POSTFILTER_ROW_CAP}`);
       if ("count" in all || "count" in limited) throw new Error("expected rows results");
       expect(limited.rows).toHaveLength(1);
-      // The user limit applies in JS over the FILTERED set: the single
-      // returned row is the filtered set's first row (same SQL order).
+
       expect(limited.rows[0]!.id).toBe(all.rows[0]!.id);
     } finally {
       bare.close();
@@ -660,9 +598,7 @@ describe("REGEXP without the UDF: the JS post-filter fallback (the REGEXP decisi
     try {
       await loadCoreSchema(bare);
       await insertCards(bare);
-      // Root-level match post-filters fine, but the any-subselect's match
-      // would be dropped from the SQL with no JS way to re-apply it — the
-      // executor refuses instead of returning wrong rows.
+
       const statement = { match: "home", any: [{ match: "about" }] };
       await expect(executeQuery(bare, statement, EXEC_OPTS)).rejects.toThrow(CqlBadQuery);
     } finally {
@@ -679,10 +615,7 @@ describe("deferred keys surface honestly at execution time", () => {
   });
 
   it("found_by's refusal is CqlBadQuery (the 400-mappable class, not a crash)", async () => {
-    // The refusal is BY DESIGN (deferred wave 2), so it must ride the
-    // BadQuery class the API layer maps to 400 "bad CQL" — a plain Error
-    // surfaced as 500 "CQL execution failed", indistinguishable from an
-    // engine crash (the probe battery's api-query-found-by-refused).
+
     const error = await executeQuery(driver, { found_by: { id: 5 } }).catch(
       (e: unknown) => e,
     );

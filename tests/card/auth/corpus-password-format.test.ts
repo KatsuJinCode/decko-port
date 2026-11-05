@@ -1,21 +1,4 @@
-// Corpus pin for the sign-in slice's central storage finding: the real
-// deck's +*account+*password cards store SALTED SHA-1 HEX DIGESTS (40
-// lowercase hex chars — Digest::SHA1.hexdigest "#{salt}--#{password}--",
-// card-1.110.0 lib/card/auth.rb:36-39), NOT bcrypt hashes. Every stored
-// value was probed read-only when the finding was made (2026-09-27); this
-// test re-pins the shape so a future corpus refresh that DID carry bcrypt
-// would fail here loudly instead of silently breaking sign-in.
-//
-// Data rule: the test asserts SHAPES (lengths, character classes, prefix
-// classes). No password content, salt content, or email content is ever
-// selected into a string that outlives the query, printed, or embedded in
-// an assertion message.
-//
-// The raw ground-truth corpus is a local, gitignored build
-// (tmp/raw-ground-truth/bench-corpus-raw.sqlite3). Resolution order:
-// DECKO_TS_RAW_CORPUS env var, this repo's tmp path, then the main
-// checkout's tmp path (lane worktrees are siblings of decko-ts and the
-// corpus stays in the main checkout's gitignored tmp). Skips when absent.
+
 
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -25,7 +8,7 @@ import { describe, expect, it } from "vitest";
 const REPO_RAW_CORPUS = fileURLToPath(
   new URL("../../../tmp/raw-ground-truth/bench-corpus-raw.sqlite3", import.meta.url),
 );
-// The lane-worktree sibling of the main checkout.
+
 const SIBLING_RAW_CORPUS = fileURLToPath(
   new URL("../../../../decko-ts/tmp/raw-ground-truth/bench-corpus-raw.sqlite3", import.meta.url),
 );
@@ -46,9 +29,6 @@ describeIfCorpus("corpus +*password storage shape (raw ground truth)", () => {
         .get() as { id: number } | undefined;
       expect(passwordCodename).toBeDefined();
 
-      // The python-built corpus names the content column `content` (the
-      // engine-standard build names it db_content — see
-      // src/card/auth/signin.ts's column-convention note).
       const digests = db
         .prepare(
           "SELECT length(content) AS len, content NOT GLOB '*[^0-9a-f]*' AS allLowerHex, " +

@@ -1,18 +1,4 @@
-// The card-mod-email mod loader integration test: the mod loaded through
-// the loader registers its views and the rendered bytes match the Ruby
-// source semantics.
-//
-// Proof shape (A/B per ported view):
-//   WITHOUT the mod: render the view on the seeded probe card raises the
-//     unsupported-view error (render.ts#view_method - the view does not
-//     exist on the live registry).
-//   WITH the mod: the view renders the port's documented bytes; the
-//     set-modules basket records the full gem tree; the view-registration
-//     table carries every ported name.
-//
-// Probe cards:
-//   - Oracle Email Probe (a basic RichText card; :email_page renders the
-//     core of any card wrapped in the email-document envelope)
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import {
@@ -34,17 +20,12 @@ beforeAll(async () => {
   storage = await createRenderTestStorage();
   const s = storage;
 
-  // codename cards (the codename registry reads cards.codename; their
-  // type ids matter to the rule-cache join: set-typed vs setting-typed).
   await seedCard(s, { id: 2, name: "RichText" });
   await seedCard(s, { id: 10, name: "*all", codename: "all", typeId: 13 });
   await seedCard(s, { id: 11, name: "*self", codename: "self", typeId: 14 });
   await seedCard(s, { id: 13, name: "*set", codename: "set", typeId: 13 });
   await seedCard(s, { id: 14, name: "*setting", codename: "setting", typeId: 14 });
 
-  // Oracle Email Probe - any card; :email_page renders the html format's
-  // :core bytes wrapped in the email-document envelope. The card needs
-  // SOME db_content so the core view emits a non-trivial interior.
   await seedCard(s, {
     id: 200,
     name: "Oracle Email Probe",
@@ -78,10 +59,7 @@ describe("card-mod-email through the mod loader (A/B)", () => {
     await loader.installInto(modEngineHost(s.engine, s.fetcher));
 
     const html = await s.engine.render("Oracle Email Probe", "email_page");
-    // The email-document wrapper (set/all/email_html.rb:2-14): doctype,
-    // html/head with the meta tag + empty <style></style>, body class
-    // "d0-email-body" wrapping the interior (which is the html format's
-    // :core render).
+
     expect(html).toContain("<!DOCTYPE html>");
     expect(html).toContain(
       '<meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>',
@@ -90,23 +68,16 @@ describe("card-mod-email through the mod loader (A/B)", () => {
     expect(html).toContain('<body class="d0-email-body">');
     expect(html).toContain("</body>");
     expect(html).toContain("</html>");
-    // The interior is the html :core view's bytes - the card's
-    // db_content run through processContent (the base core just emits
-    // raw db_content when there are no nests).
+
     expect(html).toContain("email probe body");
   });
 
   it("WITH the mod: :email_page wrapper shape is byte-exact to the source heredoc", async () => {
     const s = storage!;
-    // The rendered bytes around the envelope should match the squiggly-
-    // heredoc output exactly. The interior is the core slot, which we
-    // pin between two fixed markers.
+
     const html = await s.engine.render("Oracle Email Probe", "email_page");
     expect(html.startsWith("<!DOCTYPE html>\n<html>\n  <head>\n")).toBe(true);
-    // After </style>\n  </head>\n  <body class="d0-email-body">\n the
-    // core slot begins; the closing is </body>\n</html> with no extra
-    // trailing newline (the heredoc body has no trailing newline after
-    // </html>).
+
     expect(html.endsWith("</body>\n</html>")).toBe(true);
   });
 
@@ -122,13 +93,13 @@ describe("card-mod-email through the mod loader (A/B)", () => {
 
   it("WITH the mod: every set module from the gem tree is in the basket", () => {
     const basket = loader!.setModules();
-    // abstract: email_field + test_context
+
     expect(basket.abstract.map((m) => m.shortname)).toContain("Abstract::EmailField");
     expect(basket.abstract.map((m) => m.shortname)).toContain("Abstract::TestContext");
-    // base (all): email_html + email_text
+
     expect(basket.base.map((m) => m.shortname)).toContain("All::EmailHtml");
     expect(basket.base.map((m) => m.shortname)).toContain("All::EmailText");
-    // right nonbase: every right/... set module from the gem
+
     const right = [...basket.nonbase.values()].flat().map((m) => m.shortname);
     expect(right).toContain("Right::Bcc");
     expect(right).toContain("Right::Cc");
@@ -137,7 +108,7 @@ describe("card-mod-email through the mod loader (A/B)", () => {
     expect(right).toContain("Right::To");
     expect(right).toContain("Right::TextMessage");
     expect(right).toContain("Right::HtmlMessage");
-    // type nonbase: email_template + email_template/email_config + email_template/html
+
     const type = [...basket.nonbase.values()].flat().map((m) => m.shortname);
     expect(type).toContain("Type::EmailTemplate");
     expect(type).toContain("Type::EmailTemplate::EmailConfig");
@@ -145,15 +116,12 @@ describe("card-mod-email through the mod loader (A/B)", () => {
   });
 
   it("WITH the mod: the mod loader's load report lists every ported view", () => {
-    // Reload (idempotent) to get the report - the first call's report
-    // was discarded; this call's report is the structural reference.
+
     const report = loader!.load();
     expect(report.registeredViews).toContain("email_page");
     expect(report.registeredViews).toContain("compact_missing");
     expect(report.registeredViews).toContain("last_action");
-    // The email_text/email_html format-block re-registrations of
-    // :unknown (also "" -> "" so the html-format unknown override is
-    // semantically identical) also appear here.
+
     expect(report.registeredViews).toContain("unknown");
   });
 
@@ -171,10 +139,7 @@ describe("card-mod-email through the mod loader (A/B)", () => {
   it("WITH the mod: a card's baseline :content render still works (the mod adds views, it does not alter core)", async () => {
     const s = storage!;
     const html = await s.engine.render("Oracle Email Probe", "content");
-    // baseline :content is the format/views.ts#contentView; the mod
-    // does NOT redefine :content for any of its set modules, so the
-    // existing core content renders unchanged. We assert it renders
-    // WITHOUT throwing and produces a non-empty slot.
+
     expect(typeof html).toBe("string");
     expect(html.length).toBeGreaterThan(0);
     expect(html).toContain("card-slot");

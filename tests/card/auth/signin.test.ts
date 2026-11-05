@@ -1,13 +1,4 @@
-// Unit tests for the sign-in flow (src/card/auth/signin.ts): the salted
-// SHA-1 password verification (Ruby Card::Auth.encrypt, auth.rb:36-39 —
-// deliberately NOT bcrypt), the authenticate error ladder (card-mod-account
-// set/self/signin.rb:12-15, :42-56), the :signin/:signout event semantics
-// over the real SessionStore, and the "sign-in writes no card rows" pin
-// (signin_success "do not save card", signin.rb:17-19).
-//
-// Storage: the auth suite's in-memory core-schema storage with SYNTHETIC
-// account cards (the stream data rule — no real deck content in tests),
-// brought up through the real auth migration runner.
+
 
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
@@ -28,8 +19,6 @@ import {
   type AuthTestStorage,
 } from "./auth-test-storage.js";
 
-// The deck's account codename ids (synthetic; resolved by codename lookup
-// exactly like the real flow resolves them).
 const IDS = {
   account: 9001,
   email: 9002,
@@ -43,7 +32,7 @@ const JUNCTION_ID = 9101;
 const EMAIL = "joe@example.com";
 const SALT = "SALT";
 const PASSWORD = "secret";
-// Digest::SHA1.hexdigest("SALT--secret--"), precomputed independently.
+
 const DIGEST = "3c92dd6f59610052250bc50b6b33f9416e7cac3c";
 
 const TS = "2026-09-20 11:00:00.000";
@@ -66,8 +55,6 @@ function insertCodenameCard(
   );
 }
 
-/** A compound card row (+*account junction or its field children):
- *  composed name, NULL key (the compound-card convention). */
 function insertCompoundCard(
   storage: AuthTestStorage,
   id: number,
@@ -88,9 +75,6 @@ function insertCompoundCard(
   );
 }
 
-/** The synthetic deck: codename cards + Joe User's +*account with
- *  email/password/salt/status children (active, salted, digested), plus
- *  the auth_sessions table through the real migration runner. */
 async function buildStorage(opts?: {
   status?: string;
   withSalt?: boolean;
@@ -152,8 +136,7 @@ async function buildStorage(opts?: {
 describe("account password verification (Ruby Card::Auth salted SHA-1)", () => {
   it("encryptAccountPassword reproduces Digest::SHA1.hexdigest('salt--password--')", async () => {
     expect(await encryptAccountPassword("secret", "SALT")).toBe(DIGEST);
-    // Independent recomputation through node:crypto (different runtime
-    // implementation than the Web Crypto path under test).
+
     expect(createHash("sha1").update("SALT--secret--").digest("hex")).toBe(
       DIGEST,
     );
@@ -163,7 +146,7 @@ describe("account password verification (Ruby Card::Auth salted SHA-1)", () => {
   it("rubyStrip strips exactly Ruby's String#strip set (ASCII whitespace + NUL)", () => {
     expect(rubyStrip(" \t\r\n\f\v\0secret\0\n")).toBe("secret");
     expect(rubyStrip("secret")).toBe("secret");
-    // JS trim's Unicode extras (e.g. \u00a0) are NOT Ruby strip characters.
+
     expect(rubyStrip("\u00a0x\u00a0")).toBe("\u00a0x\u00a0");
   });
 });
@@ -265,9 +248,7 @@ describe("authenticateAccount (the :signin event's authenticate half)", () => {
         reason: "password_missing",
         message: "password can't be blank",
       });
-      // A whitespace-only password survives the blank check and fails as
-      // :wrong_password through the strip inside password_valid? — the
-      // exact Ruby ladder.
+
       expect(await authenticateAccount(storage.driver, EMAIL, "   ")).toEqual({
         ok: false,
         reason: "wrong_password",
@@ -279,8 +260,7 @@ describe("authenticateAccount (the :signin event's authenticate half)", () => {
   });
 
   it("verifies against an empty salt when the +*salt card is absent (auth.rb:38 nil interpolation)", async () => {
-    // Ruby: "a lot of existing accounts without a salt" (right/password.rb
-    // encrypt_password comment); "#{salt}--" with nil salt is "--".
+
     const storage = await buildStorage({
       withSalt: false,
       storedDigest: createHash("sha1").update(`--${PASSWORD}--`).digest("hex"),
@@ -322,8 +302,7 @@ describe("signinAccount / signoutAccount (the :signin and :signout events over t
       expect(outcome.ok).toBe(true);
       if (!outcome.ok) return;
       expect(outcome.actor).toEqual({ id: HOLDER.id, name: HOLDER.name });
-      // The only write is the auth_sessions row — signin_success aborts the
-      // save ("do not save card", signin.rb:17-19).
+
       const cardsAfter = storage.selectOne<{ n: number }>(
         "SELECT COUNT(*) AS n FROM cards",
       )?.n;
@@ -363,8 +342,7 @@ describe("signinAccount / signoutAccount (the :signin and :signout events over t
       expect(await sessions.lookupSession(outcome.session.token)).not.toBeNull();
       expect(await signoutAccount(sessions, outcome.session.token)).toBe(true);
       expect(await sessions.lookupSession(outcome.session.token)).toBeNull();
-      // Signing out Anonymous is a no-op success in Ruby; the port reports
-      // "nothing revoked" instead of throwing.
+
       expect(await signoutAccount(sessions, outcome.session.token)).toBe(false);
       expect(await signoutAccount(sessions, null)).toBe(false);
       expect(await signoutAccount(sessions, "")).toBe(false);

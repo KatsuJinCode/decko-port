@@ -1,20 +1,4 @@
-// The reference-mod integration test: card-mod-help loaded through the mod
-// loader changes what a deck renders, and the changed bytes match the live
-// Ruby oracle exactly.
-//
-// Proof shape (A/B):
-//   WITHOUT the mod: render "Oracle Help Probe" :help raises the
-//     unsupported-view error (render.rb#view_method) - the view does not
-//     exist. Baseline views (:content) already match the oracle.
-//   WITH the mod: :help / :help_text / :lead render byte-identically to
-//     fixtures/captured/help-mod-loader.json "rendered" (captured from the
-//     live decko 0.20.0 oracle app via
-//     tests/card/mod-loader/oracle-capture-help-mod.rb; data-slot-id
-//     normalized to RANDOMIZED - it is SecureRandom by design).
-//
-// Seed deck = the capture's probe deck: the two probe cards (ids must match
-// the oracle's - the bytes carry data-card-id) plus the *help rule card and
-// its set/setting/codename cards.
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { readFileSync } from "node:fs";
@@ -42,10 +26,6 @@ const FIXTURE = JSON.parse(
   setting_opts_guide: Record<string, unknown>;
 };
 
-/** The capture's normalizations: data-slot-id is SecureRandom.hex(10) by
- *  design (card-mod-format set/all/html/wrap.rb:45), and the probe cards'
- *  data-card-id advances every create/trash cycle (seed state, not mod
- *  semantics). The oracle capture applies the same two masks. */
 function normalize(html: string): string {
   return html
     .replace(/data-slot-id=(["'])[0-9a-fA-F]+\1/g, 'data-slot-id="RANDOMIZED"')
@@ -59,17 +39,15 @@ beforeAll(async () => {
   storage = await createRenderTestStorage();
   const s = storage;
 
-  // codename cards (the codename registry reads cards.codename; their type
-  // ids matter to the rule-cache join: Set-typed cards vs Setting-typed)
-  await seedCard(s, { id: 2, name: "RichText" }); // the cardtypes' type card
+  await seedCard(s, { id: 2, name: "RichText" });
   await seedCard(s, { id: 10, name: "*all", codename: "all", typeId: 13 });
   await seedCard(s, { id: 11, name: "*self", codename: "self", typeId: 14 });
   await seedCard(s, { id: 12, name: "*help", codename: "help", typeId: 14 });
   await seedCard(s, { id: 13, name: "*set", codename: "set", typeId: 13 });
   await seedCard(s, { id: 14, name: "*setting", codename: "setting", typeId: 14 });
-  // the set card "Oracle Help Probe+*self" (junction: probe + *self)
+
   await seedCard(s, { id: 20, leftId: 1169, rightId: 11, typeId: 13 });
-  // the rule card "Oracle Help Probe+*self+*help" (junction: set card + *help)
+
   await seedCard(s, {
     id: 21,
     leftId: 20,
@@ -77,14 +55,13 @@ beforeAll(async () => {
     typeId: 14,
     dbContent: "Moderator-approved help text for the probe card.",
   });
-  // the probe cards - ids 1169/1170 exactly as the oracle seeded them (the
-  // rendered bytes carry data-card-id)
+
   await seedCard(s, { id: 1169, name: "Oracle Help Probe", dbContent: "probe card body" });
   await seedCard(s, { id: 1170, name: "Oracle Bare Probe", dbContent: "bare probe body" });
 }, 60_000);
 
 afterAll(() => {
-  loader?.reset(); // unregister the mod views from the live record
+  loader?.reset();
   storage?.close();
 });
 

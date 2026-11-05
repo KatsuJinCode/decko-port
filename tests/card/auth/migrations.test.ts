@@ -1,7 +1,4 @@
-// Migration-runner tests: the auth DDL (db/migrations/001-auth-sessions.sql)
-// applies cleanly on a FRESH database (including one with no core schema at
-// all — the table is standalone), is idempotent across repeated runs, and
-// its statement splitter survives the migration files' comment punctuation.
+
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -19,9 +16,6 @@ const AUTH_MIGRATION_FILE = fileURLToPath(
   new URL("../../../db/migrations/001-auth-sessions.sql", import.meta.url),
 );
 
-/** Bare driver over an empty in-memory database (NO core schema) — proves
- *  the auth migration stands alone. Same local-narrowing pattern as
- *  auth-test-storage.ts (better-sqlite3 ships no usable types here). */
 interface BareStatement {
   readonly reader: boolean;
   run(...params: unknown[]): { changes: number | bigint; lastInsertRowid: number | bigint };
@@ -89,7 +83,7 @@ describe("runAuthMigrations", () => {
 
     expect(second.applied).toEqual([]);
     expect(second.skipped).toEqual(["001-auth-sessions.sql"]);
-    // Table still there, bookkeeping has exactly one row per version.
+
     const versions = storage.selectAll<{ version: string }>(
       "SELECT version FROM auth_migrations",
     );
@@ -98,11 +92,11 @@ describe("runAuthMigrations", () => {
 
   it("is idempotent even on a DB that already has the table but no bookkeeping (deploy-stream applied)", async () => {
     const storage = createAuthTestStorage();
-    // Simulate the deploy stream: raw DDL applied, no auth_migrations row.
+
     storage.exec(readFileSync(AUTH_MIGRATION_FILE, "utf8"));
 
     const result = await runAuthMigrations(storage.driver);
-    // IF NOT EXISTS makes the re-apply a no-op; the runner records it.
+
     expect(result.applied).toEqual(["001-auth-sessions.sql"]);
     expect(result.skipped).toEqual([]);
   });

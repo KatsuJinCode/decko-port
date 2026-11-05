@@ -1,13 +1,4 @@
-// A tiny mock libSQL/Hrana-v2-over-HTTP server for testing LibSqlHttpAdapter.
-//
-// It is protocol-faithful but not a SQL engine: request encoding is decoded
-// with the same rules the adapter uses, SQL actually executes against a
-// better-sqlite3 in-memory database, and responses are encoded following
-// the reference shapes in @libsql/hrana-client (shared/json_encode.js /
-// json_decode.js). Every captured request body is available to tests, so a
-// test can assert the EXACT wire shape the adapter produced (tagged
-// {type, value} args, one close request, one POST per batch), which is the
-// whole point of testing against a mock instead of a real client.
+
 
 import http from "node:http";
 import type { AddressInfo } from "node:net";
@@ -22,17 +13,14 @@ export interface CapturedRequest {
 }
 
 export interface MockHranaServer {
-  /** Base URL, e.g. "http://127.0.0.1:54321" (ephemeral port). */
+
   url: string;
   port: number;
-  /** Every captured request, in arrival order. */
+
   requests: CapturedRequest[];
-  /** Wire-shape violations the server noticed (never expected when the
-   *  adapter is correct). */
+
   violations: string[];
-  /** Queue a raw response body to be sent verbatim on the NEXT request —
-   *  used to prove the adapter surfaces protocol violations instead of
-   *  swallowing them. */
+
   enqueueRawResponse(body: string): void;
   close(): Promise<void>;
 }
@@ -95,10 +83,6 @@ export async function startMockHranaServer(): Promise<MockHranaServer> {
   };
 }
 
-// ---------------------------------------------------------------------------
-// Pipeline handling
-// ---------------------------------------------------------------------------
-
 function handlePipeline(db: Database, body: unknown, violations: string[]): unknown {
   const requests = (body as { requests?: unknown })?.requests;
   if (!Array.isArray(requests)) {
@@ -158,8 +142,7 @@ function handleRequestEntry(db: Database, entry: unknown, index: number, violati
   try {
     return { type: "ok", response: { type: "execute", result: execute(db, stmt.sql, jsArgs) } };
   } catch (e) {
-    // Statement-level failures travel in-band as error results (HTTP stays
-    // 200), matching how real libSQL servers report SQL errors.
+
     return {
       type: "error",
       error: { message: (e as Error).message, code: "SQLITE_ERROR" },
@@ -187,10 +170,6 @@ function execute(db: Database, sql: string, args: unknown[]): unknown {
     ...(rowId > 0n ? { last_insert_rowid: rowId.toString() } : {}),
   };
 }
-
-// ---------------------------------------------------------------------------
-// Hrana value encoding/decoding (mock side)
-// ---------------------------------------------------------------------------
 
 function wireToJs(value: unknown, reqIndex: number, argIndex: number, violations: string[]): unknown {
   if (value === null || typeof value !== "object" || typeof (value as WireValue).type !== "string") {

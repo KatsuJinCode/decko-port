@@ -1,7 +1,4 @@
-// generalized-import.test.ts — the end-to-end generalized importer
-// against a synthetic Ruby decko SQLite source built in-test. Verifies
-// the corpus-v2 shape (content -> db_content rename, NULL-filled
-// columns) and the mysqldump shape (full schema) both land identically.
+
 
 import { describe, it, expect, afterAll } from "vitest";
 import { mkdtempSync } from "node:fs";
@@ -11,7 +8,7 @@ import Database from "better-sqlite3";
 import { LocalSqliteToolDriver } from "../../../tools/migrate/import.mjs";
 import { importFromSqlite } from "../../../tools/migrate/generalized-import.mjs";
 
-const DDL_PATH = "C:/localProjects/decko-ts/db/schema.sqlite.sql";
+const DDL_PATH = "db/schema.sqlite.sql";
 const dirs: string[] = [];
 function makeDir(): string {
   const dir = mkdtempSync(join(tmpdir(), "decko-gen-import-"));
@@ -20,12 +17,11 @@ function makeDir(): string {
 }
 afterAll(() => {
   for (const d of dirs) {
-    // no rm; tmpdir cleanup is OS-managed on Windows
+
     void d;
   }
 });
 
-/** Build a corpus-v2-shaped source SQLite DB (3 tables, content rename). */
 function buildCorpusV2Source(dir: string): string {
   const path = join(dir, "corpus.sqlite");
   const db = new Database(path);
@@ -43,8 +39,7 @@ function buildCorpusV2Source(dir: string): string {
     ref_type TEXT DEFAULT '', is_present INTEGER
   )`);
   db.exec(`CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)`);
-  // populate a small deck — decko-ts target requires created_at + updated_at
-  // NOT NULL, so include them on every row.
+
   const T0 = "2024-01-01 00:00:00";
   const cards = [
     [1, "Alpha", "alpha", null, null, null, 1, 1, "*all", null, 0, 3, "<p>alpha body</p>", T0, T0],
@@ -83,29 +78,29 @@ describe("importFromSqlite — corpus-v2 shape", () => {
       expect(stats.counts["cards"]).toBe(4);
       expect(stats.counts["card_references"]).toBe(1);
       expect(stats.errors).toEqual([]);
-      // settings inventory
+
       expect(stats.settingsInventory.tables.length).toBe(1);
       expect(stats.settingsInventory.tables[0]?.source).toBe("meta");
       expect(stats.settingsInventory.tables[0]?.count).toBe(1);
       expect(stats.settingsInventory.tables[0]?.sampleKeys).toContain("build");
-      // schema mappings
+
       expect(stats.schemaMappings["cards"]).toBe("core");
       expect(stats.schemaMappings["card_references"]).toBe("core");
       expect(stats.schemaMappings["meta"]).toBe("settings");
-      // rows landed: target db_content is the source content
+
       const r = await driver.query<{ id: number; db_content: string }>(
         "SELECT id, db_content FROM cards WHERE id = 1",
         [],
       );
       expect(r.rows[0]?.db_content).toBe("<p>alpha body</p>");
-      // NULL target columns filled in (current_revision_id + references_expired)
+
       const rev = await driver.query<{ current_revision_id: number | null; references_expired: number | null }>(
         "SELECT current_revision_id, references_expired FROM cards WHERE id = 1",
         [],
       );
       expect(rev.rows[0]?.current_revision_id).toBeNull();
       expect(rev.rows[0]?.references_expired).toBeNull();
-      // meta not imported: target has no meta table
+
       const meta = await driver.query<{ n: number }>(
         "SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='meta'",
         [],
@@ -122,7 +117,7 @@ describe("importFromSqlite — unknown tables", () => {
     const dir = makeDir();
     const srcPath = join(dir, "src.sqlite");
     const db = new Database(srcPath);
-    // include created_at/updated_at because decko-ts target requires NOT NULL
+
     db.exec(`CREATE TABLE cards (
       id INTEGER PRIMARY KEY, name TEXT, content TEXT,
       created_at TEXT, updated_at TEXT,
@@ -188,7 +183,7 @@ describe("importFromSqlite — reports content-free", () => {
       expect(json).not.toContain("alpha body");
       expect(json).not.toContain("child body");
       expect(json).not.toContain("trashed body");
-      // settings VALUES never copied
+
       expect(json).not.toContain("synth-test");
     } finally {
       driver.close();

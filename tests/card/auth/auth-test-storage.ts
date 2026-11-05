@@ -1,13 +1,4 @@
-// Test storage for the auth-layer tests: a thin better-sqlite3
-// SQLDatabaseDriver over an in-memory database loaded with the CORE schema
-// (db/schema.sqlite.sql), synthetic account cards, and the auth layer's own
-// migration applied through the real runner. All card content is SYNTHETIC
-// (the stream data rule: no real deck content in tests).
-//
-// Lives INSIDE tests/card/auth per the stream boundaries — same pattern as
-// tests/card/history/history-test-storage.ts, which documents why these
-// tests narrow the better-sqlite3 surface locally instead of growing the
-// shared ambient shim.
+
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -73,7 +64,7 @@ export class AuthTestDriver implements SQLDatabaseDriver {
 
 export interface AuthTestStorage {
   driver: AuthTestDriver;
-  /** Raw helpers for SELECTing rows back outside the driver contract. */
+
   selectAll<T = Record<string, unknown>>(sql: string, params?: unknown[]): T[];
   selectOne<T = Record<string, unknown>>(sql: string, params?: unknown[]): T | undefined;
   exec(sql: string): void;
@@ -82,8 +73,6 @@ export interface AuthTestStorage {
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
-/** Fixed clock base for deterministic expiry tests: T0 plus one tick per
- *  advance() call. */
 export const T0 = Date.parse("2026-09-20T12:00:00.000Z");
 
 export function fakeClock() {
@@ -103,8 +92,6 @@ export interface SyntheticAccount {
   codename?: string;
 }
 
-/** Insert one synthetic user card. User cards are simple cards (name + key
- *  set — the compound-card NULL convention applies to junction cards). */
 export function insertAccountCard(
   storage: AuthTestStorage,
   account: SyntheticAccount,
@@ -123,9 +110,6 @@ export function insertAccountCard(
   );
 }
 
-/** Fresh in-memory database with the CORE schema loaded. Migration
- *  application is left to each test (some tests exercise the migration
- *  itself against a bare database). */
 export function createAuthTestStorage(): AuthTestStorage {
   const db = new Database(":memory:") as unknown as TestDatabase;
   const ddl = readFileSync(`${REPO_ROOT}db/schema.sqlite.sql`, "utf8");

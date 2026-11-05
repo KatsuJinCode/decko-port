@@ -1,7 +1,4 @@
-// Tests for the fetch/cache layer port (src/card/fetch.ts + src/card/fetch/*
-// <- card-1.110.0 lib/card/fetch.rb, lib/card/fetch/**, lib/card/cache/**)
-// against real SQLite storage seeded with plain row INSERTs. Every
-// expectation cites the Ruby source it derives from.
+
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
@@ -40,7 +37,6 @@ afterEach(() => {
   storage.close();
 });
 
-/** The standard seed: two type cards, a junction pair, and a trashed card. */
 async function seedStandardDeck(): Promise<void> {
   await seedCard(storage, { id: 2, name: "RichText", codename: "basic", typeId: 2 });
   await seedCard(storage, { id: 5, name: "Search Type", typeId: 2 });
@@ -61,7 +57,7 @@ describe("hit / hit-cache / miss (fetch.rb#retrieve_or_new)", () => {
     expect(card!.dbContent).toBe("the home content");
     expect(card!.trash).toBe(false);
     expect(card!.isNew).toBe(false);
-    // first fetch went to the db
+
     expect(storage.counting.queries).toBeGreaterThan(0);
   });
 
@@ -71,7 +67,7 @@ describe("hit / hit-cache / miss (fetch.rb#retrieve_or_new)", () => {
     storage.counting.reset();
     const card = await engine.fetchByName("Home Page");
     expect(card?.id).toBe(10);
-    expect(storage.counting.queries).toBe(0); // cache/card_class.rb#retrieve_from_cache
+    expect(storage.counting.queries).toBe(0);
   });
 
   it("resolves ids through the lexicon and then the cache (retrieve_from_cache_by_id)", async () => {
@@ -80,7 +76,7 @@ describe("hit / hit-cache / miss (fetch.rb#retrieve_or_new)", () => {
     storage.counting.reset();
     const second = await engine.fetchById(10);
     expect(second?.key).toBe(first?.key);
-    expect(storage.counting.queries).toBe(0); // lexicon name(10) is warm too
+    expect(storage.counting.queries).toBe(0);
   });
 
   it("misses return nil for unknown names (retrieve.rb:22-23)", async () => {
@@ -91,14 +87,13 @@ describe("hit / hit-cache / miss (fetch.rb#retrieve_or_new)", () => {
   it("caches the miss as a placeholder so repeat misses skip the db (store.rb#new_for_cache)", async () => {
     await seedStandardDeck();
     await engine.fetchByName("Nobody Home");
-    // the placeholder is in the cache under the key (shared.rb module doc:
-    // the shared cache stores records "that have been requested but are missing")
+
     const placeholder = engine.retrieveFromCacheByKey("nobody_home");
     expect(placeholder?.isNew).toBe(true);
     expect(placeholder?.id).toBeUndefined();
     storage.counting.reset();
     expect(await engine.fetchByName("Nobody Home")).toBeUndefined();
-    expect(storage.counting.queries).toBe(0); // served from the cached placeholder
+    expect(storage.counting.queries).toBe(0);
   });
 
   it("fetches by all three accessors to the same card", async () => {
@@ -118,9 +113,7 @@ describe("hit / hit-cache / miss (fetch.rb#retrieve_or_new)", () => {
     expect(junction?.id).toBe(21);
     expect(junction?.leftId).toBe(10);
     expect(junction?.rightId).toBe(20);
-    // the composed (canonical) name joins the side cards' stored names -
-    // the right card is stored as "Search", so that is the canonical form;
-    // the KEY is built from the canonical name
+
     expect(junction?.name?.s).toBe("Home Page+Search");
     expect(junction?.key).toBe("home_page+search");
   });
@@ -193,10 +186,10 @@ describe("trash exclusion (retrieve.rb#retrieval_from_db_query)", () => {
 
   it("look_in_trash drops cached new? placeholders to read the db version (retrieve.rb:15-17)", async () => {
     await seedStandardDeck();
-    await engine.fetchByName("Never Existed"); // placeholder cached
-    // now look_in_trash must NOT serve the cached placeholder: it goes to db
+    await engine.fetchByName("Never Existed");
+
     expect(await engine.fetchByName("Never Existed", { lookInTrash: true })).toBeUndefined();
-    // and the placeholder is still cached for non-trash lookups
+
     expect(engine.retrieveFromCacheByKey("never_existed")?.isNew).toBe(true);
   });
 
@@ -218,13 +211,13 @@ describe("row composition (the table -> attribute map)", () => {
   it("composes compound names via the lexicon, not the (NULL) column (name/all.rb:13)", async () => {
     await seedStandardDeck();
     const junction = await engine.fetchById(21);
-    // composed from the side cards' stored names: "Home Page" + "Search"
+
     expect(junction?.name?.s).toBe("Home Page+Search");
     expect(junction?.key).toBe("home_page+search");
     const row = await storage.selectOne<{ name: string | null; key: string | null }>(
       "SELECT name, key FROM cards WHERE id = 21",
     );
-    expect(row?.name).toBeNull(); // the 2020-migration convention: compound columns are NULL
+    expect(row?.name).toBeNull();
     expect(row?.key).toBeNull();
   });
 
@@ -232,15 +225,14 @@ describe("row composition (the table -> attribute map)", () => {
     await seedStandardDeck();
     const search = await engine.fetchByName("Search");
     expect(search?.typeId).toBe(5);
-    // the type CARD itself fetches fine
+
     const typeCard = await engine.fetchById(5);
     expect(typeCard?.name?.s).toBe("Search Type");
   });
 
   it("card_actions/card_changes do not participate in fetch composition", async () => {
     await seedStandardDeck();
-    // history rows exist for the card but the fetch ignores them entirely:
-    // composition reads cards columns only (card-mod-history lib/card/action.rb)
+
     await storage.driver.query(
       `INSERT INTO card_acts (id, card_id, actor_id, acted_at, ip_address)
        VALUES (1, 10, 1, '2026-09-19 00:00:00.000', '127.0.0.1')`,
@@ -257,7 +249,7 @@ describe("row composition (the table -> attribute map)", () => {
       [],
     );
     const card = await engine.fetchByName("Home Page");
-    expect(card?.dbContent).toBe("the home content"); // cards.db_content, not the change
+    expect(card?.dbContent).toBe("the home content");
   });
 });
 
@@ -270,25 +262,19 @@ describe("fetch cache scoping and writes (cache/card_class.rb#write_to_cache)", 
   });
 
   it("scopes reads temp-first then shared; local_only reads temp only", async () => {
-    // lib/card/cache.rb: temp is request-local, shared is cross-process;
-    // retrieve_from_cache(local_only) reads cache.temp.read ONLY
-    // (cache/card_class.rb:13-15) and write_to_cache(local_only) writes
-    // temp only (cache/card_class.rb:28-30).
+
     const store = mapStore();
     const first = await createFetchTestStorage({ sharedStore: store });
     try {
       await seedCard(first, { id: 10, name: "Home Page" });
       const second = new FetchEngine(first.counting, { sharedStore: store });
 
-      await first.engine.fetchByName("Home Page"); // writes temp1 AND shared
+      await first.engine.fetchByName("Home Page");
       first.counting.reset();
 
-      // engine2 has an empty temp but sees the shared entry
       expect((await second.fetchByName("Home Page"))?.id).toBe(10);
-      expect(first.counting.queries).toBe(0); // served from the shared cache
+      expect(first.counting.queries).toBe(0);
 
-      // local_only bypasses the shared level: a THIRD engine with an empty
-      // temp must go all the way to the db
       const third = new FetchEngine(first.counting, { sharedStore: store });
       expect((await third.fetchByName("Home Page", { localOnly: true }))?.id).toBe(10);
       expect(first.counting.queries).toBeGreaterThan(0);
@@ -305,7 +291,7 @@ describe("fetch cache scoping and writes (cache/card_class.rb#write_to_cache)", 
       const sharedKeys = () => [...store.map.keys()].filter((k) => k.endsWith("/home_page"));
       expect(sharedKeys()).toHaveLength(0);
       await first.engine.fetchByName("Home Page", { localOnly: true });
-      expect(sharedKeys()).toHaveLength(0); // nothing reached the shared level
+      expect(sharedKeys()).toHaveLength(0);
       expect(first.engine.retrieveFromCacheByKey("home_page", true)?.id).toBe(10);
     } finally {
       first.close();
@@ -317,8 +303,7 @@ describe("fetch cache scoping and writes (cache/card_class.rb#write_to_cache)", 
     const card = await engine.fetchByName("Home Page");
     expect(card).toBeDefined();
     engine.expireName("Home Page");
-    // the guard lives in store.rb#update_cache? - exercise it through the
-    // private hook (the write path is what sets @uncacheable in Ruby)
+
     card!.uncacheable = true;
     (
       engine as unknown as {
@@ -333,17 +318,17 @@ describe("cache invalidation (cache/all.rb#expire)", () => {
   it("expireName drops the cached card so the next fetch re-reads the db", async () => {
     await seedStandardDeck();
     await engine.fetchByName("Home Page");
-    // simulate a write-path change behind the cache's back
+
     await storage.driver.query("UPDATE cards SET db_content = 'updated content' WHERE id = 10", []);
-    expect((await engine.fetchByName("Home Page"))?.dbContent).toBe("the home content"); // stale
-    engine.expireName("Home Page"); // cache/card_class.rb#expire
+    expect((await engine.fetchByName("Home Page"))?.dbContent).toBe("the home content");
+    engine.expireName("Home Page");
     expect((await engine.fetchByName("Home Page"))?.dbContent).toBe("updated content");
   });
 
   it("expireCard deletes both key versions (name + nameBeforeAct, cache/all.rb:104-108)", async () => {
     await seedStandardDeck();
     const card = (await engine.fetchByName("Home Page"))!;
-    // a rename leaves the OLD key version in the cache (write-path behavior)
+
     engine.cardCache.write("old_name", card);
     card.nameBeforeAct = DeckoName.parse("Old Name");
     engine.expireCard(card);
@@ -367,7 +352,7 @@ describe("cache invalidation (cache/all.rb#expire)", () => {
     const junction = (await engine.fetchByName("Home Page+search"))!;
     engine.expireCard(junction);
     expect(engine.retrieveFromCacheByKey("home_page+search")).toBeUndefined();
-    expect(engine.retrieveFromCacheByKey("home_page")).toBeUndefined(); // left card expired too
+    expect(engine.retrieveFromCacheByKey("home_page")).toBeUndefined();
   });
 });
 

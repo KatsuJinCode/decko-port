@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites name="vitest tests" tests="143" failures="43" errors="0" time="10.479471924">
-    <testsuite name="tests/card/render/deep-nesting-trip-attribution.test.ts" timestamp="2026-11-03T20:26:07.127Z" hostname="brandon-portal-vm" tests="2" failures="1" errors="0" skipped="0" time="0.160190742">
+    <testsuite name="tests/card/render/deep-nesting-trip-attribution.test.ts" timestamp="2026-11-03T20:26:07.127Z" hostname="linux-arm64-verification-vm" tests="2" failures="1" errors="0" skipped="0" time="0.160190742">
         <testcase classname="tests/card/render/deep-nesting-trip-attribution.test.ts" name="deep-nesting round-trip attribution &gt; names the cause of every cold round trip" time="0.116599901">
             <failure message="chain d1: trips with no named cause: expected [ { kind: &apos;query&apos;, …(3) }, …(1) ] to deeply equal []" type="AssertionError">
 AssertionError: chain d1: trips with no named cause: expected [ { kind: &apos;query&apos;, …(3) }, …(1) ] to deeply equal []
@@ -48,7 +48,7 @@ AssertionError: chain d1: trips with no named cause: expected [ { kind: &apos;qu
         <testcase classname="tests/card/render/deep-nesting-trip-attribution.test.ts" name="deep-nesting round-trip attribution &gt; a warm render of the same card costs the freshness stamp alone" time="0.040797461">
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" timestamp="2026-11-03T20:26:07.129Z" hostname="brandon-portal-vm" tests="6" failures="1" errors="0" skipped="0" time="0.01492603">
+    <testsuite name="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" timestamp="2026-11-03T20:26:07.129Z" hostname="linux-arm64-verification-vm" tests="6" failures="1" errors="0" skipped="0" time="0.01492603">
         <testcase classname="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" name="the page&apos;s own main-view dispatch is rescue-scoped &gt; imports the quiet span helper and the posture switch" time="0.001909654">
         </testcase>
         <testcase classname="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" name="the page&apos;s own main-view dispatch is rescue-scoped &gt; the root view-lane catch is what made the raise unconditional" time="0.000605044">
@@ -1694,7 +1694,7 @@ function resolveCloudUrls(html: string): string {
         <testcase classname="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" name="the posture switch still governs the scope &gt; true re-raises and false reaches the span, by construction of the guard" time="0.000594404">
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/rules/adversarial-original-rule-storage.test.ts" timestamp="2026-11-03T20:26:07.135Z" hostname="brandon-portal-vm" tests="10" failures="10" errors="0" skipped="0" time="2.623054475">
+    <testsuite name="tests/card/rules/adversarial-original-rule-storage.test.ts" timestamp="2026-11-03T20:26:07.135Z" hostname="linux-arm64-verification-vm" tests="10" failures="10" errors="0" skipped="0" time="2.623054475">
         <testcase classname="tests/card/rules/adversarial-original-rule-storage.test.ts" name="original new Book type rule returns authorize" time="0.435864136">
             <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
 Error: RubySourceProbePinnedGemSourcesUnavailable
@@ -1786,7 +1786,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/card/rules/adversarial-rule-cache-key.test.ts" timestamp="2026-11-03T20:26:07.142Z" hostname="brandon-portal-vm" tests="4" failures="4" errors="0" skipped="0" time="0.683947527">
+    <testsuite name="tests/card/rules/adversarial-rule-cache-key.test.ts" timestamp="2026-11-03T20:26:07.142Z" hostname="linux-arm64-verification-vm" tests="4" failures="4" errors="0" skipped="0" time="0.683947527">
         <testcase classname="tests/card/rules/adversarial-rule-cache-key.test.ts" name="matches the original requested cache key: setting-code-changed, fallback=false" time="0.254567598">
             <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
 Error: RubySourceProbePinnedGemSourcesUnavailable
@@ -1820,7 +1820,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/cql/search-count-mysql.test.ts" timestamp="2026-11-03T20:26:07.145Z" hostname="brandon-portal-vm" tests="5" failures="1" errors="0" skipped="4" time="0.022589647">
+    <testsuite name="tests/cql/search-count-mysql.test.ts" timestamp="2026-11-03T20:26:07.145Z" hostname="linux-arm64-verification-vm" tests="5" failures="1" errors="0" skipped="4" time="0.022589647">
         <testcase classname="tests/cql/search-count-mysql.test.ts" name="search count on the MySQL rung (stock Ruby Decko&apos;s recorded queries) &gt; runs on the recorded rung: a real MySQL server, the capture&apos;s collation" time="0">
             <skipped/>
         </testcase>
@@ -1834,16 +1834,16 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             <skipped/>
         </testcase>
         <testcase classname="tests/cql/search-count-mysql.test.ts" name="tests/cql/search-count-mysql.test.ts" time="0.022589647">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ tests/cql/search-count-mysql.test.ts:109:12
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/deploy/uncompressed-wasm-build.test.ts" timestamp="2026-11-03T20:26:07.147Z" hostname="brandon-portal-vm" tests="7" failures="3" errors="0" skipped="0" time="3.923123668">
+    <testsuite name="tests/deploy/uncompressed-wasm-build.test.ts" timestamp="2026-11-03T20:26:07.147Z" hostname="linux-arm64-verification-vm" tests="7" failures="3" errors="0" skipped="0" time="3.923123668">
         <testcase classname="tests/deploy/uncompressed-wasm-build.test.ts" name="refuses implicit or unsafe asset hosts" time="0.004464353">
         </testcase>
         <testcase classname="tests/deploy/uncompressed-wasm-build.test.ts" name="reads replaced canonical provider bytes during a same-process rebuild and refuses a different provider" time="0.091824277">
@@ -1860,16 +1860,16 @@ AssertionError: expected &apos;node:internal/errors:983\n  const err…&apos; to
   const err = new Error(message);
               ^
 
-Error: Command failed: git -C /home/ubuntu/decko-full-suite-20261103/src rev-parse --show-toplevel
+Error: Command failed: git -C workspace/decko-full-suite-20261103/src rev-parse --show-toplevel
 fatal: not a git repository (or any of the parent directories): .git
 
     at genericNodeError (node:internal/errors:983:15)
     at wrappedFn (node:internal/errors:537:14)
     at checkExecSyncError (node:child_process:916:11)
     at execFileSync (node:child_process:952:15)
-    at git (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
-    at readBuildStamp (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
-    at file:///home/ubuntu/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
+    at git (file://workspace/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
+    at readBuildStamp (file://workspace/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
+    at file://workspace/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
     at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
@@ -1905,16 +1905,16 @@ AssertionError: expected &apos;node:internal/errors:983\n  const err…&apos; to
 +   const err = new Error(message);
 +               ^
 +
-+ Error: Command failed: git -C /home/ubuntu/decko-full-suite-20261103/src rev-parse --show-toplevel
++ Error: Command failed: git -C workspace/decko-full-suite-20261103/src rev-parse --show-toplevel
 + fatal: not a git repository (or any of the parent directories): .git
 +
 +     at genericNodeError (node:internal/errors:983:15)
 +     at wrappedFn (node:internal/errors:537:14)
 +     at checkExecSyncError (node:child_process:916:11)
 +     at execFileSync (node:child_process:952:15)
-+     at git (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
-+     at readBuildStamp (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
-+     at file:///home/ubuntu/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
++     at git (file://workspace/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
++     at readBuildStamp (file://workspace/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
++     at file://workspace/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
 +     at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
 +     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
 +     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
@@ -1941,16 +1941,16 @@ AssertionError: expected &apos;node:internal/errors:983\n  const err…&apos; to
   const err = new Error(message);
               ^
 
-Error: Command failed: git -C /home/ubuntu/decko-full-suite-20261103/src rev-parse --show-toplevel
+Error: Command failed: git -C workspace/decko-full-suite-20261103/src rev-parse --show-toplevel
 fatal: not a git repository (or any of the parent directories): .git
 
     at genericNodeError (node:internal/errors:983:15)
     at wrappedFn (node:internal/errors:537:14)
     at checkExecSyncError (node:child_process:916:11)
     at execFileSync (node:child_process:952:15)
-    at git (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
-    at readBuildStamp (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
-    at file:///home/ubuntu/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
+    at git (file://workspace/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
+    at readBuildStamp (file://workspace/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
+    at file://workspace/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
     at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
@@ -1972,16 +1972,16 @@ AssertionError: node:internal/errors:983
   const err = new Error(message);
               ^
 
-Error: Command failed: git -C /home/ubuntu/decko-full-suite-20261103/src rev-parse --show-toplevel
+Error: Command failed: git -C workspace/decko-full-suite-20261103/src rev-parse --show-toplevel
 fatal: not a git repository (or any of the parent directories): .git
 
     at genericNodeError (node:internal/errors:983:15)
     at wrappedFn (node:internal/errors:537:14)
     at checkExecSyncError (node:child_process:916:11)
     at execFileSync (node:child_process:952:15)
-    at git (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
-    at readBuildStamp (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
-    at file:///home/ubuntu/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
+    at git (file://workspace/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
+    at readBuildStamp (file://workspace/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
+    at file://workspace/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
     at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
@@ -2015,7 +2015,7 @@ Node.js v22.23.3
         <testcase classname="tests/deploy/uncompressed-wasm-build.test.ts" name="builds real binary providers without boot fetches and recovers later compiler/image operations" time="3.458377919">
         </testcase>
     </testsuite>
-    <testsuite name="tests/exercise/parity-1.test.ts" timestamp="2026-11-03T20:26:07.150Z" hostname="brandon-portal-vm" tests="5" failures="1" errors="0" skipped="4" time="0.018348615">
+    <testsuite name="tests/exercise/parity-1.test.ts" timestamp="2026-11-03T20:26:07.150Z" hostname="linux-arm64-verification-vm" tests="5" failures="1" errors="0" skipped="4" time="0.018348615">
         <testcase classname="tests/exercise/parity-1.test.ts" name="byte-for-byte parity with Ruby Decko on the synthetic-v1 deck &gt; the finite synthetic-v1 operations match recorded Ruby under the declared normalizations; dirty source remains diagnostic" time="0">
             <skipped/>
         </testcase>
@@ -2039,7 +2039,7 @@ Error: ParitySourceIdentityUnavailable: fatal: not a git repository (or any of t
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/exercise/parity-2.test.ts" timestamp="2026-11-03T20:26:07.152Z" hostname="brandon-portal-vm" tests="5" failures="1" errors="0" skipped="2" time="0.183074911">
+    <testsuite name="tests/exercise/parity-2.test.ts" timestamp="2026-11-03T20:26:07.152Z" hostname="linux-arm64-verification-vm" tests="5" failures="1" errors="0" skipped="2" time="0.183074911">
         <testcase classname="tests/exercise/parity-2.test.ts" name="the side-effect and read-write tallies of the synthetic-deck grade &gt; &quot;side effects 19 of 19&quot; — the grade run asserts all 16 write answers (saved or refused, the error messages, the mail sent) and all 3 sign-in answers equal the Ruby oracle answers committed beside the fixture, and the 19 is recounted from ops/scenarios.json" time="0">
             <skipped/>
         </testcase>
@@ -2061,7 +2061,7 @@ Error: ParitySourceIdentityUnavailable: fatal: not a git repository (or any of t
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/server/api-key-read-arm-seam-parity.test.ts" timestamp="2026-11-03T20:26:07.153Z" hostname="brandon-portal-vm" tests="14" failures="1" errors="0" skipped="0" time="0.0595156">
+    <testsuite name="tests/server/api-key-read-arm-seam-parity.test.ts" timestamp="2026-11-03T20:26:07.153Z" hostname="linux-arm64-verification-vm" tests="14" failures="1" errors="0" skipped="0" time="0.0595156">
         <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the PINNED api_key gem&apos;s own answers (C17) &gt; the capture ran the pinned gem&apos;s own authenticators and sign-in" time="0.001925735">
         </testcase>
         <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the PINNED api_key gem&apos;s own answers (C17) &gt; the header wins over the param, and neither is a token" time="0.000680365">
@@ -2100,7 +2100,7 @@ Received: &quot;//   The api_key half of the authenticators (the X-API-Key heade
         <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the pinned deck&apos;s own answer at the read path (C17) &gt; the read reaches the card read arm in the pinned deck" time="0.000235282">
         </testcase>
     </testsuite>
-    <testsuite name="tests/server/autoname-serving-qualification.test.ts" timestamp="2026-11-03T20:26:07.156Z" hostname="brandon-portal-vm" tests="4" failures="3" errors="0" skipped="0" time="1.973699244">
+    <testsuite name="tests/server/autoname-serving-qualification.test.ts" timestamp="2026-11-03T20:26:07.156Z" hostname="linux-arm64-verification-vm" tests="4" failures="3" errors="0" skipped="0" time="1.973699244">
         <testcase classname="tests/server/autoname-serving-qualification.test.ts" name="observes the original serving fixture default type and absent Setting registration" time="0.043932764">
         </testcase>
         <testcase classname="tests/server/autoname-serving-qualification.test.ts" name="matches actual root and native cache qualification: valid" time="0.636736018">
@@ -2128,16 +2128,16 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/server/card-class-declarations-parity.test.ts" timestamp="2026-11-03T20:26:07.158Z" hostname="brandon-portal-vm" tests="9" failures="1" errors="0" skipped="0" time="0.069902155">
+    <testsuite name="tests/server/card-class-declarations-parity.test.ts" timestamp="2026-11-03T20:26:07.158Z" hostname="linux-arm64-verification-vm" tests="9" failures="1" errors="0" skipped="0" time="0.069902155">
         <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; the fixture graded every declaration the pinned class body carries" time="0.002492378">
         </testcase>
         <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; the pinned class body is the body the fixture says it is" time="0.006353606">
-            <failure message="ENOENT: no such file or directory, open &apos;C:/localProjects/decko-ruby-oracle-gems/ruby/3.4.0/gems/card-1.110.0/lib/card.rb&apos;" type="Error">
-Error: ENOENT: no such file or directory, open &apos;C:/localProjects/decko-ruby-oracle-gems/ruby/3.4.0/gems/card-1.110.0/lib/card.rb&apos;
+            <failure message="ENOENT: no such file or directory, open &apos;workspace/decko-ruby-oracle-gems/ruby/3.4.0/gems/card-1.110.0/lib/card.rb&apos;" type="Error">
+Error: ENOENT: no such file or directory, open &apos;workspace/decko-ruby-oracle-gems/ruby/3.4.0/gems/card-1.110.0/lib/card.rb&apos;
  ❯ tests/server/card-class-declarations-parity.test.ts:94:20
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-Serialized Error: { errno: -2, code: &apos;ENOENT&apos;, syscall: &apos;open&apos;, path: &apos;C:/localProjects/decko-ruby-oracle-gems/ruby/3.4.0/gems/card-1.110.0/lib/card.rb&apos; }
+Serialized Error: { errno: -2, code: &apos;ENOENT&apos;, syscall: &apos;open&apos;, path: &apos;workspace/decko-ruby-oracle-gems/ruby/3.4.0/gems/card-1.110.0/lib/card.rb&apos; }
             </failure>
         </testcase>
         <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; every PORTED declaration retains one exact source anchor in its recorded file" time="0.029630458">
@@ -2155,7 +2155,7 @@ Serialized Error: { errno: -2, code: &apos;ENOENT&apos;, syscall: &apos;open&apo
         <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; the one named skip is still a skip, and its reason is still true" time="0.002510378">
         </testcase>
     </testsuite>
-    <testsuite name="tests/server/drivers/mysql-driver.test.ts" timestamp="2026-11-03T20:26:07.162Z" hostname="brandon-portal-vm" tests="32" failures="8" errors="0" skipped="12" time="0.044219846">
+    <testsuite name="tests/server/drivers/mysql-driver.test.ts" timestamp="2026-11-03T20:26:07.162Z" hostname="linux-arm64-verification-vm" tests="32" failures="8" errors="0" skipped="12" time="0.044219846">
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="conformance: MysqlDriver (MySQL 8.4 server) &gt; creates a table, inserts with params, and maps rows/rowsAffected/lastInsertRowId" time="0">
             <skipped/>
         </testcase>
@@ -2197,9 +2197,9 @@ Serialized Error: { errno: -2, code: &apos;ENOENT&apos;, syscall: &apos;open&apo
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="atomic sign-in counter dialect &gt; preserves conflict-clause words inside quoted values while translating the real clause" time="0.000562764">
         </testcase>
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="MysqlDriver session settings &gt; runs every connection in strict mode with the engine&apos;s string and identifier rules" time="0.000466604">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
@@ -2207,9 +2207,9 @@ Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-
             </failure>
         </testcase>
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="MysqlDriver session settings &gt; rejects an over-long value rather than truncating it (strict session)" time="0.000764486">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
@@ -2217,9 +2217,9 @@ Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-
             </failure>
         </testcase>
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="MysqlDriver session settings &gt; gives a SQLite-style rowid counter for AUTOINCREMENT ids and reports the last insert id" time="0.000446163">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
@@ -2227,9 +2227,9 @@ Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-
             </failure>
         </testcase>
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="MysqlDriver recursive CTE (the prefetch reach shape) &gt; walks nest and side edges over a cyclic graph, once per card, and drops trashed cards" time="0.000513563">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
@@ -2255,9 +2255,9 @@ Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; reads sqlite_sequence as the last allocation before the next AUTO_INCREMENT value" time="0.000181002">
         </testcase>
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; keeps the native sequence high-water mark after rollback and deletion" time="0.000259002">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
@@ -2265,9 +2265,9 @@ Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-
             </failure>
         </testcase>
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; answers last_insert_rowid() with the id the connection&apos;s last insert took" time="0.000226361">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
@@ -2277,9 +2277,9 @@ Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; passes unknown forms through unchanged so MySQL reports them" time="0.000153122">
         </testcase>
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="conformance: MysqlDriver (MySQL 8.4 server)" time="0.027017399">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
@@ -2287,9 +2287,9 @@ Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-
             </failure>
         </testcase>
         <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="transactions: MysqlDriver (MySQL 8.4 server, native)" time="0.000481684">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
@@ -2297,21 +2297,21 @@ Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/server/drivers/mysql-lifetime.test.ts" timestamp="2026-11-03T20:26:07.170Z" hostname="brandon-portal-vm" tests="2" failures="2" errors="0" skipped="0" time="0.255374524">
+    <testsuite name="tests/server/drivers/mysql-lifetime.test.ts" timestamp="2026-11-03T20:26:07.170Z" hostname="linux-arm64-verification-vm" tests="2" failures="2" errors="0" skipped="0" time="0.255374524">
         <testcase classname="tests/server/drivers/mysql-lifetime.test.ts" name="mysqld lifetime &gt; ends the server when the process that started it is force-killed" time="0.238899523">
             <failure message="helper did not start a server: code=1 signal=none
 stdout:
 
 stderr:
-file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142
+file://workspace/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142
     if (init.code !== 0) throw new Error(`mysqld --initialize-insecure failed (${init.code}): ${init.output}`);
                                ^
 
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
-    at startMysqlServer (file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142:32)
+    at startMysqlServer (file://workspace/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142:32)
     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-lifetime-parent.ts:12:16
+    at async file://workspace/decko-full-suite-20261103/src/tests/server/drivers/mysql-lifetime-parent.ts:12:16
 
 Node.js v22.23.3
 " type="Error">
@@ -2319,15 +2319,15 @@ Error: helper did not start a server: code=1 signal=none
 stdout:
 
 stderr:
-file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142
+file://workspace/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142
     if (init.code !== 0) throw new Error(`mysqld --initialize-insecure failed (${init.code}): ${init.output}`);
                                ^
 
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
-    at startMysqlServer (file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142:32)
+    at startMysqlServer (file://workspace/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142:32)
     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-lifetime-parent.ts:12:16
+    at async file://workspace/decko-full-suite-20261103/src/tests/server/drivers/mysql-lifetime-parent.ts:12:16
 
 Node.js v22.23.3
 
@@ -2338,16 +2338,16 @@ Node.js v22.23.3
             </failure>
         </testcase>
         <testcase classname="tests/server/drivers/mysql-lifetime.test.ts" name="mysqld lifetime &gt; normal shutdown ends the actual server and removes its data directory" time="0.013421939">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ tests/server/drivers/mysql-lifetime.test.ts:90:20
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/server/drivers/mysql-ruby-schema.test.ts" timestamp="2026-11-03T20:26:07.172Z" hostname="brandon-portal-vm" tests="5" failures="1" errors="0" skipped="4" time="0.033415286">
+    <testsuite name="tests/server/drivers/mysql-ruby-schema.test.ts" timestamp="2026-11-03T20:26:07.172Z" hostname="linux-arm64-verification-vm" tests="5" failures="1" errors="0" skipped="4" time="0.033415286">
         <testcase classname="tests/server/drivers/mysql-ruby-schema.test.ts" name="Ruby Decko&apos;s MySQL schema, served by the port &gt; opens the Ruby schema with openSameDatabase and reports only the port&apos;s additive objects" time="0">
             <skipped/>
         </testcase>
@@ -2361,22 +2361,22 @@ Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-
             <skipped/>
         </testcase>
         <testcase classname="tests/server/drivers/mysql-ruby-schema.test.ts" name="tests/server/drivers/mysql-ruby-schema.test.ts" time="0.033415286">
-            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+            <failure message="mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 " type="Error">
-Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+Error: mysqld --initialize-insecure failed (127): workspace/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 
  ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
  ❯ tests/server/drivers/mysql-ruby-schema.test.ts:35:12
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/server/edit-session-replay.test.ts" timestamp="2026-11-03T20:26:07.173Z" hostname="brandon-portal-vm" tests="1" failures="1" errors="0" skipped="0" time="0">
+    <testsuite name="tests/server/edit-session-replay.test.ts" timestamp="2026-11-03T20:26:07.173Z" hostname="linux-arm64-verification-vm" tests="1" failures="1" errors="0" skipped="0" time="0">
         <testcase classname="tests/server/edit-session-replay.test.ts" name="tests/server/edit-session-replay.test.ts" time="0">
-            <failure message="RubyOracleVmUnavailable: Warning: Identity file /home/ubuntu/.ssh/oci-agents not accessible: No such file or directory.
+            <failure message="RubyOracleVmUnavailable: Warning: Identity file workspace/.ssh/oci-agents not accessible: No such file or directory.
 ssh: Could not resolve hostname juc-vm: Temporary failure in name resolution
 Connection closed by UNKNOWN port 65535
 " type="Error">
-Error: RubyOracleVmUnavailable: Warning: Identity file /home/ubuntu/.ssh/oci-agents not accessible: No such file or directory.
+Error: RubyOracleVmUnavailable: Warning: Identity file workspace/.ssh/oci-agents not accessible: No such file or directory.
 ssh: Could not resolve hostname juc-vm: Temporary failure in name resolution
 Connection closed by UNKNOWN port 65535
 
@@ -2386,7 +2386,7 @@ Connection closed by UNKNOWN port 65535
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/server/jasmine-engine-mount-template-parity.test.ts" timestamp="2026-11-03T20:26:07.174Z" hostname="brandon-portal-vm" tests="9" failures="1" errors="0" skipped="0" time="0.017742811">
+    <testsuite name="tests/server/jasmine-engine-mount-template-parity.test.ts" timestamp="2026-11-03T20:26:07.174Z" hostname="linux-arm64-verification-vm" tests="9" failures="1" errors="0" skipped="0" time="0.017742811">
         <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the pinned deck app template&apos;s Jasmine mount (A23) &gt; the capture read the PINNED card gem&apos;s own generator template" time="0.001826133">
         </testcase>
         <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the pinned deck app template&apos;s Jasmine mount (A23) &gt; the mount is behind the constant, and the whole gemset names it three times" time="0.001046448">
@@ -2417,7 +2417,7 @@ AssertionError: src/server/worker-shared-surface.ts:417: expected &apos;&apos; t
         <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the port&apos;s own surface (A23) &gt; the port&apos;s own source names no spec-runner engine" time="0.001640092">
         </testcase>
     </testsuite>
-    <testsuite name="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" timestamp="2026-11-03T20:26:07.176Z" hostname="brandon-portal-vm" tests="10" failures="1" errors="0" skipped="9" time="0.182437546">
+    <testsuite name="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" timestamp="2026-11-03T20:26:07.176Z" hostname="linux-arm64-verification-vm" tests="10" failures="1" errors="0" skipped="9" time="0.182437546">
         <testcase classname="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" name="armed route pins: UPDATE through the production recaptcha seat (no module mock) &gt; (1) armed + failed verify: the update is refused whole — 422 recaptcha shape, the token rode to siteverify once, zero rows" time="0">
             <skipped/>
         </testcase>
@@ -2455,7 +2455,7 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/server/write-routes-recaptcha-seat.test.ts" timestamp="2026-11-03T20:26:07.179Z" hostname="brandon-portal-vm" tests="5" failures="1" errors="0" skipped="4" time="0.161479071">
+    <testsuite name="tests/server/write-routes-recaptcha-seat.test.ts" timestamp="2026-11-03T20:26:07.179Z" hostname="linux-arm64-verification-vm" tests="5" failures="1" errors="0" skipped="4" time="0.161479071">
         <testcase classname="tests/server/write-routes-recaptcha-seat.test.ts" name="the production recaptcha seat over the HTTP write routes (no module mock) &gt; (1) armed seat + the deck&apos;s real *captcha rule: failed verify -&gt; 422 recaptcha shape, token rode to siteverify, zero rows" time="0">
             <skipped/>
         </testcase>
@@ -2478,15 +2478,15 @@ Error: RubySourceProbePinnedGemSourcesUnavailable
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/support/ruby-source-probe-vm.test.ts" timestamp="2026-11-03T20:26:07.180Z" hostname="brandon-portal-vm" tests="3" failures="1" errors="0" skipped="0" time="0.052430226">
+    <testsuite name="tests/support/ruby-source-probe-vm.test.ts" timestamp="2026-11-03T20:26:07.180Z" hostname="linux-arm64-verification-vm" tests="3" failures="1" errors="0" skipped="0" time="0.052430226">
         <testcase classname="tests/support/ruby-source-probe-vm.test.ts" name="rejects the retired host environment helper before any interpreter starts" time="0.004495233">
         </testcase>
         <testcase classname="tests/support/ruby-source-probe-vm.test.ts" name="delivers exact stdin bytes to real VM Ruby, including Unicode, NUL and CRLF" time="0.033116605">
-            <failure message="RubyOracleVmUnavailable: Warning: Identity file /home/ubuntu/.ssh/oci-agents not accessible: No such file or directory.
+            <failure message="RubyOracleVmUnavailable: Warning: Identity file workspace/.ssh/oci-agents not accessible: No such file or directory.
 ssh: Could not resolve hostname juc-vm: Temporary failure in name resolution
 Connection closed by UNKNOWN port 65535
 " type="Error">
-Error: RubyOracleVmUnavailable: Warning: Identity file /home/ubuntu/.ssh/oci-agents not accessible: No such file or directory.
+Error: RubyOracleVmUnavailable: Warning: Identity file workspace/.ssh/oci-agents not accessible: No such file or directory.
 ssh: Could not resolve hostname juc-vm: Temporary failure in name resolution
 Connection closed by UNKNOWN port 65535
 
@@ -2497,7 +2497,7 @@ Connection closed by UNKNOWN port 65535
         <testcase classname="tests/support/ruby-source-probe-vm.test.ts" name="binds the stored tag fixture to its VM recapture, source probe and DEC102 runtime" time="0.009769832">
         </testcase>
     </testsuite>
-    <testsuite name="tests/tools/mod-porting-harness/format-census-view-set.test.ts" timestamp="2026-11-03T20:26:07.181Z" hostname="brandon-portal-vm" tests="5" failures="0" errors="0" skipped="5" time="0">
+    <testsuite name="tests/tools/mod-porting-harness/format-census-view-set.test.ts" timestamp="2026-11-03T20:26:07.181Z" hostname="linux-arm64-verification-vm" tests="5" failures="0" errors="0" skipped="5" time="0">
         <testcase classname="tests/tools/mod-porting-harness/format-census-view-set.test.ts" name="card-mod-format view census == Ruby&apos;s view set &gt; the Ruby oracle walks every set file and resolves every view call" time="0">
             <skipped/>
         </testcase>

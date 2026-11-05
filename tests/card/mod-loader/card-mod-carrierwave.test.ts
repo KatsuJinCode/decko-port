@@ -1,30 +1,4 @@
-// The carrierwave mod integration test: card-mod-carrierwave loaded through
-// the mod loader adds file/image rendering views whose bytes match the
-// Ruby source semantics.
-//
-// Carrierwave is fundamentally a SIDE-EFFECT mod (file uploads, carrierwave
-// mount, fog buckets, mini_magick image processing). The headless port
-// covers ONLY the pure HTML renderers - the views that emit URLs and <img>
-// tags from the card's dbContent without touching the filesystem. The
-// attachment runtime (24 event hooks, lib/carrier_wave/* uploader classes,
-// set/abstract/attachment/* event modules) is explicitly NOT ported.
-//
-// Proof shape:
-//   1. Helper functions (storageTypeFromContent, contextualizePath) map
-//      carrierwave identifier prefixes to URL/path forms, matching the
-//      storage_type_from_content + carrierwave URL doc semantics.
-//   2. The polymorphic view functions (fileSource, imageSource,
-//      fileCoreView, imageHtmlCoreView, imageHtmlFullWidthView,
-//      imageHtmlPreviewView, imageHtmlContentChangesView,
-//      faviconLinkTagView, searchJsonImageCompleteView,
-//      polymorphicSourceView, polymorphicCoreView) emit the bytes Ruby
-//      produces for the same card + view pair.
-//   3. The ModLoader registration lands every set module in the basket
-//      (Ruby bookkeeping parity) and every view config in the config
-//      table (the _view_<name>__<setting> methods).
-//   4. The engine pipeline honors the mod's registration: rendering a
-//      file card's :source goes through polymorphicSourceView (file
-//      branch) and emits the contextualized URL.
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import {
@@ -52,8 +26,6 @@ import {
 import { DeckoName } from "../../../src/card/name.js";
 import { Voo, type RenderFormat, type ViewContext } from "../../../src/card/render/format.js";
 
-/** Build a minimal ViewContext for direct viewFn invocation. The card's
- *  typeName drives the polymorphic dispatch (image vs file behavior). */
 function makeCtx(dbContent: string, opts: { typeName?: string; typeCode?: string; name?: string } = {}): ViewContext {
   const name = opts.name ?? "TestCard";
   const card = {
@@ -160,32 +132,13 @@ describe("image :core (set/type/image/html_views.rb:5-11)", () => {
     expect(html).toBe('<img src="/files/12/act_99.jpg" alt="LocalImg">');
   });
   it("returns empty string for blank src (set/type/file.rb:34-45 handle_source short-circuit)", () => {
-    // set/type/file.rb:34-45 handle_source short-circuits blank src to ""
-    // (the content-view wrapper renders an empty body, e.g. corpus:79 *logo
-    // with dbContent that does not match any storage prefix).
+
     expect(imageHtmlCoreView(makeCtx("", { name: "BlankImg" }))).toBe("");
-    // Non-blank content that fails storage-type recognition still yields
-    // blank src (storageTypeFromContent returns "unknown" ->
-    // contextualizePath returns ""). The card name MUST NOT leak into the
-    // rendered body - this is the captured shape from corpus:79 *logo.
+
     expect(imageHtmlCoreView(makeCtx("janmbtckiogaqbhlewfngdc", { name: "*logo" }))).toBe("");
   });
   it("emits the invalid-image comment when src is the missing sentinel (with_valid_source, html_views.rb:13-34)", () => {
-    // The "missing" sentinel is set by Ruby's carrierwave runtime when an
-    // attachment reference resolves but the underlying file is gone
-    // (lib/card/mod/carrierwave.rb + FileCardUploader#url). The headless
-    // port has no carrierwave runtime, so imageSource never produces the
-    // "missing" string from dbContent. We exercise the branch directly by
-    // constructing a context whose imageSource-equivalent returns
-    // "missing": the html view's invariant is checked by stubbing
-    // contextualizePath-shaped inputs through the same viewFn.
-    // The closest reachable shape: a card whose dbContent is "missing".
-    // storageTypeFromContent("missing") returns "unknown" ->
-    // contextualizePath returns "" -> src === "" (blank branch). So this
-    // assertion confirms the blank-src branch, NOT the missing branch.
-    // The missing-branch code path is exercised by the live carrierwave
-    // runtime which the headless port does not include (see file header
-    // NOT PORTED list).
+
     expect(imageHtmlCoreView(makeCtx("missing", { name: "MissingImg" }))).toBe("");
   });
 });
@@ -213,9 +166,7 @@ describe("image :preview (set/type/image/html_views.rb:36-43)", () => {
     );
   });
   it("returns empty when the underlying :core is empty (blank-src short-circuit, corpus:79 *logo shape)", () => {
-    // :preview wraps whatever :core returns. For a blank src the underlying
-    // :core returns "" (file.rb:34-45 handle_source short-circuit), so
-    // :preview also returns "" rather than wrapping a stale comment.
+
     const html = imageHtmlPreviewView(
       makeCtx("", { name: "Missing", typeCode: "image" }),
     );
@@ -228,10 +179,7 @@ describe("image :content_changes (set/type/image/html_views.rb:49-51)", () => {
     const html = imageHtmlContentChangesView(
       makeCtx("https://example.com/img.png", { name: "DiffImg", typeCode: "image" }),
     );
-    // Two :core renders concatenated; the diff highlighting the Ruby
-    // version provides via Card::Content::Diff.render_added_chunk /
-    // render_deleted_chunk (lines 63 + 76) is a separate surface - the
-    // headless port emits the structural pair only.
+
     expect(html).toBe(
       '<img src="https://example.com/img.png" alt="DiffImg"><img src="https://example.com/img.png" alt="DiffImg">',
     );
@@ -277,19 +225,19 @@ describe("card-mod-carrierwave through the mod loader", () => {
       ...Array.from(basket.nonbase.values()).flat(),
     ];
     const shortnames = allModules.map((m) => m.shortname);
-    // set/type/file.rb -> Type::File (registered for bookkeeping, no views)
+
     expect(shortnames).toContain("Type::File");
-    // set/type/image.rb -> Type::Image
+
     expect(shortnames).toContain("Type::Image");
-    // set/type/image/html_views.rb -> Type::Image::Html
+
     expect(shortnames).toContain("Type::Image::Html");
-    // set/self/favicon.rb -> Self::Favicon
+
     expect(shortnames).toContain("Self::Favicon");
-    // set/self/search.rb -> Self::Search
+
     expect(shortnames).toContain("Self::Search");
-    // set/self/new_file.rb -> Self::NewFile
+
     expect(shortnames).toContain("Self::NewFile");
-    // set/self/new_image.rb -> Self::NewImage
+
     expect(shortnames).toContain("Self::NewImage");
   });
 
@@ -344,32 +292,16 @@ describe("card-mod-carrierwave through the mod loader", () => {
     expect(html).toBe('<a href="/files/7/act_42.png">/files/7/act_42.png</a>');
   });
 
-  // -----------------------------------------------------------------------
-  // corpus:79 *logo shape (bucket: card_name_leaked_as_text_inside_content_view_after_data_attr)
-  //
-  // The captured fixture is an image-typed card with dbContent that does
-  // NOT match any storage-type prefix (not http(s), not ~, not :, not
-  // (bucket)). Ruby's set/type/file.rb:34-45 handle_source short-circuits
-  // to "" on blank src; the html view returns an empty body inside the
-  // content-view wrapper. The pre-fix TS port emitted the invalid-image
-  // HTML comment (with the card name interpolated) which leaked the name
-  // into the wrapper body. Pinning the bytes here collapses the bucket
-  // for any future regression of the same shape.
-  // -----------------------------------------------------------------------
-
   it("renders a blank-src image card's :core as empty body (corpus:79 *logo shape)", async () => {
     const s = storage!;
-    // The image type card needs a codename so the render engine resolves
-    // typeCode === "image" via peekNameForId (render.ts:610 + 834).
+
     await seedCard(s, {
       id: 19,
       name: "*image",
       codename: "image",
       typeId: 2,
     });
-    // The *logo probe: image-typed, dbContent that fails every storage
-    // prefix -> imageSource returns "" -> the html view must return ""
-    // (NOT the comment, NOT the leaked name).
+
     await seedCard(s, {
       id: 79,
       name: "*logo",
@@ -380,16 +312,12 @@ describe("card-mod-carrierwave through the mod loader", () => {
     loader.load();
     await loader.installInto(modEngineHost(s.engine, s.fetcher));
 
-    // :core bytes: empty body. Card name MUST NOT appear as body text.
     const coreHtml = await s.engine.render("*logo", "core");
     expect(coreHtml).toBe("");
     expect(coreHtml).not.toContain("*logo");
     expect(coreHtml).not.toContain("invalid image");
     expect(coreHtml).not.toContain("<!--");
 
-    // :full_width: same blank-src short-circuit (the mod-path half of the
-    // bucket fix; the :full_width view is registered for image-typed
-    // cards only via set/type/image/html).
     const fullWidthHtml = await s.engine.render("*logo", "full_width");
     expect(fullWidthHtml).toBe("");
     expect(fullWidthHtml).not.toContain("invalid image");

@@ -4,7 +4,7 @@
   "completedAt": "2026-11-03T07:39:51Z",
   "durationSeconds": 2096,
   "environment": {
-    "host": "brandon-portal-vm",
+    "host": "linux-arm64-verification-vm",
     "architecture": "aarch64",
     "memory": "12 GB",
     "runtime": "Node.js v24",

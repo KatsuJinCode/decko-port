@@ -1,28 +1,4 @@
-// Endpoint tests for the staging server's slice-1 sign-in surface
-// (vm-staging-server.mjs): POST /_signin, POST /_signout, GET /*signin
-// (the form page), and session-scoped rendering — an authenticated GET
-// shows a private card the account can read and anonymous cannot, while a
-// bogus/revoked/expired token renders the exact anonymous bytes
-// (auth/current.rb:58-63 degradation).
-//
-// The server boots against a DISPOSABLE COPY of the anonymized corpus-v2
-// (benchmarks/corpus-v2/bench-corpus-v2.sqlite3, gitignored, rebuilt on
-// demand). The account used is a REAL corpus account card — holder 583,
-// the corpus-proven roleful member whose readable rule set strictly
-// contains Anonymous's (tests/card/permissions/
-// read-permission-actors-corpus.test.ts pins the set math). The corpus
-// pipeline anonymized the account's +*password and +*status contents, so
-// the fixture re-issues credentials for THAT account in the COPY with the
-// exact Ruby formula (salted SHA-1, node:crypto side) — the sanctioned
-// test-issued-hash fallback; no account data is written to any corpus
-// file, and nothing is printed (emails, salts, digests, tokens stay in
-// memory).
-//
-// The fixture also renames the python-built corpus's cards.content column
-// to the engine-standard db_content (see src/card/auth/signin.ts's
-// column-convention note) and restores the Default Layout card's own name
-// (the anonymizer renamed the card; the *all+*layout rule still points at
-// "Default Layout") so the server's page chrome can resolve.
+
 
 import { spawn, type ChildProcess } from "node:child_process";
 import { copyFileSync, existsSync, rmSync } from "node:fs";
@@ -45,7 +21,7 @@ function firstExisting(paths: Array<{ path: string; exists: boolean }>): string 
 const REPO_CORPUS = fileURLToPath(
   new URL("../../../benchmarks/corpus-v2/bench-corpus-v2.sqlite3", import.meta.url),
 );
-// The lane-worktree sibling of the main checkout.
+
 const SIBLING_CORPUS = fileURLToPath(
   new URL("../../../../decko-ts/benchmarks/corpus-v2/bench-corpus-v2.sqlite3", import.meta.url),
 );
@@ -96,13 +72,10 @@ const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 describeIfCorpus("staging server sign-in endpoints (booted server, disposable corpus copy)", () => {
   beforeAll(async () => {
-    // 1. Disposable copy of the corpus (the source stays untouched).
+
     rmSync(FIXTURE_PATH, { force: true });
     copyFileSync(CORPUS_PATH as string, FIXTURE_PATH);
 
-    // 2. Seed the fixture: engine-standard column name, deck-identity
-    //    restoration for the layout card, test-issued credentials for the
-    //    real account card, and the private-card pick.
     const db = new Database(FIXTURE_PATH);
     try {
       const columns = (db.prepare("PRAGMA table_info(cards)").all() as Array<{
@@ -150,10 +123,6 @@ describeIfCorpus("staging server sign-in endpoints (booted server, disposable co
       expect(passwordChild).toBeDefined();
       expect(statusChild).toBeDefined();
 
-      // Test-issued credential for the REAL account card: the corpus
-      // anonymized its +*password and +*status contents; re-issue them in
-      // the disposable copy with Ruby's exact formula
-      // (Digest::SHA1.hexdigest "#{salt}--#{password}--", auth.rb:36-39).
       const salt = saltChild?.content ?? "";
       const digest = createHash("sha1")
         .update(`${salt}--${TEST_PASSWORD}--`)
@@ -171,12 +140,6 @@ describeIfCorpus("staging server sign-in endpoints (booted server, disposable co
         .get(HOLDER_ID) as { name: string } | undefined;
       expect(holder?.name).toBeTruthy();
 
-      // Restore the Default Layout card's own identity (anonymizer renamed
-      // it; the deck's own *all+*layout rule names it) and repoint every
-      // *layout rule whose target card the anonymizer left unresolvable —
-      // otherwise the engine's page lane cannot resolve a layout for ANY
-      // card and every page 500s. Deck-chrome restoration only; the
-      // source corpus files stay untouched.
       const layoutCard = db
         .prepare("SELECT id FROM cards WHERE codename = 'default_layout' AND trash = 0")
         .get() as { id: number } | undefined;
@@ -210,9 +173,6 @@ describeIfCorpus("staging server sign-in endpoints (booted server, disposable co
         }
       }
 
-      // 3. Private-card pick: named, live, non-empty content, readable by
-      //    holder 583's parties but NOT by Anonymous's — the same
-      //    independent ReadRuleCache SQL the corpus permission test pins.
       const anyone = codenameId("anyone");
       const anyoneSignedIn = codenameId("anyone_signed_in");
       const anonymous = codenameId("anonymous");
@@ -261,10 +221,7 @@ describeIfCorpus("staging server sign-in endpoints (booted server, disposable co
       expect(holderOnly.length).toBeGreaterThan(0);
 
       const placeholders = holderOnly.map(() => "?").join(",");
-      // Plain content cards only: rule/set cards (+* names) render through
-      // content-parsing views that the anonymized corpus data breaks, and
-      // brace-bearing content is nest/CQL markup — none of that is needed
-      // to prove the permission verdicts.
+
       const candidates = db
         .prepare(
           `SELECT id, name, db_content AS content FROM cards
@@ -291,7 +248,7 @@ describeIfCorpus("staging server sign-in endpoints (booted server, disposable co
       expect(privateCard).not.toBeNull();
 
       fixture = {
-        baseUrl: "", // filled after the port is reserved
+        baseUrl: "",
         identifier: emailChild?.content ?? "",
         holderName: holder?.name ?? "",
         privateCard: privateCard as { name: string; marker: string },
@@ -301,7 +258,6 @@ describeIfCorpus("staging server sign-in endpoints (booted server, disposable co
       db.close();
     }
 
-    // 4. Boot the server on the fixture.
     reservedPort = await reserveEphemeralPort();
     fixture.baseUrl = `http://127.0.0.1:${reservedPort}`;
     server = spawn(
@@ -316,8 +272,6 @@ describeIfCorpus("staging server sign-in endpoints (booted server, disposable co
       serverOutput += chunk.toString();
     });
 
-    // Bounded readiness wait (the boot primes the engine; typically a few
-    // seconds). No unbounded polling.
     let ready = false;
     for (let attempt = 0; attempt < 120 && !ready; attempt++) {
       try {
@@ -335,8 +289,7 @@ describeIfCorpus("staging server sign-in endpoints (booted server, disposable co
   }, 240_000);
 
   afterAll(async () => {
-    // The server process is this test's own child (fully owned): terminate
-    // via its own API, then clean the disposable fixture file.
+
     if (server !== null && server.exitCode === null) {
       server.kill();
       await new Promise<void>((resolve) => {
@@ -358,11 +311,6 @@ describeIfCorpus("staging server sign-in endpoints (booted server, disposable co
     return match?.[1] as string;
   }
 
-  /** The engine stamps every rendered slot with a fresh random hex
-   *  data-slot-id per request (SecureRandom; the staging server's own
-   *  error-page builder notes slot ids are normalized in every replay
-   *  comparison). Normalize it before cross-request byte comparisons —
-   *  everything else must be identical. */
   function normalizeSlotIds(html: string): string {
     return html.replace(/data-slot-id="[0-9a-f]+"/g, 'data-slot-id="X"');
   }
@@ -449,8 +397,6 @@ describeIfCorpus("staging server sign-in endpoints (booted server, disposable co
     const signedHtml = await signedPage.text();
     expect(signedHtml).toContain(fixture.privateCard.marker);
 
-    // The record endpoint agrees with the page: 403 for Anonymous, 200 for
-    // the account.
     const anonymousJson = await fetch(`${cardUrl}.json`);
     expect(anonymousJson.status).toBe(403);
     const signedJson = await fetch(`${cardUrl}.json`, {
@@ -505,7 +451,6 @@ describeIfCorpus("staging server sign-in endpoints (booted server, disposable co
     });
     expect(normalizeSlotIds(await afterSignout.text())).toBe(anonymousHtml);
 
-    // Idempotent like Ruby's :signout (signing out Anonymous is a no-op).
     const again = await fetch(`${fixture.baseUrl}/_signout`, {
       method: "POST",
       headers: { Cookie: `decko_ts_session=${token}` },

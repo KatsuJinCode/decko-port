@@ -1,46 +1,4 @@
-// The card-mod-rules mod loader test: the mod loaded through the loader
-// registers its five html views (set_label, input, grouped_list, rule_help,
-// overlay_title), records all 31 gem-tree set modules in the baskets, and
-// warms the rule cache so the rule_help dispatch resolves its rule cards
-// synchronously. Each view proves its Ruby-source semantics against a probe
-// deck (no captured oracle exists for this mod - fixtures/captured has no
-// rules file - so the bytes are pinned against the Ruby sources cited in
-// card-mod-rules.ts, the same A/B shape the help mod's test established).
-//
-// Proof shape (A/B per ported view):
-//   WITHOUT the mod: rendering the view raises the unsupported-view error
-//     (render.rb#view_method - the view does not exist on the live registry).
-//   WITH the mod: the view renders the port's documented bytes; out-of-set
-//     cards raise the same error (the set guard Ruby's set-module inclusion
-//     gives the view); the baskets record the full gem tree.
-//
-// Probe cards:
-//   - codename cards: *all(10, Set-typed), *self(11), *help(12),
-//     *set(13, codename "set"), *setting(14), *type(15, codename "type"),
-//     *create(16), *default(17) - the codename registry + the typeCode
-//     enrichment read these.
-//   - "RichText+*self" (23, Set-typed) - the set-card probe for :set_label
-//     and :input.
-//   - "RichText+*self+*help" (24) - a THREE-part rule card (set
-//     "RichText+*self", setting *help): the live engine's rule? predicate
-//     (render.ts cardIsRule) classifies 3-part rule names, matching the
-//     corpus shapes the render layer pinned; the help rule card
-//     "*all+*help" (22) resolves through the *all candidate of the
-//     rule_names walk (lib/card/rule/all.rb:9-15).
-//   - "Cardtype" (30) - the Self::Cardtype probe for :grouped_list.
-//   - RichText(2)/PlainText(3)/Number(4) - type cards the grouped_list
-//     listing nests; the GROUP names without cards nest as unknown cards
-//     ("" - format/error.rb:23), which the Template-section assertion pins.
-//
-// Exported (unregistered) view bodies - ruleCoreView, ruleOneLineContent-
-// View, ruleRawOneLineContentView, setOneLineContentView, and the
-// registered ruleHelpView's two-set dispatch - are byte-pinned through the
-// stub-fmt harness (the card-mod-permissions test's pattern), because the
-// global view table would clobber the render layer's / card-mod-content's
-// registrations of those names (docs/mod-loader-port-notes.md "View
-// dispatch is global, not set-scoped"). The A/B test additionally pins
-// that one_line_content is NOT live-registered: with the mod loaded it
-// still raises.
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import {
@@ -69,8 +27,6 @@ beforeAll(async () => {
   storage = await createRenderTestStorage();
   const s = storage;
 
-  // codename cards (the codename registry reads cards.codename; their type
-  // ids drive the typeCode enrichment: Set-typed vs Setting-typed).
   await seedCard(s, { id: 2, name: "RichText" });
   await seedCard(s, { id: 3, name: "PlainText" });
   await seedCard(s, { id: 4, name: "Number" });
@@ -83,11 +39,8 @@ beforeAll(async () => {
   await seedCard(s, { id: 16, name: "*create", codename: "create", typeId: 14 });
   await seedCard(s, { id: 17, name: "*default", codename: "default", typeId: 14 });
 
-  // set card "RichText+*self" (junction: type card + *self pattern card)
   await seedCard(s, { id: 23, leftId: 2, rightId: 11, typeId: 13 });
 
-  // the help rule card "*all+*help" - the *all candidate the rule_names
-  // walk resolves for rule cards' help (help.rb:1-4 -> all.rb:9-15)
   await seedCard(s, {
     id: 22,
     leftId: 10,
@@ -96,7 +49,6 @@ beforeAll(async () => {
     dbContent: "Broad help text for this setting.",
   });
 
-  // the THREE-part rule card probe (set "RichText+*self" + setting *help)
   await seedCard(s, {
     id: 24,
     leftId: 23,
@@ -105,10 +57,8 @@ beforeAll(async () => {
     dbContent: "nonsense rule content",
   });
 
-  // the Self::Cardtype probe (the card NAMED "Cardtype")
   await seedCard(s, { id: 30, name: "Cardtype", codename: "cardtype" });
 
-  // an out-of-set probe (no set membership the mod's views recognize)
   await seedCard(s, { id: 31, name: "Oracle Plain Probe", dbContent: "plain body" });
 }, 60_000);
 
@@ -143,10 +93,6 @@ describe("card-mod-rules through the mod loader (A/B)", () => {
     loader.load();
     await loader.installInto(modEngineHost(s.engine, s.fetcher));
 
-    // card.label (set/type/set.rb:38-41) for the *self set of "RichText":
-    // the Self pattern's label (set_pattern/09_self.rb) - The card "RichText".
-    // wrap_with passes content through the content_tag BLOCK, so the quotes
-    // are not HTML-escaped (card-mod-format set/all/html/wrap.rb:128-136).
     const html = await s.engine.render("RichText+*self", "set_label");
     expect(html).toBe(`<strong class="set-label">The card "RichText"</strong>`);
   });
@@ -179,38 +125,28 @@ describe("card-mod-rules through the mod loader (A/B)", () => {
   it("WITH the mod: :grouped_list renders every non-empty GROUP in order, skipping Custom (set/self/cardtype.rb:2-9)", async () => {
     const s = storage!;
     const html = await s.engine.render("Cardtype", "grouped_list");
-    // one h5 per group, GROUP declaration order (cardtype_groups.rb:2-12),
-    // Custom skipped by `next if type_list.empty?` (cardtype.rb:5)
+
     const order = ["Text", "Data", "Upload", "Organize", "Template", "Admin", "Styling", "Scripting"].map(
       (group) => html.indexOf(`<h5>${group}</h5>`),
     );
     for (const index of order) expect(index).toBeGreaterThan(-1);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     expect(html).not.toContain("<h5>Custom</h5>");
-    // each h5 pairs with a p; the listing nests the type cards with the
-    // default nest view (titled) - the seeded RichText card's title lands
-    // inside the Text section, between the Text and Data headings
-    // (card-mod-collection set/all/item.rb:164-176 listing_list, no wrap).
+
     const textAt = html.indexOf("<h5>Text</h5>");
     const richTextAt = html.indexOf("RichText");
     const dataAt = html.indexOf("<h5>Data</h5>");
     expect(textAt).toBeGreaterThan(-1);
     expect(richTextAt).toBeGreaterThan(textAt);
     expect(dataAt).toBeGreaterThan(richTextAt);
-    // every GROUP name without a card nests as an unknown card -> "" bytes
-    // (format/error.rb:23); the Template section's three type cards
-    // ("Notification template", "Email template", "Twitter template") are
-    // unseeded, so their names appear nowhere.
+
     expect(html).not.toContain("Notification template");
     expect(html).not.toContain("Twitter template");
   });
 
   it("WITH the mod: :rule_help on a rule card renders the rule-instruction alert over the *all help rule (set/rule/editor.rb:24-28)", async () => {
     const s = storage!;
-    // the rule-based help chain resolves the card's *help rule card through
-    // the pattern-precedence walk (help.rb:1-4) - the seeded "*all+*help"
-    // (id 22) is the *all candidate, warmed into the render map by
-    // prepareRuleCache (the Rule::Cache analog, lib/card/rule/cache.rb:10-27)
+
     const html = await s.engine.render("RichText+*self+*help", "rule_help");
     expect(html).toBe(
       `<div class="alert alert-info rule-instruction">Broad help text for this setting.</div>`,
@@ -219,27 +155,21 @@ describe("card-mod-rules through the mod loader (A/B)", () => {
 
   it("WITH the mod: :rule_help on a SETTING card nests the *all rule card and renders its rule_help (set/type/setting.rb:59-61)", async () => {
     const s = storage!;
-    // "*create" is Setting-typed and not a rule; the dispatch nests
-    // "*all+*create". That rule card is NOT seeded in this deck, so the
-    // nest is an unknown-card nest whose :rule_help substitutes to
-    // :unknown ("" - format/error.rb:23).
+
     const html = await s.engine.render("*create", "rule_help");
     expect(html).toBe("");
   });
 
   it("WITH the mod: :overlay_title renders the edit_rule_title h5 with the star-stripped setting title (board_rules_editor.rb:13-15 + editor.rb:64-69, 85-87)", async () => {
     const s = storage!;
-    // setting_title = card.name.tag.tr("*", "") -> "RichText+*self+*help"
-    // tag "*help" -> "help"
+
     const html = await s.engine.render("RichText+*self+*help", "overlay_title");
     expect(html).toBe(`<h5 class="title fw-bold">help</h5>`);
   });
 
   it("WITH the mod: :one_line_content is NOT live-registered (the exported bodies await the set-scoped dispatch pass)", async () => {
     const s = storage!;
-    // card-mod-rules.ts exports ruleOneLineContentView/setOneLineContentView
-    // instead of registering: the global table would clobber card-mod-
-    // content's right/* registrations of the same name.
+
     await expect(
       s.engine.render("RichText+*self+*help", "one_line_content"),
     ).rejects.toThrow(UnsupportedViewError);
@@ -252,7 +182,7 @@ describe("card-mod-rules through the mod loader (A/B)", () => {
       expect(report.registeredViews).toContain(view);
     }
     expect(report.registeredSettings).toEqual([]);
-    // rule_help carries the editor.rb:24 config (view_opts.rb VIEW_SETTINGS)
+
     const config = loader!.viewConfigFor("rule_help");
     expect(config?.unknown).toBe(true);
     expect(config?.perms).toBe("none");
@@ -261,15 +191,15 @@ describe("card-mod-rules through the mod loader (A/B)", () => {
 
   it("WITH the mod: every set module from the gem tree is in the basket (31 files; rule_set_radio.rb is `#! no set module`)", () => {
     const basket = loader!.setModules();
-    // all/* -> base bucket (loader.ts#kindOfSetPath)
+
     const baseShortnames = basket.base.map((m) => m.shortname);
     expect(baseShortnames).toEqual(
       expect.arrayContaining(["All::CardtypeGroups", "All::RelatedSets", "All::SetSelect"]),
     );
-    // abstract/* -> abstract bucket
+
     const abstractShortnames = basket.abstract.map((m) => m.shortname);
     expect(abstractShortnames).toEqual(["Abstract::VirtualSet"]);
-    // the rest -> nonbase, keyed by shortname
+
     const nonbaseShortnames = [...basket.nonbase.values()].flat().map((m) => m.shortname);
     expect(nonbaseShortnames).toEqual(
       expect.arrayContaining([
@@ -313,15 +243,6 @@ describe("card-mod-rules through the mod loader (A/B)", () => {
     expect(html).toContain("plain body");
   });
 });
-
-// ---------------------------------------------------------------------------
-// stub harness for the exported / dispatched view bodies (the
-// card-mod-permissions test's pattern): a stub fmt whose renderView
-// dispatches through the manifest's registered views, with a name-keyed
-// fetchRenderCard map and an explicit isRule flag per card. This pins the
-// Ruby dispatch semantics the live engine's 3-part rule? predicate cannot
-// reach (2-part rule cards like "*all+*create").
-// ---------------------------------------------------------------------------
 
 interface CardLike {
   name: DeckoName;
@@ -398,8 +319,6 @@ class StubFmt {
     return `[rendered:${view}]`;
   }
 
-  /** collection.rb#nest_item shape for the setting branch: the nested view
-   *  runs on a subformat carrying the TARGET card. */
   nestRecord(target: CardLike, view: string): string {
     const sub = new StubFmt(target, this.deck);
     return sub.renderView(view);
@@ -410,8 +329,6 @@ class StubFmt {
   }
 }
 
-/** Every viewFn the manifest registers, keyed by view name (the exported
- *  :core override is handed to assertions directly). */
 function resolveViewFn(view: string): ViewFn | undefined {
   for (const module of cardModRules.setModules ?? []) {
     for (const block of Object.values(module.formats ?? {})) {
@@ -440,10 +357,7 @@ describe("card-mod-rules exported view bodies (stub harness)", () => {
       isRule: true,
       dbContent: "",
     }),
-    // the ONLY *help rule card in the stub deck: every higher-precedence
-    // candidate of the rule_names walk (self/rule/rstar/star/type/all_plus)
-    // misses, so the *all candidate resolves - the same shape the live deck
-    // pins.
+
     "*all+*help": cardLike("*all+*help", {
       id: 42,
       typeCode: "setting",
@@ -661,8 +575,7 @@ describe("card-mod-rules exported view bodies (stub harness)", () => {
   it("ruleHelpView: the registered viewFn carries Ruby's two-set dispatch - rule card -> alert (editor.rb:24-28)", () => {
     const ruleHelp = resolveViewFn("rule_help");
     expect(ruleHelp).toBeDefined();
-    // the *help walk's first EXISTING candidate in pattern precedence is
-    // "*all+*help" (the self/rule/type candidates miss in this deck)
+
     const ruleCard = new StubFmt(deck["*all+*create"]!, deck);
     const out = ruleHelp!(makeCtx(ruleCard, "rule_help"));
     expect(out).toBe(
@@ -677,7 +590,7 @@ describe("card-mod-rules exported view bodies (stub harness)", () => {
       deck,
     );
     const out = ruleHelp!(makeCtx(settingCard, "rule_help"));
-    // the nested "*all+*create" rule card's own :rule_help is the alert
+
     expect(out).toBe(
       `<div class="alert alert-info rule-instruction">Broad help text for this setting.</div>`,
     );

@@ -1,13 +1,4 @@
-/**
- * Oracle parity: assert the TS registry reproduces the captured live-decko
- * output byte-for-byte where the capture has a port-level answer.
- *
- * Captures were produced by set-pattern-oracle-probe.rb (capture1) and
- * set-pattern-oracle-probe2.rb (capture2) - read-only `decko runner` scripts
- - against tools/oracle/decko-oracle-app (card-1.110.0 / decko-0.20.0,
- * local SQLite deck). Ids are deck-specific; they enter this test through
- * oracle-environment.ts (captured facts), not through hardcoded tables here.
- */
+
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -84,7 +75,6 @@ const capture2 = JSON.parse(
   readFileSync(join(here, "set-pattern-oracle-capture2.json"), "utf8"),
 ) as Capture2;
 
-/** Captured card facts -> pattern input (see oracle-environment.ts). */
 function cardInputFor(name: string): PatternCardInput {
   const facts: Record<string, PatternCardInput> = {
     "Oracle Basics": { name, id: 605, typeId: 2, typeName: "RichText" },
@@ -95,7 +85,7 @@ function cardInputFor(name: string): PatternCardInput {
     "*read": { name, id: 9, typeId: 6, typeName: "Setting" },
     "*all+*read": {
       name, id: 10, typeId: 4, typeName: "List", isRule: true,
-      // superleft "*all" is a Set card -> tpr anchor "Set+*read"
+
       leftTypeName: "Set",
     },
   };
@@ -104,7 +94,6 @@ function cardInputFor(name: string): PatternCardInput {
   return input;
 }
 
-/** New-card inputs from capture1's new_cards section. */
 const NEW_SIMPLE: PatternCardInput = {
   name: "Zz Probe New Simple", isNew: true, typeId: 2, typeName: "RichText",
 };
@@ -114,7 +103,7 @@ const NEW_FIELD: PatternCardInput = {
 
 describe("oracle parity: the pattern table", () => {
   it("reproduces the concrete table row by row", () => {
-    // capture1 "concrete" - the authoritative ordered table.
+
     expect(patternCodes()).toEqual(capture1.codes);
     capture1.concrete.forEach((row, index) => {
       const spec = findPattern(row.pattern_code);
@@ -176,7 +165,7 @@ describe("oracle parity: per-card patterns", () => {
         .toEqual(captured.module_keys);
       expect(patterns.map((p) => p.safeKey), `${captured.name} safe_keys`)
         .toEqual(captured.safe_keys);
-      // each_type_assigning_module_key yields only non-nil keys.
+
       expect(typeAssigningModuleKeys(card), `${captured.name} assigns_type keys`).toEqual(
         captured.assigns_type_module_keys.filter((key): key is string => key !== null),
       );
@@ -192,12 +181,11 @@ describe("oracle parity: rule names", () => {
   });
 
   it("reproduces cache-key shapes from the captured rule cache sample", () => {
-    // "all+read" -> 10 is the *all+*read rule card (id 10); the port builds
-    // the same keys (values are the storage walk's business, next stream).
+
     expect(capture1.rule_name_check.rule_lookup_key_sample["all+read"]).toBe(10);
     expect(capture1.rule_name_check.rule_lookup_key_sample["606+self+read"]).toBeUndefined();
     for (const key of Object.keys(capture1.rule_name_check.rule_lookup_key_sample)) {
-      // key shape: [anchorId]? + patternCode + settingCode, no stars
+
       expect(key, key).toMatch(/^(?:\d+\+)?(?:self|right|type|type_plus_right|rule|rstar|star|all_plus|all)\+(?:\d+\+)?[a-z_]+$/);
     }
   });
@@ -211,7 +199,7 @@ describe("oracle parity: set card parsing", () => {
       expect(parsed.anchorName?.s ?? null).toBe(captured.anchor_name);
       expect(parsed.patternCardName.s).toBe(captured.pattern_name);
       expect(labelForParsedSet(parsed)).toBe(captured.label);
-      // Ruby nil compound_only (option unset) -> falsy -> false.
+
       expect(compoundOnlyForParsedSet(parsed)).toBe(captured.compound_only ?? false);
     });
   }

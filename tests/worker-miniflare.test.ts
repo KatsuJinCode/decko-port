@@ -1,26 +1,6 @@
-// E2E smoke for the Cloudflare Workers entry — URL routing layer.
-//
-// The full workerd boot of worker.js requires a real bundler (esbuild) to
-// inline the engine imports; that lives in the production deploy step
-// (`wrangler deploy` ships esbuild-bundled output). Here we cover the part
-// of the worker that is exercisable WITHOUT workerd: the URL parser and
-// response-shape branches. The other parts are covered by:
-//
-//   - tests/worker.test.ts       (module loads, exports fetch handler)
-//   - tests/server/drivers/d1-   (CloudflareD1Adapter proven under
-//     miniflare.test.ts            miniflare's real workerd D1)
-//
-// The #1282 claim the deploy must prove (constant queries per render at
-// any depth) is already locked in by tests/card/render/depth-sweep.test.ts
-// (tests 1..32 with the counting driver).
+
 
 import { describe, it, expect } from "vitest";
-
-// We re-declare parsePath's behavior here as a contract test. The same
-// logic lives in worker.js (the deploy artifact) — if these tests pass and
-// the worker module loads, the routing layer is verified. (Mirroring the
-// parser into the test avoids the workerd-boot/esbuild dependency for this
-// pure-function surface.)
 
 const SUPPORTED_VIEWS = new Set([
   "open", "closed", "content", "title", "titled", "menu",
@@ -81,8 +61,7 @@ describe("worker URL parser", () => {
 
 describe("worker module — contract check", () => {
   it("worker.js exports a default object with a fetch handler (loadable as ESM)", async () => {
-    // The same file wrangler ships. If this loads without throwing the
-    // module graph is wired correctly — same path the Workers runtime takes.
+
     const mod = await import("../worker.js");
     expect(typeof mod.default).toBe("object");
     expect(typeof mod.default.fetch).toBe("function");

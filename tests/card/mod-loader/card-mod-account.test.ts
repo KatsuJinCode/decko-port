@@ -1,25 +1,4 @@
-// The card-mod-account mod loader integration test: the mod loaded
-// through the loader registers its views and the rendered bytes match
-// the Ruby source semantics.
-//
-// Proof shape (A/B per ported view):
-//   WITHOUT the mod: render the view on the seeded probe card raises the
-//     unsupported-view error (render.ts#view_method - the view does not
-//     exist on the live registry).
-//   WITH the mod: the view renders the port's documented bytes; the
-//     set-modules basket records the full gem tree; view registration
-//     order matches the gem's pattern walk (right/account/views first,
-//     right/password later - the mod loader's set-loader path-sorts and
-//     pattern-groups exactly the way SetLoader does).
-//
-// Probe cards:
-//   - Oracle Token Probe+account (junction): right side = account setting
-//     so the right/account set module's :token_days is reachable
-//   - *signin (the *self anchor for the self/signin set module)
-//   - Oracle Closed Probe (any card; abstract/account_holder's
-//     :closed_account renders independent of card shape)
-//   - Oracle Mail Probe+email (User+email junction, real with content)
-//     plus a virtual probe of the same name with no id
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import {
@@ -41,16 +20,12 @@ beforeAll(async () => {
   storage = await createRenderTestStorage();
   const s = storage;
 
-  // codename cards (the codename registry reads cards.codename; their
-  // type ids matter to the rule-cache join: set-typed vs setting-typed).
-  await seedCard(s, { id: 2, name: "RichText" }); // cardtypes' type card
+  await seedCard(s, { id: 2, name: "RichText" });
   await seedCard(s, { id: 10, name: "*all", codename: "all", typeId: 13 });
   await seedCard(s, { id: 11, name: "*self", codename: "self", typeId: 14 });
   await seedCard(s, { id: 13, name: "*set", codename: "set", typeId: 13 });
   await seedCard(s, { id: 14, name: "*setting", codename: "setting", typeId: 14 });
 
-  // the *signin card (the *self anchor for Self::Signin; the name is the
-  // codename registry's lookup key)
   await seedCard(s, {
     id: 100,
     name: "*signin",
@@ -59,7 +34,6 @@ beforeAll(async () => {
     dbContent: "Sign In",
   });
 
-  // the *account setting card (the right-anchor for Right::Account)
   await seedCard(s, {
     id: 110,
     name: "account",
@@ -67,10 +41,6 @@ beforeAll(async () => {
     typeId: 14,
   });
 
-  // the *email phrase setting card (the right-anchor for Right::Email and
-  // the right side of the User+email junction below). Phrase type — the
-  // type_plus_right set pattern's right side carries this card's id as
-  // the right_id of every User+email card.
   await seedCard(s, {
     id: 130,
     name: "email",
@@ -78,9 +48,6 @@ beforeAll(async () => {
     typeId: 14,
   });
 
-  // Oracle Token Probe+account (junction: left = Oracle Token Probe,
-  // right = *account setting). The right/account set module applies
-  // because the card's right side is the *account setting card.
   await seedCard(s, {
     id: 120,
     name: "Oracle Token Probe",
@@ -90,19 +57,16 @@ beforeAll(async () => {
     id: 121,
     leftId: 120,
     rightId: 110,
-    typeId: 14, // setting type (junctions are setting-typed)
+    typeId: 14,
     dbContent: "token probe account body",
   });
 
-  // Oracle Closed Probe - any card. abstract/account_holder applies to
-  // every card via the abstract pseudo-pattern.
   await seedCard(s, {
     id: 140,
     name: "Oracle Closed Probe",
     dbContent: "closed probe body",
   });
 
-  // Oracle Mail Probe (a User card whose +email right is the probe)
   await seedCard(s, {
     id: 150,
     name: "Oracle Mail Probe",
@@ -112,7 +76,7 @@ beforeAll(async () => {
   await seedCard(s, {
     id: 151,
     leftId: 150,
-    rightId: 130, // +email right (right is the email phrase setting)
+    rightId: 130,
     typeId: 2,
     dbContent: "alice@example.com",
   });
@@ -184,9 +148,7 @@ describe("card-mod-account through the mod loader (A/B)", () => {
 
   it("WITH the mod: :open_content delegates to :core (self/signin.rb:139-142)", async () => {
     const s = storage!;
-    // *signin has dbContent "Sign In"; the :core view (views.ts#coreView)
-    // for a plain settings-typed card falls through to
-    // processContent(renderRaw()) = "Sign In".
+
     expect(await s.engine.render("*signin", "open_content")).toBe("Sign In");
   });
 
@@ -206,13 +168,13 @@ describe("card-mod-account through the mod loader (A/B)", () => {
 
   it("WITH the mod: every set module from the gem tree is in the basket", () => {
     const basket = loader!.setModules();
-    // the base pattern: all/account + all/password_input
+
     expect(basket.base.map((m) => m.shortname)).toContain("All::Account");
     expect(basket.base.map((m) => m.shortname)).toContain("All::PasswordInput");
-    // abstract: account_field + account_holder
+
     expect(basket.abstract.map((m) => m.shortname)).toContain("Abstract::AccountField");
     expect(basket.abstract.map((m) => m.shortname)).toContain("Abstract::AccountHolder");
-    // right nonbase: every right/... set module from the gem
+
     const right = [...basket.nonbase.values()].flat().map((m) => m.shortname);
     expect(right).toContain("Right::Account");
     expect(right).toContain("Right::Account::Events");
@@ -222,27 +184,26 @@ describe("card-mod-account through the mod loader (A/B)", () => {
     expect(right).toContain("Right::Roles");
     expect(right).toContain("Right::Salt");
     expect(right).toContain("Right::Status");
-    // self nonbase
+
     const self = [...basket.nonbase.values()].flat().map((m) => m.shortname);
     expect(self).toContain("Self::Anonymous");
     expect(self).toContain("Self::DeckoBot");
     expect(self).toContain("Self::Role");
     expect(self).toContain("Self::Signin");
-    // type nonbase
+
     const type = [...basket.nonbase.values()].flat().map((m) => m.shortname);
     expect(type).toContain("Type::Role");
     expect(type).toContain("Type::Signup");
     expect(type).toContain("Type::Signup::Views");
     expect(type).toContain("Type::User");
-    // type_plus_right nonbase
+
     expect(type).toContain("TypePlusRight::Cardtype::Account");
     expect(type).toContain("TypePlusRight::Role::Members");
     expect(type).toContain("TypePlusRight::User::Email");
   });
 
   it("WITH the mod: the mod loader's load report lists every ported view", () => {
-    // the ModLoadReport is returned by load(); re-run via the loader's
-    // table introspection since the first call's report was discarded.
+
     const report = loader!.load();
     expect(report.registeredViews).toContain("token_days");
     expect(report.registeredViews).toContain("verify_days");
@@ -257,10 +218,7 @@ describe("card-mod-account through the mod loader (A/B)", () => {
   it("WITH the mod: a card's baseline :content render still works (the mod adds views, it does not alter core)", async () => {
     const s = storage!;
     const html = await s.engine.render("Oracle Token Probe+account", "content");
-    // baseline :content is the format/views.ts#contentView; the mod
-    // does NOT redefine :content for any of its set modules, so the
-    // existing core content renders unchanged. We assert it renders
-    // WITHOUT throwing and produces a non-empty slot.
+
     expect(typeof html).toBe("string");
     expect(html.length).toBeGreaterThan(0);
     expect(html).toContain("card-slot");

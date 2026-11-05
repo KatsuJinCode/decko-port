@@ -1,6 +1,4 @@
-// source-sqlite.test.ts — the source-side SQLite reader (the generalized
-// migration tool's input layer). All inputs are SYNTHETIC databases
-// built in-test; zero real content.
+
 
 import { describe, it, expect } from "vitest";
 import { mkdtempSync } from "node:fs";
@@ -20,7 +18,7 @@ function makeDb(): string {
   db.exec(`CREATE TABLE cards (id INTEGER PRIMARY KEY, name TEXT, key TEXT, content TEXT, type_id INTEGER)`);
   db.exec(`CREATE TABLE card_references (id INTEGER PRIMARY KEY, referer_id INTEGER, referee_id INTEGER)`);
   db.exec(`CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)`);
-  // populate
+
   const ins = db.prepare("INSERT INTO cards (id, name, key, content, type_id) VALUES (?, ?, ?, ?, ?)");
   ins.run(1, "Alpha", "alpha", "alpha body", 3);
   ins.run(2, "Beta", "beta", "beta body", 3);
@@ -66,7 +64,7 @@ describe("sourceTableRows", () => {
       expect(out[0]?.values[0]).toBe(1);
       expect(out[0]?.values[1]).toBe("Alpha");
       expect(out[0]?.values[2]).toBe("alpha");
-      // the compound card (id=3) carries a NULL key column
+
       expect(out[2]?.values[0]).toBe(3);
       expect(out[2]?.values[2]).toBeNull();
     } finally {

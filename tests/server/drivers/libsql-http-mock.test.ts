@@ -1,8 +1,4 @@
-// LibSqlHttpAdapter tests against a protocol-faithful mock Hrana v2 server.
-// The mock (tests/server/drivers/mock-hrana-server.ts) captures every
-// request body, so these tests assert the EXACT wire shape the adapter
-// produces — tagged {type, value} args, the trailing close request, one
-// POST per batch — plus full conformance and protocol-violation surfacing.
+
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { LibSqlHttpAdapter, LibSqlHttpError } from "../../../src/server/drivers/libsql-http.js";
@@ -66,9 +62,9 @@ describe("LibSqlHttpAdapter over mock Hrana server", () => {
       { sql: "SELECT COUNT(*) AS c FROM wire", params: [] },
     ]);
 
-    expect(server.requests).toHaveLength(1); // the round-trip contract
+    expect(server.requests).toHaveLength(1);
     const body = server.requests[0].body as { requests: Array<{ type?: string; stmt?: unknown }> };
-    expect(body.requests).toHaveLength(3); // 2 executes + close
+    expect(body.requests).toHaveLength(3);
     expect(body.requests.map((r) => r.type)).toEqual(["execute", "execute", "close"]);
     expect(results).toHaveLength(2);
     expect(results[0].rowsAffected).toBe(1);
@@ -95,8 +91,6 @@ describe("LibSqlHttpAdapter over mock Hrana server", () => {
     await expect(adapter.query("SELECT ?", [{ nested: "object" }])).rejects.toThrow(/unsupported parameter type/);
   });
 
-  /** The wire-shape tests need their own table; the conformance suite
-   *  creates and drops nothing, so this just ensures a table exists. */
   async function driverSetup(): Promise<void> {
     await adapter.query("CREATE TABLE IF NOT EXISTS wire (id INTEGER PRIMARY KEY AUTOINCREMENT, n INTEGER, f REAL, s TEXT, z)", []);
   }

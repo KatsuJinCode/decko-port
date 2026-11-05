@@ -1,14 +1,4 @@
-// card-mod-virtual mod-loader tests: prove the ported Card::Virtual record
-// model (card-mod-virtual-0.20.0 lib/card/virtual.rb) and the abstract
-// virtual_cache set module (set/abstract/virtual_cache.rb) against REAL
-// storage - in-memory better-sqlite3 loaded with db/schema.sqlite.sql (the
-// same fixture the history write-path tests use), rows SELECTed back and
-// compared against expectations derived from the Ruby source. Each
-// expectation cites the Ruby file:line it derives from.
-//
-// The mod declares no html views (compat report metrics.htmlViewsDeclared:
-// 0, htmlViewsMissingNames: []), so the proof surface is the record model's
-// SQL semantics + the set module's predicates/event bodies/manifest shape.
+
 
 import { describe, expect, it, afterEach } from "vitest";
 import { createHistoryTestStorage, type HistoryTestStorage } from "../history/history-test-storage.js";
@@ -46,8 +36,6 @@ import { ActWriter, cardFieldStateFromRow } from "../../../src/card/history/writ
 import type { CardsRow } from "../../../src/server/schema.js";
 import { DeckoName } from "../../../src/card/name.js";
 
-// Deterministic clock: one Virtual operation = one second on the fake clock
-// (same shape as the write-path tests' fixture).
 const T0 = Date.parse("2026-09-21T12:00:00.000Z");
 const STAMP_1 = "2026-09-21 12:00:00.000";
 const STAMP_2 = "2026-09-21 12:00:01.000";
@@ -82,13 +70,9 @@ function cardRecord(overrides: Partial<CardRecord> & { key: string; name: DeckoN
   };
 }
 
-// A simple (non-compound) card: left_id = its own id, right_id = the -2
-// sentinel (virtual.rb:78, :86).
 const SIMPLE = () =>
   cardRecord({ id: 75, key: "caesar", name: DeckoName.parse("Caesar"), dbContent: "the content" });
 
-// A compound card with stored positive side ids (the where_card id branch,
-// virtual.rb:66-68).
 const COMPOUND = () =>
   cardRecord({
     id: 33,
@@ -114,15 +98,8 @@ function virtualRows(s: HistoryTestStorage) {
   return s.selectAll<Record<string, unknown>>("SELECT * FROM card_virtuals ORDER BY id");
 }
 
-/** The lexicon stub for the cardname tests: Integer#cardname = Lexicon.name
- *  (01_core_extensions/integer.rb:9-11); the caller owns id->name. */
 const NAME_OF_ID = (id: number): string | undefined =>
   ({ 10: "Jane Doe", 20: "Books", 75: "Caesar" })[id];
-
-// ---------------------------------------------------------------------------
-// the mod-loads-into-loader prove: registeredEvents + eventRegistry
-// (forStage / forEvent / all) — vitest path for this lane
-// ---------------------------------------------------------------------------
 
 let liveLoader: ModLoader | undefined;
 
@@ -135,11 +112,7 @@ describe("card-mod-virtual: the manifest", () => {
   it("registers the gem's one set module, abstract/virtual_cache, with no views", () => {
     expect(cardModVirtual.name).toBe("virtual");
     expect(cardModVirtual.gemName).toBe("card-mod-virtual");
-    // The setModule carries the two events[] entries (the LANDED+WIDENED
-    // mod-manifest.ts ModSetModuleFile.events surface). fn is the live
-    // exported stub; we assert the declaration shape + the fn identity
-    // (the body itself is exercised by the eventRegistry describe block
-    // below).
+
     expect(cardModVirtual.setModules).toEqual([
       {
         setPath: "abstract/virtual_cache",
@@ -175,20 +148,12 @@ describe("card-mod-virtual: the manifest", () => {
 });
 
 describe("card-mod-virtual: the events surface through the loader (virtual_cache.rb:21,26)", () => {
-  // The two events sit on abstract/virtual_cache (the gem's one set file)
-  // and ride the SetLoader phase's events[] registration
-  // (mod-loader.ts:283-293): the loader injects setPath + modName into
-  // each entry's registered copy, reports the names in
-  // ModLoadReport.registeredEvents, and exposes them via
-  // loader.eventRegistry() (forStage / forEvent / all).
 
   it("load() reports both event names in registeredEvents, in declaration order", () => {
     const loader = new ModLoader([{ manifest: cardModVirtual }], { ...HTML_VIEWS });
     liveLoader = loader;
     const report = loader.load();
-    // virtual_cache.rb:21 (save) declares before :26 (delete);
-    // SetLoader walks the gem's setModules in path order (one file), so
-    // registration order = declaration order.
+
     expect(report.registeredEvents).toEqual([
       "save_virtual_content",
       "delete_virtual_content",
@@ -207,23 +172,16 @@ describe("card-mod-virtual: the events surface through the loader (virtual_cache
       "virtual:delete_virtual_content:abstract/virtual_cache",
     ]);
 
-    // forStage preserves registration order (Ruby's same-stage execution
-    // order is definition load order - lib/card/set/event.rb's stage
-    // runner). Both events declare the same stage.
     expect(registry.forStage("prepare_to_store").map((e) => e.event)).toEqual([
       "save_virtual_content",
       "delete_virtual_content",
     ]);
-    // Stages the mod never fires at stay empty (the cross-check that
-    // forStage is a stage filter, not a total dump).
+
     expect(registry.forStage("validate")).toEqual([]);
     expect(registry.forStage("integrate")).toEqual([]);
     expect(registry.forStage("store")).toEqual([]);
     expect(registry.forStage("finalize")).toEqual([]);
 
-    // forEvent returns the first registration for the name, with the
-    // file coordinates + stage + on[] populated. The fn reference is the
-    // same one the manifest exported (object identity preserved).
     const save = registry.forEvent("save_virtual_content");
     expect(save?.setPath).toBe("abstract/virtual_cache");
     expect(save?.modName).toBe("virtual");
@@ -240,11 +198,7 @@ describe("card-mod-virtual: the events surface through the loader (virtual_cache
   });
 
   it("the registered event fns are the documented stubs (fn returns void; no body side effects)", () => {
-    // The body needs SQLDatabaseDriver + VirtualRecordCache + Date clock
-    // (virtual_save / virtual_delete - virtual.rb:28-35); ModEventFn has
-    // neither, so the bodies are stubs that return void without
-    // performing the Virtual side effect (the header in card-mod-virtual.ts
-    // names this seam + the WRITE PATH seam it leaves open).
+
     const loader = new ModLoader([{ manifest: cardModVirtual }], { ...HTML_VIEWS });
     liveLoader = loader;
     loader.load();
@@ -253,10 +207,6 @@ describe("card-mod-virtual: the events surface through the loader (virtual_cache
     const save = registry.forEvent("save_virtual_content");
     const del = registry.forEvent("delete_virtual_content");
 
-    // The documented stub takes the card + host and does nothing
-    // observable. We do not have a card or driver in scope here, so we
-    // exercise the same fns the registry holds via the same exported
-    // symbols the loader registered (object identity proves the wiring).
     const fakeCard = { name: "Probe" };
     const fakeHost = {
       fetchRenderCard: () => undefined,
@@ -265,7 +215,7 @@ describe("card-mod-virtual: the events surface through the loader (virtual_cache
       codenames: { ensureLoaded: async () => undefined, peekId: () => undefined },
       fetchById: async () => undefined,
       cacheFetchedRecord: async () => undefined,
-    } as never; // structural - ModEngineHost's full surface unused
+    } as never;
     expect(() => save?.fn(fakeCard, fakeHost)).not.toThrow();
     expect(() => del?.fn(fakeCard, fakeHost)).not.toThrow();
   });
@@ -284,7 +234,6 @@ describe("card-mod-virtual: the events surface through the loader (virtual_cache
     expect(loader.eventRegistry().forStage("prepare_to_store")).toEqual([]);
     expect(loader.eventRegistry().forEvent("save_virtual_content")).toBeUndefined();
 
-    // a fresh load() reproduces the same registrations (idempotence).
     const rep2 = loader.load();
     expect(rep2.registeredEvents).toEqual([
       "save_virtual_content",
@@ -297,8 +246,8 @@ describe("card-mod-virtual: the events surface through the loader (virtual_cache
 describe("card-mod-virtual: virtual.rb key derivation (left_id/right_id)", () => {
   it("simple cards key on their own id and the -2 right sentinel (virtual.rb:74-88)", () => {
     const card = SIMPLE();
-    expect(virtualLeftId(card)).toBe(75); // :78 the else branch (card.id)
-    expect(virtualRightId(card)).toBe(-2); // :86 the else branch
+    expect(virtualLeftId(card)).toBe(75);
+    expect(virtualRightId(card)).toBe(-2);
   });
 
   it("compound cards pass positive stored ids through (virtual.rb:75-76, 83-84)", () => {
@@ -311,21 +260,18 @@ describe("card-mod-virtual: virtual.rb key derivation (left_id/right_id)", () =>
     const card = cardRecord({
       key: "x",
       name: DeckoName.parse("Jane Doe+Books"),
-      leftId: 0, // not positive -> left&.id
-      rightId: -1, // not positive -> right&.id
+      leftId: 0,
+      rightId: -1,
     });
     expect(virtualLeftId(card, { leftCardId: 10 })).toBe(10);
     expect(virtualRightId(card, { rightCardId: 20 })).toBe(20);
-    expect(virtualLeftId(card)).toBeUndefined(); // nil left card stays nil
+    expect(virtualLeftId(card)).toBeUndefined();
   });
 });
 
 describe("card-mod-virtual: virtual.rb validate_card (virtual.rb:90-104)", () => {
   it("raises with the card NAME as the message and the descriptive text in the backtrace slot", () => {
-    // Ruby's 3-arg Kernel#raise: raise Card::Error, card.name, "count not
-    // cacheable: ..." (virtual.rb:103) - message = the name (a String is
-    // not a Card, so Card::Error#initialize keeps it verbatim,
-    // lib/card/error.rb:21-26), descriptive string = backtrace arg.
+
     const card = cardRecord({ key: "orphan+child", name: DeckoName.parse("Orphan+Child") });
     expect(() => validateVirtualCard(card)).toThrow(VirtualCardError);
     try {
@@ -333,7 +279,7 @@ describe("card-mod-virtual: virtual.rb validate_card (virtual.rb:90-104)", () =>
       expect.unreachable("validate_card should have raised");
     } catch (e) {
       const err = e as VirtualCardError;
-      expect(err.message).toBe("Orphan+Child"); // raise arg 2
+      expect(err.message).toBe("Orphan+Child");
       expect(err.cardName).toBe("Orphan+Child");
       expect(err.backtraceText).toBe("count not cacheable: card Orphan+Child needs left_id");
     }
@@ -344,7 +290,7 @@ describe("card-mod-virtual: virtual.rb validate_card (virtual.rb:90-104)", () =>
       key: "x",
       name: DeckoName.parse("Jane Doe+Books"),
       leftId: 10,
-      // right id missing entirely
+
     });
     expect(() => validateVirtualCard(card)).toThrow(VirtualCardError);
     try {
@@ -381,14 +327,14 @@ describe("card-mod-virtual: Virtual.save / fetch / delete against storage", () =
     expect(saved).toMatchObject({
       left_id: 75,
       right_id: -2,
-      left_key: null, // simple names have no left_key
+      left_key: null,
       content: "the content",
       updated_at: STAMP_1,
     });
     const rows = virtualRows(storage);
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ left_id: 75, right_id: -2, left_key: null, content: "the content" });
-    expect(cache.has("caesar")).toBe(true); // cached under card.key (virtual.rb:29)
+    expect(cache.has("caesar")).toBe(true);
   });
 
   it("save on a compound card INSERTs its side ids and the left part's key (virtual.rb:54-56)", async () => {
@@ -397,7 +343,7 @@ describe("card-mod-virtual: Virtual.save / fetch / delete against storage", () =
     expect(saved).toMatchObject({
       left_id: 10,
       right_id: 20,
-      left_key: "jane_doe", // card.name.left_key (virtual.rb:56)
+      left_key: "jane_doe",
       content: "junction content",
     });
   });
@@ -405,13 +351,11 @@ describe("card-mod-virtual: Virtual.save / fetch / delete against storage", () =
   it("re-saving changed content UPDATEs content+updated_at; same content only touches (virtual.rb:8-11,43-50)", async () => {
     const { storage, clock, cache } = freshFixture();
     const card = SIMPLE();
-    await virtualSave(storage.driver, card, cache, clock()); // create, STAMP_1
+    await virtualSave(storage.driver, card, cache, clock());
 
-    // Re-save with UNCHANGED content: create_or_update finds the row and
-    // Virtual#update takes the touch branch (content == new_content).
     await virtualSave(storage.driver, card, cache, clock());
     let rows = virtualRows(storage);
-    expect(rows).toHaveLength(1); // updated in place, no second row
+    expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ content: "the content", updated_at: STAMP_2 });
 
     card.dbContent = "changed content";
@@ -425,8 +369,6 @@ describe("card-mod-virtual: Virtual.save / fetch / delete against storage", () =
     const card = SIMPLE();
     await virtualSave(storage.driver, card, cache, clock());
 
-    // Tamper UNDERNEATH the cache: the temp cache is "ahead of the
-    // database" (lib/card/cache.rb:8-11), so the cached row still answers.
     storage.exec("UPDATE card_virtuals SET content = 'tampered' WHERE left_id = 75");
     const fetched = await virtualFetch(storage.driver, card, cache, clock());
     expect(fetched.content).toBe("the content");
@@ -437,18 +379,17 @@ describe("card-mod-virtual: Virtual.save / fetch / delete against storage", () =
     const card = SIMPLE();
     const fetched = await virtualFetch(storage.driver, card, cache, clock());
     expect(fetched.content).toBe("the content");
-    expect(virtualRows(storage)).toHaveLength(1); // materialized by the read
+    expect(virtualRows(storage)).toHaveLength(1);
   });
 
   it("find_by_card resolves through the left_key branch when left_id is unresolvable (virtual.rb:64-72)", async () => {
     const { storage, clock, cache } = freshFixture();
-    // A row stored under the left_key branch's shape: NULL left_id.
+
     storage.exec(
       "INSERT INTO card_virtuals (left_id, right_id, left_key, content, updated_at) VALUES (NULL, 20, 'jane_doe', 'legacy row', ?)",
       [STAMP_1],
     );
-    // Compound card with NO resolvable left id: where_card falls to
-    // left_key = card.name.left_key ("jane_doe") + right_id 20.
+
     const card = cardRecord({
       key: "jane_doe+books",
       name: DeckoName.parse("Jane Doe+Books"),
@@ -458,7 +399,6 @@ describe("card-mod-virtual: Virtual.save / fetch / delete against storage", () =
     const found = await findVirtualByCard(storage.driver, card);
     expect(found?.content).toBe("legacy row");
 
-    // And fetch ADOPTS that row instead of creating a duplicate.
     const fetched = await virtualFetch(storage.driver, card, cache, clock());
     expect(fetched.id).toBe(found?.id);
     expect(virtualRows(storage)).toHaveLength(1);
@@ -471,10 +411,9 @@ describe("card-mod-virtual: Virtual.save / fetch / delete against storage", () =
     expect(virtualRows(storage)).toHaveLength(1);
 
     await virtualDelete(storage.driver, card, cache);
-    expect(virtualRows(storage)).toHaveLength(0); // row gone
-    expect(cache.has("caesar")).toBe(false); // cache entry gone (virtual.rb:33)
+    expect(virtualRows(storage)).toHaveLength(0);
+    expect(cache.has("caesar")).toBe(false);
 
-    // Deleting again is a no-op (`find_by_card&.delete` - virtual.rb:34).
     await expect(virtualDelete(storage.driver, card, cache)).resolves.toBeUndefined();
   });
 
@@ -487,15 +426,15 @@ describe("card-mod-virtual: Virtual.save / fetch / delete against storage", () =
     );
     const row = (await findVirtualByCard(storage.driver, SIMPLE()))!;
 
-    await virtualRecordUpdate(storage.driver, row, "same", clock()); // touch
+    await virtualRecordUpdate(storage.driver, row, "same", clock());
     let rows = virtualRows(storage);
-    expect(rows[0]).toMatchObject({ content: "same", updated_at: STAMP_1 }); // stamp moved, content kept
+    expect(rows[0]).toMatchObject({ content: "same", updated_at: STAMP_1 });
 
-    await virtualRecordUpdate(storage.driver, row, "different", clock()); // update!
+    await virtualRecordUpdate(storage.driver, row, "different", clock());
     rows = virtualRows(storage);
     expect(rows[0]).toMatchObject({ content: "different", updated_at: STAMP_2 });
-    expect(row.content).toBe("different"); // update! assigns the attribute
-    // both paths return the new content (virtual.rb:10)
+    expect(row.content).toBe("different");
+
     await expect(virtualRecordUpdate(storage.driver, row, "different", clock())).resolves.toBe("different");
   });
 });
@@ -511,14 +450,13 @@ describe("card-mod-virtual: Virtual#cardname / #card_id (virtual.rb:13-19)", () 
       updated_at: null,
     };
     const name = virtualRowCardname(row, NAME_OF_ID);
-    expect(name?.s).toBe("Jane Doe+Books"); // [left_id, right_id].cardname
+    expect(name?.s).toBe("Jane Doe+Books");
   });
 
   it("hands the composed mark to the Card.fetch analog and returns its result (virtual.rb:13-15)", () => {
     const row = { id: 1, left_id: 10, right_id: 20, content: null, left_key: null, updated_at: null };
     const composed = virtualRowCardname(row, NAME_OF_ID)!;
-    // The mark passed to the fetcher IS the composed cardname (Card.fetch's
-    // mark, lib/card/mark.rb:20-23); compared by identity below.
+
     expect(
       virtualRowCardId(row, (name) => (name === composed ? { cardId: 33 } : undefined), NAME_OF_ID),
     ).toEqual({ cardId: 33 });
@@ -534,11 +472,11 @@ describe("card-mod-virtual: Virtual#cardname / #card_id (virtual.rb:13-19)", () 
 describe("card-mod-virtual: the abstract virtual_cache set module", () => {
   it("virtual? is new? (virtual_cache.rb:3-5; states.rb#new?)", () => {
     const fresh = SIMPLE();
-    fresh.isNew = true; // new_record?
+    fresh.isNew = true;
     expect(isVirtualCard(fresh)).toBe(true);
-    expect(isVirtualCard({ ...fresh, fromTrash: true })).toBe(true); // revived-from-trash counts
-    expect(isVirtualCard({ ...fresh, isNew: false })).toBe(false); // saved card
-    expect(isVirtualCard({ ...fresh, isNew: true, trash: true })).toBe(false); // trashed is not new?
+    expect(isVirtualCard({ ...fresh, fromTrash: true })).toBe(true);
+    expect(isVirtualCard({ ...fresh, isNew: false })).toBe(false);
+    expect(isVirtualCard({ ...fresh, isNew: true, trash: true })).toBe(false);
   });
 
   it("virtual_content is the PENDING db_content attribute (virtual_cache.rb:9-11)", () => {
@@ -549,11 +487,10 @@ describe("card-mod-virtual: the abstract virtual_cache set module", () => {
   it("db_content override materializes the row and answers the cached content (virtual_cache.rb:13-15)", async () => {
     const { storage, clock, cache } = freshFixture();
     const card = SIMPLE();
-    // First read: no row exists -> fetch CREATES it (the read materializes).
+
     await expect(virtualDbContent(storage.driver, card, cache, clock())).resolves.toBe("the content");
     expect(virtualRows(storage)).toHaveLength(1);
 
-    // A later save flows into the same read.
     card.dbContent = "newer content";
     await virtualSave(storage.driver, card, cache, clock());
     await expect(virtualDbContent(storage.driver, card, cache, clock())).resolves.toBe("newer content");
@@ -563,29 +500,28 @@ describe("card-mod-virtual: the abstract virtual_cache set module", () => {
     const { storage, clock, cache } = freshFixture();
     const card = SIMPLE();
     await expect(virtualUpdatedAt(storage.driver, card, cache, clock())).resolves.toBe(STAMP_1);
-    // Second read: a cache HIT (no clock tick, no re-query) - and NOT the
-    // cards row's stamp, the card_virtuals row's (virtual_cache.rb:17-19).
+
     await expect(virtualUpdatedAt(storage.driver, card, cache, clock())).resolves.toBe(STAMP_1);
   });
 
   it("save_virtual_content event body saves then returns the abort :success marker (virtual_cache.rb:21-24)", async () => {
     const { storage, clock, cache } = freshFixture();
     await expect(saveVirtualContent(storage.driver, SIMPLE(), cache, clock())).resolves.toBe("success");
-    expect(virtualRows(storage)).toHaveLength(1); // the Virtual side effect ran
+    expect(virtualRows(storage)).toHaveLength(1);
   });
 
   it("delete_virtual_content aborts (marker) only on unreal cards (virtual_cache.rb:26-29)", async () => {
     const { storage, clock, cache } = freshFixture();
     const card = SIMPLE();
-    card.isNew = true; // unreal (new?) -> abort :success unless real?
+    card.isNew = true;
     await virtualSave(storage.driver, card, cache, clock());
     await expect(deleteVirtualContent(storage.driver, card, cache)).resolves.toBe("success");
-    expect(virtualRows(storage)).toHaveLength(0); // Virtual.delete ran first
+    expect(virtualRows(storage)).toHaveLength(0);
 
-    const real = SIMPLE(); // isNew false -> real -> NO abort
+    const real = SIMPLE();
     await virtualSave(storage.driver, real, cache, clock());
     await expect(deleteVirtualContent(storage.driver, real, cache)).resolves.toBeUndefined();
-    expect(virtualRows(storage)).toHaveLength(0); // row still deleted
+    expect(virtualRows(storage)).toHaveLength(0);
   });
 });
 
@@ -603,9 +539,9 @@ describe("card-mod-virtual: delete/delete! are update trash: true (virtual_cache
       storage.selectOne<CardsRow>("SELECT * FROM cards WHERE id = 301") as CardsRow,
     );
     const saved = await virtualDeleteCard(writer, { cardId: 301, before });
-    expect(saved).not.toBeNull(); // update succeeded
+    expect(saved).not.toBeNull();
     expect((await storage.driver.query<{ trash: number }>("SELECT trash FROM cards WHERE id = 301", [])).rows[0]?.trash).toBe(1);
-    // the trash flip is a :delete action (write-path trashCard -> identify_action)
+
     expect((await storage.driver.query<{ action_type: number }>("SELECT action_type FROM card_actions WHERE card_id = 301", [])).rows[0]?.action_type).toBe(2);
   });
 
@@ -621,7 +557,7 @@ describe("card-mod-virtual: delete/delete! are update trash: true (virtual_cache
     const before = cardFieldStateFromRow(
       storage.selectOne<CardsRow>("SELECT * FROM cards WHERE id = 302") as CardsRow,
     );
-    // trash: true on an already-trashed card is a no-op save -> update! raises
+
     await expect(virtualDeleteCardBang(writer, { cardId: 302, before })).rejects.toThrow(
       "Failed to save the record",
     );

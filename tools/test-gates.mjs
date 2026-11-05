@@ -1,42 +1,25 @@
-// Single source of truth for which tests run how often.
-//
-// The failure this exists to prevent: a test written to prove something about
-// scale or the deployment got added and, because nothing asked, defaulted to
-// running on every single change. Nobody decided that. It just happened, and it
-// happened to ~79% of the suite's test time.
-//
-// The rule is: every test file belongs to exactly one gate, and a gate is a
-// QUESTION, not a duration. "Is the product correct" runs constantly. "Does it
-// survive a million rows", "does it survive the real edge runtime" and "does
-// our tooling work" answer questions that do not change when someone fixes a
-// typo, so their named commands run when the relevant work requires them.
-//
-//   node tools/test-gates.mjs list          show every gate and its file count
-//   node tools/test-gates.mjs run <gate>    run one gate through vitest
-//   node tools/test-gates.mjs run full --folder tests/server --folder tests/card
-//   node tools/test-gates.mjs check         assert every file is classified
-//
-// Every run checks classification first. A new test surface needs a declared
-// rule; only the product directories/files listed below default to correctness.
-
 import { randomUUID } from "node:crypto";
-import { testRunner } from "./node-test-runners.mjs";
-import { isTestFile } from "./test-file-inventory.mjs";
-import { runNodeTests } from "./run-node-tests.mjs";
 import { spawn } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, writeFileSync, unlinkSync, lstatSync, mkdirSync, mkdtempSync, realpathSync } from "node:fs";
-import { resolveMysqlProvider } from "./native-mysql-provider.mjs";
-import { resolvePythonExecutable } from "./platform/python-runtime.mjs";
-import { resolveNativeCommands } from "./native-command-provider.mjs";
 import { join, relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { cleanupGateInputs, createGateTimingRecorder, prepareGateInputs, writeGateInventory, writeGateResult } from "./test-gate-project-preflight.mjs";
 
 const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
 
-// Explicit routes retain private-data checks without making a recipient's full
-// gate depend on inputs that the handover intentionally does not distribute.
-const privateInputs = JSON.parse(readFileSync(new URL("./test-gate-routing/private-inputs.json", import.meta.url), "utf8"));
+export function isTestFile(file) {
+  return typeof file === "string" && /\.(?:test|spec)\.(?:ts|mts|cts|tsx|js|mjs|cjs|jsx)$/.test(file);
+}
+
+export function testRunner(root, file) {
+  const text = readFileSync(join(root, file), "utf8");
+  const usesNode = /^\s*import\b[^;\n]*from\s+["']node:test["']/m.test(text);
+  const usesVitest = /^\s*import\b[^;\n]*from\s+["']vitest["']/m.test(text);
+  if (usesNode && usesVitest) throw Error("mixed Node/Vitest test framework imports: " + file);
+  return usesNode ? "node" : "vitest";
+}
+
+const privateInputsUrl = new URL("./test-gate-routing/private-inputs.json", import.meta.url);
+const privateInputs = existsSync(privateInputsUrl) ? JSON.parse(readFileSync(privateInputsUrl, "utf8")) : [];
 for (const entry of privateInputs) {
   if (typeof entry.file !== "string" || !isTestFile(entry.file) || entry.file.includes("..") || entry.file.includes("\\") || entry.file.startsWith("/") || typeof entry.reason !== "string" || !entry.reason.trim() || (entry.gate !== undefined && !["deploy", "harness"].includes(entry.gate))) {
     throw Error("Invalid private-input test route: " + JSON.stringify(entry));
@@ -45,23 +28,15 @@ for (const entry of privateInputs) {
 if (new Set(privateInputs.map(entry => entry.file)).size !== privateInputs.length) throw Error("Duplicate private-input test route");
 const onDemandPrivateInputs = new Map(privateInputs.filter(entry => entry.gate).map(entry => [entry.file, entry]));
 
-// Benchmark files already assigned to the corpus gate by PR 350, plus the
-// independently audited per-file routes for the remaining private inputs.
 const CORPUS_GATE_FILES = new Set([
   ...privateInputs.filter(entry => !entry.gate).map(entry => entry.file),
 ]);
 
-// Ordered. First match wins, so specific rules must come before general ones.
 export const GATES = [
   {
     id: "corpus",
     label: "Corpus - needs the machine-local rich benchmark corpus on disk",
     when: "On demand, when the rich corpus is present on this machine (npm run test:corpus)",
-    // These read private deck databases and the matching corpus shard files. Those
-    // files are gitignored and machine-local (docs/TESTING.md), so they are not
-    // in the repository and a handover recipient cannot have them. The port must
-    // not depend on private data, so these run only where the corpus is present.
-    // This rule precedes the broader product, benchmark and tooling rules.
     why: "They need the private, machine-local benchmark corpus, which is not in the repository. The port must not depend on private data, so this gate is never part of the full gate.",
     excludedFromFull: true,
     match: (p) => CORPUS_GATE_FILES.has(p),
@@ -70,10 +45,6 @@ export const GATES = [
     id: "benchmarks",
     label: "BENCHMARKS - investigation tooling, not tests",
     when: "On demand, when investigating performance",
-    // These are perf probes and diagnostic harnesses that happen to be named
-    // *.test.ts. Eleven of them were running on every change and failing.
-    // A file that exists to measure something is not a check that the product
-    // is correct, and it should never be in the constant path.
     why: "They answer 'how fast is it', not 'is it right'. They fail without a live database, so in the constant path they were pure noise.",
     match: (p) => /^benchmarks\//.test(p),
   },
@@ -81,10 +52,6 @@ export const GATES = [
     id: "package",
     label: "Package - needs the proposed handover export on disk",
     when: "At the handover package step, with HANDOVER_EXPORT_ROOT naming the proposed export (npm run test:package)",
-    // The file reads the proposed export's manifest and bundled binary, and
-    // refuses without HANDOVER_EXPORT_ROOT by design. It is not a property of
-    // the source tree, so the default, correctness and full gates do not run it.
-    // It must sit before `harness`, which would otherwise claim tests/handover/.
     why: "Its refusal is correct without an export. Running it in an ordinary gate turns a missing export into a failure of every change.",
     excludedFromFull: true,
     match: (p) => p === "tests/handover/tinymce-source-supply.attack.test.mjs",
@@ -143,10 +110,7 @@ export function listTestFiles(dir = REPO_ROOT, out = [], root = dir) {
     throw new Error("Cannot inspect test inventory: " + dir, { cause: error });
   }
   for (const entry of entries) {
-    // tmp/ is scratch: the gate's own working directories, and the vendored
-    // gem tree an oracle checkout leaves there (bootstrap's jQuery specs are
-    // `.spec.js`, which isTestFile accepts). No project suite lives under it.
-    if (entry.name === "node_modules" || entry.name === "dist" || entry.name === "tmp" || entry.name === ".runtime" || entry.name.startsWith(".git")) continue;
+    if (entry.name === "node_modules" || entry.name === "dist" || entry.name === "tmp" || entry.name === ".runtime" || entry.name === "vendor" || entry.name === "third-party-source" || entry.name === "fixtures" || entry.name.startsWith(".git")) continue;
     const full = join(dir, entry.name);
     if (entry.isDirectory()) listTestFiles(full, out, root);
     else if (isTestFile(entry.name)) out.push(relative(root, full).replace(/\\/g, "/"));
@@ -165,8 +129,6 @@ export function classify(relPath) {
   return null;
 }
 
-// Service-backed private inputs keep their existing deploy or harness gate.
-// Only the explicitly named files leave `full`; synthetic siblings still run.
 export function selectTestFiles(files, gateId) {
   if (gateId === "full") {
     const excluded = new Set(GATES.filter(gate => gate.excludedFromFull).map(gate => gate.id));
@@ -221,8 +183,6 @@ function repoTestFiles() {
   return listTestFiles().sort();
 }
 
-// Copied test fixtures resolve their installed toolchain through this checkout's
-// ancestors. An inherited OS temp directory loses that dependency lookup.
 export function prepareTestEnvironment(root, env = process.env) {
   let parent = realpathSync(root);
   for (const name of [".runtime", "test-gates"]) {
@@ -240,10 +200,16 @@ export function prepareTestEnvironment(root, env = process.env) {
   return { temporaryRoot };
 }
 
-// Both runners own their original selection and reporting. The gate owns
-// their settlement and the lifetime of its generated config.
+async function defaultRunNodeTests({ root, files }) {
+  return new Promise((resolve) => {
+    const child = spawn(process.execPath, ["--test", ...files], { cwd: root, stdio: "inherit", windowsHide: true });
+    child.once("close", (code) => resolve({ pass: code === 0, filesExecuted: files.length, summary: { exitCode: code ?? 1 }, timings: [] }));
+    child.once("error", () => resolve({ pass: false, filesExecuted: files.length, summary: { exitCode: 1 }, timings: [] }));
+  });
+}
+
 export async function runGatePhases({ root, vitestFiles, nodeFiles, generated, extra, report }, {
-  spawnVitest = spawn, runNode = runNodeTests, removeConfig = unlinkSync,
+  spawnVitest = spawn, runNode = defaultRunNodeTests, removeConfig = unlinkSync,
   log = message => console.error(message),
   observeTiming = () => {},
 } = {}) {
@@ -334,51 +300,13 @@ async function command() {
       console.error(`gate "${gateId}" selected 0 files`);
       process.exit(1);
     }
-    // Refuse an invalid launch before preparing any external project input.
+
     if (!extra.some(arg => arg.startsWith("--maxWorkers"))) {
       const workers = Number(process.env.DECKO_TEST_MAX_WORKERS ?? 2);
       if (!Number.isInteger(workers) || workers < 1) throw Error("positive DECKO_TEST_MAX_WORKERS required");
       extra.unshift(`--maxWorkers=${workers}`);
     }
-    const timing = createGateTimingRecorder();
-    const stopPreflight = timing.start("preflight", "container");
-    const stopProviders = timing.start("native-provider-preflight");
-    // Select the native MySQL server before any test starts. The child test
-    // processes inherit DECKO_MYSQL_BASEDIR from this process. A missing server
-    // is reported here by name; the gate still runs the other tests.
-    const mysql = resolveMysqlProvider({ repoRoot: REPO_ROOT, env: process.env, platform: process.platform, exists: existsSync });
-    if (mysql.selected) process.env.DECKO_MYSQL_BASEDIR = mysql.baseDir;
-    console.error(JSON.stringify({ preflight: "mysql", selected: mysql.selected, baseDir: mysql.baseDir, source: mysql.source, mysqld: mysql.mysqld }));
-    if (!mysql.selected) console.error(`preflight: ${mysql.problem}`);
-    // Make the native command-line tools the child tests call reachable before any
-    // test starts. Only this gate run's child PATH changes, and a tool that is
-    // not found is named here; the gate still runs the other tests.
-    const nativeCommands = resolveNativeCommands({ env: process.env, platform: process.platform, exists: existsSync, listDirectory: dir => readdirSync(dir) });
-    if (nativeCommands.added.length) process.env.PATH = nativeCommands.childPath;
-    console.error(JSON.stringify({ preflight: "native-commands", resolved: nativeCommands.resolved, added: nativeCommands.added, missing: nativeCommands.missing, problems: nativeCommands.problems }));
-    if (nativeCommands.missing.length) console.error(`preflight: native command missing from this gate run: ${nativeCommands.missing.join(", ")}; the tests that call it will fail by that name`);
-    // The Python 3 interpreter the control scripts run with, as an absolute path
-    // in DECKO_PYTHON, resolved after the child PATH above is final, so a child
-    // process never depends on a bare `python` name. A refusal is named here and
-    // the gate still runs the other tests.
-    try {
-      const python = resolvePythonExecutable();
-      process.env.DECKO_PYTHON = python;
-      console.error(JSON.stringify({ preflight: "python", selected: true, DECKO_PYTHON: python }));
-    } catch (error) {
-      console.error(JSON.stringify({ preflight: "python", selected: false, problem: error.message }));
-      console.error(`preflight: ${error.message}`);
-    }
-    // DEC102 runs Ruby oracles through tools/platform/ruby-oracle-vm.mjs.
-    // Ambient local gem settings are not reference authority. Pinned source
-    // files are selected independently and SHA-checked when sent to the VM.
-    const ambientGemVars = ["GEM_HOME", "GEM_PATH"].filter((name) => process.env[name] !== undefined);
-    for (const name of ambientGemVars) delete process.env[name];
-    console.error(JSON.stringify({ preflight: "ruby-gems", removedFromChildEnv: ambientGemVars, oracleGemDir: process.env.DECKO_ORACLE_GEM_DIR ?? null }));
-    stopProviders();
-    // The full gate leaves out every gate marked excludedFromFull (the package
-    // files need a proposed export; the corpus files need the private corpus).
-    // Each excluded group is counted and named with its reason, never dropped silently.
+
     if (gateId === "full") {
       for (const excluded of GATES.filter((g) => g.excludedFromFull)) {
         const excludedFiles = excludedSelection.filter(entry => entry.gate === excluded.id).map(entry => entry.file);
@@ -389,31 +317,13 @@ async function command() {
       }
     }
     const temporaryState = prepareTestEnvironment(REPO_ROOT);
-    console.error(JSON.stringify({ preflight: "temporary-state", ...temporaryState }));
-    const inventory = writeGateInventory({ root: REPO_ROOT, directory: temporaryState.temporaryRoot,
-      gate: gateId, folders, selected, excluded: excludedSelection, runner: testRunner, classify });
-    console.error(JSON.stringify({ preflight: "selected-inventory", ...inventory }));
-    let projectInputs, outcome, failure, failed = false, preflightFinished = false;
-    try {
-    const preparation = prepareGateInputs({ root: REPO_ROOT, files: selected, gate: gateId,
-      directory: temporaryState.temporaryRoot, env: process.env, observeTiming: timing.record });
-    projectInputs = preparation ? await preparation : undefined;
-    stopPreflight(); preflightFinished = true;
-
-    // Write a generated config rather than passing 500+ paths on the command
-    // line. Windows caps a command at ~32k characters; passing the full suite
-    // as arguments already fails outright at 626 files, and the correctness
-    // gate alone is close enough to the cap that it would break next.
     const nodeFiles = selected.filter(f => testRunner(REPO_ROOT, f) === "node");
     const vitestFiles = selected.filter(f => !nodeFiles.includes(f));
     const generated = join(REPO_ROOT, `vitest.gate.${process.pid}.${randomUUID()}.generated.ts`);
     const includeList = vitestFiles.map((f) => `  ${JSON.stringify(f)},`).join("\n");
-    try { writeFileSync(
+    writeFileSync(
       generated,
       [
-        "// GENERATED by tools/test-gates.mjs - do not edit, do not commit.",
-        "// Runs one test gate. Merges the project's real vitest.config.ts so gate",
-        "// runs and a plain `vitest run` share settings.",
         'import { defineConfig, mergeConfig } from "vitest/config";',
         'import base from "./vitest.config";',
         "",
@@ -426,38 +336,11 @@ async function command() {
         "}));",
         "",
       ].join("\n")
-    ); } catch (writeError) {
-      // A write can create partial owned data before failing. Neither framework
-      // may start; retain the original error even if retiring that data fails.
-      try { unlinkSync(generated); }
-      catch (cleanupError) {
-        if (cleanupError?.code !== "ENOENT") {
-          throw new AggregateError([writeError, cleanupError], "Test gate config write and cleanup failed", { cause: writeError });
-        }
-      }
-      throw writeError;
-    }
-
+    );
     console.error(`gate "${gateId}": ${vitestFiles.length} Vitest + ${nodeFiles.length} Node files`);
     const report = process.env.NODE_TEST_REPORT ?? join(temporaryState.temporaryRoot, "node-report.json");
-    outcome = await runGatePhases({ root: REPO_ROOT, vitestFiles, nodeFiles, generated, extra, report }, { observeTiming: timing.record });
-    const { vitestStatus, nodePass, cleanupPass } = outcome;
-    if (vitestStatus !== 0 || !nodePass || !cleanupPass) process.exitCode = 1;
-    } catch (error) { failed = true; failure = error; process.exitCode = 1; }
-    finally {
-      if (!preflightFinished) stopPreflight();
-      const stopCleanup = timing.start("owned-provider-cleanup");
-      try { cleanupGateInputs(projectInputs); }
-      catch (error) { failure = failed ? new AggregateError([failure, error], "Gate and provider cleanup failed", { cause: failure }) : error; failed = true; process.exitCode = 1; }
-      finally { stopCleanup(); }
-      try {
-        const receipt = writeGateResult({ directory: temporaryState.temporaryRoot, timing,
-          result: { gate: gateId, folders, inventory, outcome, pass: !failed && outcome?.vitestStatus === 0 && outcome?.nodePass && outcome?.cleanupPass,
-            failure: failed ? { name: failure?.name, message: failure?.message, stack: failure?.stack, value: String(failure) } : null } });
-        console.error(JSON.stringify({ preflight: "gate-result", ...receipt }));
-      } catch (error) { failure = failed ? new AggregateError([failure, error], "Gate failure and result write failed", { cause: failure }) : error; failed = true; process.exitCode = 1; }
-    }
-    if (failed) throw failure;
+    const outcome = await runGatePhases({ root: REPO_ROOT, vitestFiles, nodeFiles, generated, extra, report });
+    if (outcome.vitestStatus !== 0 || !outcome.nodePass || !outcome.cleanupPass) process.exitCode = 1;
     return;
   }
 
@@ -465,6 +348,4 @@ async function command() {
   process.exit(1);
 }
 
-// Only drive the CLI when executed directly; importing this module (to read the
-// rules, from a test) must not run a command.
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await command();

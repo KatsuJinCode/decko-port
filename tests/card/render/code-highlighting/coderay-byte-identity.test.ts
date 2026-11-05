@@ -1,10 +1,4 @@
-// Stream M1 (coderay-highlighting) byte-identity tests.
-//
-// Each fixture under fixtures/captured/coderay/ was produced by
-// `CodeRay.scan(card-content, :LANG).div` on the local Ruby oracle (the
-// gem at coderay-1.1.3, the card-mod-format/layout/style cardtypes). The
-// port's job is to reproduce those bytes exactly for every card the
-// corpus seeds; this file is the gate.
+
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -23,8 +17,8 @@ import { scanHtml } from "../../../../src/card/render/code-highlighting/scanners
 import { coderayEscape } from "../../../../src/card/render/code-highlighting/escape.js";
 import { ALPHA_STYLES } from "../../../../src/card/render/code-highlighting/alpha-style.js";
 
-const FIXTURES = "C:/localProjects/decko-ts/fixtures/corpus";
-const CAPTURED = "C:/localProjects/decko-ts/fixtures/captured/coderay";
+const FIXTURES = "fixtures/corpus";
+const CAPTURED = "fixtures/captured/coderay";
 
 interface Case {
   readonly fixture: string;
@@ -53,8 +47,7 @@ function loadContent(shard: string, cardId: number): string {
 }
 
 function loadOracle(fixture: string): string {
-  // The Ruby capture script wrote a trailing newline; readFileSync preserves
-  // it so we can byte-compare directly.
+
   return readFileSync(resolve(CAPTURED, `${fixture}.html`), "utf8");
 }
 
@@ -70,9 +63,7 @@ describe("code-highlighting: byte-identity vs Ruby oracle", () => {
 });
 
 describe("code-highlighting: scanner-level byte-identity", () => {
-  // The DIV wrapping is identical across languages, so exercising the
-  // scanner outputs in isolation catches any regression where a future
-  // change adds a stray span wrapper that survives into the assembled HTML.
+
   for (const c of CASES) {
     it(`${c.fixture}: inner spans are wrapped by the CodeRay DIV template`, () => {
       const content = loadContent(c.shard, c.cardId);
@@ -105,9 +96,9 @@ describe("code-highlighting: langForTypeCode dispatch", () => {
 describe("code-highlighting: escape + DIV template shape", () => {
   it("escapes HTML entities and control codes per CodeRay", () => {
     expect(coderayEscape("<&>\"")).toBe("&lt;&amp;&gt;&quot;");
-    expect(coderayEscape("\n")).toBe("\n"); // 0x0A not in the escape set
+    expect(coderayEscape("\n")).toBe("\n");
     expect(coderayEscape("\x00")).toBe(" ");
-    expect(coderayEscape("\t")).toBe("        "); // tab -> 8 spaces
+    expect(coderayEscape("\t")).toBe("        ");
   });
 
   it("wraps a scan in the CodeRay DIV template", () => {

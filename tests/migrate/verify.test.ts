@@ -1,6 +1,4 @@
-// verify.test.ts — the verification report: shape, parity truthfulness,
-// junction resolution, and the DATA RULE audit (the report must be
-// content-free: no card names, no card content).
+
 
 import { describe, it, expect, afterAll } from "vitest";
 import { mkdtempSync, writeFileSync, rmSync, existsSync } from "node:fs";
@@ -25,12 +23,12 @@ const DDL_PATH = join(REPO_ROOT, "db", "schema.sqlite.sql");
 
 const dirs: string[] = [];
 afterAll(() => {
-  // best-effort cleanup; Windows may still hold a handle briefly
+
   for (const dir of dirs) {
     try {
       rmSync(dir, { recursive: true, force: true });
     } catch {
-      // leftover %TEMP% dirs are acceptable
+
     }
   }
 });
@@ -88,13 +86,13 @@ describe("verifyMigration", () => {
     });
     expect(report.tables["cards"]?.countParity).toBe(true);
     expect(report.tables["cards"]?.checksumParity).toBe(true);
-    // tables absent from the dump: sourceCount 0, parity trivially true
+
     expect(report.tables["sessions"]?.sourceCount).toBe(0);
     expect(report.tables["sessions"]?.countParity).toBe(true);
-    // junction walk resolved the one compound card
+
     expect(report.junction.sampled).toBe(1);
     expect(report.junction.resolved).toBe(1);
-    // engine checks without a bridge: honestly skipped
+
     expect(report.engine.status).toBe("skipped");
     expect(report.outOfScope).toEqual(OUT_OF_SCOPE);
     expect(existsSync(reportPath)).toBe(true);
@@ -105,7 +103,7 @@ describe("verifyMigration", () => {
     const dir = mkdtempSync(join(tmpdir(), "decko-verify-"));
     dirs.push(dir);
     const { dumpPath, driver, stats } = await buildVerifiedFixture(dir);
-    // tamper: delete a card behind the verifier's back
+
     await driver.query("DELETE FROM cards WHERE id = 2", []);
     const report = await verifyMigration({
       dumpPath,
@@ -136,12 +134,12 @@ describe("verifyMigration", () => {
       reportPath,
     });
     const json = JSON.stringify(report);
-    // synthetic content markers that would prove a leak
+
     expect(json).not.toContain("Verify Alpha");
     expect(json).not.toContain("Verify Beta");
     expect(json).not.toContain("alpha body text");
     expect(json).not.toContain("child content");
-    // engine checks ran and rendered
+
     expect(report.engine.status).toBe("ok");
     driver.close();
   }, 60000);

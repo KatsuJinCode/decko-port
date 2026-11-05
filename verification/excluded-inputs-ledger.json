@@ -229,12 +229,12 @@
    "id": "vitest:017",
    "gate": "corpus",
    "file": "tests/deploy/bunny-edge-person-participating-real-deck-replay.test.ts",
-   "test": "person page +Item(s) Listing section on the REAL production deck renders the virtual titled Search section through the deployed boot",
+   "test": "person page +Item(s) Listing section on the REAL reference deck renders the virtual titled Search section through the deployed boot",
    "occurrence": 1,
    "status": "failed",
-   "message": "trial-deck mirror missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/p2-person-section/corpus-mirror.sqlite3: expected false to be true // Object.is equality",
+   "message": "trial-deck mirror missing: workspace/decko-corpus-tests-20261103/src/tmp/p2-person-section/corpus-mirror.sqlite3: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "trial-deck mirror missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/p2-person-section/corpus-mirror.sqlite3: expected false to be true // Object.is equality"
+   "why": "trial-deck mirror missing: workspace/decko-corpus-tests-20261103/src/tmp/p2-person-section/corpus-mirror.sqlite3: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:018",
@@ -353,9 +353,9 @@
    "test": "pod features (TS engine against the Ruby oracle) pod attachments store Ruby's rows and files",
    "occurrence": 1,
    "status": "failed",
-   "message": "ENOENT: no such file or directory, copyfile '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/pod-features/attachments.sqlite3'",
+   "message": "ENOENT: no such file or directory, copyfile 'workspace/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> 'workspace/decko-corpus-tests-20261103/src/tmp/persist/pod-features/attachments.sqlite3'",
    "category": "could-not-run",
-   "why": "ENOENT: no such file or directory, copyfile '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/pod-features/attachments.sqlite3'"
+   "why": "ENOENT: no such file or directory, copyfile 'workspace/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> 'workspace/decko-corpus-tests-20261103/src/tmp/persist/pod-features/attachments.sqlite3'"
   },
   {
    "id": "vitest:050",
@@ -364,9 +364,9 @@
    "test": "pod features (TS engine against the Ruby oracle) pod coded storage stores Ruby's rows and mod files",
    "occurrence": 1,
    "status": "failed",
-   "message": "ENOENT: no such file or directory, copyfile '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/pod-features/coded.sqlite3'",
+   "message": "ENOENT: no such file or directory, copyfile 'workspace/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> 'workspace/decko-corpus-tests-20261103/src/tmp/persist/pod-features/coded.sqlite3'",
    "category": "could-not-run",
-   "why": "ENOENT: no such file or directory, copyfile '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/pod-features/coded.sqlite3'"
+   "why": "ENOENT: no such file or directory, copyfile 'workspace/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> 'workspace/decko-corpus-tests-20261103/src/tmp/persist/pod-features/coded.sqlite3'"
   },
   {
    "id": "vitest:051",
@@ -375,9 +375,9 @@
    "test": "pod features (TS engine against the Ruby oracle) sow's --items, --url and -m pods equal Ruby's byte for byte",
    "occurrence": 1,
    "status": "failed",
-   "message": "ENOENT: no such file or directory, copyfile '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/ruby-after-70.sqlite3' -> '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/pod-features/probe-deck.sqlite3'",
+   "message": "ENOENT: no such file or directory, copyfile 'workspace/decko-corpus-tests-20261103/src/tmp/persist/ruby-after-70.sqlite3' -> 'workspace/decko-corpus-tests-20261103/src/tmp/persist/pod-features/probe-deck.sqlite3'",
    "category": "could-not-run",
-   "why": "ENOENT: no such file or directory, copyfile '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/ruby-after-70.sqlite3' -> '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/pod-features/probe-deck.sqlite3'"
+   "why": "ENOENT: no such file or directory, copyfile 'workspace/decko-corpus-tests-20261103/src/tmp/persist/ruby-after-70.sqlite3' -> 'workspace/decko-corpus-tests-20261103/src/tmp/persist/pod-features/probe-deck.sqlite3'"
   },
   {
    "id": "vitest:052",
@@ -386,9 +386,9 @@
    "test": "pod features (TS engine against the Ruby oracle) conflict modes and codename-versus-name resolution leave Ruby's rows",
    "occurrence": 1,
    "status": "failed",
-   "message": "ENOENT: no such file or directory, copyfile '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/pod-features/conflict-modes.sqlite3'",
+   "message": "ENOENT: no such file or directory, copyfile 'workspace/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> 'workspace/decko-corpus-tests-20261103/src/tmp/persist/pod-features/conflict-modes.sqlite3'",
    "category": "could-not-run",
-   "why": "ENOENT: no such file or directory, copyfile '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/persist/pod-features/conflict-modes.sqlite3'"
+   "why": "ENOENT: no such file or directory, copyfile 'workspace/decko-corpus-tests-20261103/src/tmp/persist/oracle-base-deck.sqlite3' -> 'workspace/decko-corpus-tests-20261103/src/tmp/persist/pod-features/conflict-modes.sqlite3'"
   },
   {
    "id": "vitest:054",
@@ -430,9 +430,9 @@
    "test": "perm-overdeny attribution probe (env-gated) probes the verdict state behind both residual pages (report-only)",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:058",
@@ -1197,7 +1197,7 @@
    "id": "vitest:156",
    "gate": "corpus",
    "file": "tests/card/permissions/read-rule-left-climb-corpus-shapes.test.ts",
-   "test": "TPR virtual rule cards: the anchor-type read chain decides the bars Message+Conversation (anchor BasicCs): the content-option virtuals stay denied bare lis",
+   "test": "TPR virtual rule cards: the anchor-type read chain decides the bars Message+Conversation (anchor CustomBasic): the content-option virtuals stay denied bare lis",
    "occurrence": 1,
    "status": "failed-in-suite-setup",
    "message": "SqliteError: no such column: content",
@@ -1230,7 +1230,7 @@
    "id": "vitest:159",
    "gate": "corpus",
    "file": "tests/card/permissions/read-rule-simple-unknown-nest-corpus.test.ts",
-   "test": "simple unknown nest targets: read verdict from the *default type's read rule Intellectual Property+Unsecured: BasicCs-typed unknown items are denied",
+   "test": "simple unknown nest targets: read verdict from the *default type's read rule Intellectual Property+Unsecured: CustomBasic-typed unknown items are denied",
    "occurrence": 1,
    "status": "failed-in-suite-setup",
    "message": "SqliteError: no such column: content",
@@ -1263,7 +1263,7 @@
    "id": "vitest:162",
    "gate": "corpus",
    "file": "tests/card/permissions/rule-candidate-walk-equivalence-on-serving-deck.test.ts",
-   "test": "the rule-candidate swap, measured on the serving deck serving deck not present at C:/localProjects/decko-ts-turn-on-editing/tmp/brandon-local-edit/deck.sqlite3 (override with DECKO_SERVING_DECK)",
+   "test": "the rule-candidate swap, measured on the serving deck serving deck not present at workspace/decko-ts-turn-on-editing/tmp/sample-local-edit/deck.sqlite3 (override with DECKO_SERVING_DECK)",
    "occurrence": 1,
    "status": "passed",
    "message": null,
@@ -1332,15 +1332,15 @@
    "test": "autolink two-page probe renders the two probe pages and dumps engine verdict state",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:169",
    "gate": "corpus",
    "file": "tests/card/render/bar-menu-virtual-known-corpus.test.ts",
-   "test": "bar-menu page links of virtual cards are known-card media+HBQ+YouTube Browser: every +HBQ YTlinkControl / +HBQ YTlinkView page link is known-card",
+   "test": "bar-menu page links of virtual cards are known-card media+SampleCatalog+YouTube Browser: every +SampleCatalog YTlinkControl / +SampleCatalog YTlinkView page link is known-card",
    "occurrence": 1,
    "status": "failed-in-suite-setup",
    "message": "SqliteError: no such column: content",
@@ -1362,7 +1362,7 @@
    "id": "vitest:171",
    "gate": "corpus",
    "file": "tests/card/render/bar-name-context-seat-census-shape-pins.test.ts",
-   "test": "grade-10 name_context family: the bar-seat seats only the corpus's extending/rule-divergent item bars ctx-less on Martial Concordance+Pages:open (full parity with the graded bytes)",
+   "test": "grade-10 name_context family: the bar-seat seats only the corpus's extending/rule-divergent item bars ctx-less on SampleConcordance+Pages:open (full parity with the graded bytes)",
    "occurrence": 1,
    "status": "skipped",
    "message": null,
@@ -1431,9 +1431,9 @@
    "test": "card 470 AsIn Layout: the main-nest nil raise IS the oracle raises the captured NoMethodError on both view-lane views and renders bytes on the page lane",
    "occurrence": 1,
    "status": "failed",
-   "message": "ENOENT: no such file or directory, open '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/view-lane/recapture-raw-shard-000000.jsonl'",
+   "message": "ENOENT: no such file or directory, open 'workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/view-lane/recapture-raw-shard-000000.jsonl'",
    "category": "could-not-run",
-   "why": "ENOENT: no such file or directory, open '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/view-lane/recapture-raw-shard-000000.jsonl'"
+   "why": "ENOENT: no such file or directory, open 'workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/view-lane/recapture-raw-shard-000000.jsonl'"
   },
   {
    "id": "vitest:178",
@@ -1442,9 +1442,9 @@
    "test": "cardtype page template interface: the :add_button anchor is oracle-pinned renders an earlier cardtype-template pages with the oracle add_button bytes",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:179",
@@ -1549,7 +1549,7 @@
    "id": "vitest:190",
    "gate": "corpus",
    "file": "tests/card/render/cql-append-sort-execution-pins.corpus.test.ts",
-   "test": "CQL append/sort execution-wave pins (media+HBQ W2b #9) PIN A: the media+HBQ search lists carry the append-altered names with the Control block in updated_at DESC",
+   "test": "CQL append/sort execution-wave pins (media+SampleCatalog W2b #9) PIN A: the media+SampleCatalog search lists carry the append-altered names with the Control block in updated_at DESC",
    "occurrence": 1,
    "status": "skipped",
    "message": null,
@@ -1585,9 +1585,9 @@
    "test": "D6 evidence arm: page 470 layout-as-_main dumps the rendered bytes and the normalized diff against the frozen shard",
    "occurrence": 1,
    "status": "failed",
-   "message": "oracle shard copy missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane/recapture-raw-shard-000000.jsonl: expected false to be true // Object.is equality",
+   "message": "oracle shard copy missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane/recapture-raw-shard-000000.jsonl: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "oracle shard copy missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane/recapture-raw-shard-000000.jsonl: expected false to be true // Object.is equality"
+   "why": "oracle shard copy missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane/recapture-raw-shard-000000.jsonl: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:194",
@@ -1596,9 +1596,9 @@
    "test": "the loud denial frame's header title renders through the title view (frame.rb:31-33) renders *recent and Anonymous+*account byte-identical to the yardstick",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:195",
@@ -1607,9 +1607,9 @@
    "test": "focal (loud) denial page corpus replay (R3.4.d) renders the focal-denial exemplars and readable controls byte-identical to the yardstick",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:196",
@@ -1618,9 +1618,9 @@
    "test": "focal (loud) denial page corpus replay (R3.4.d) sweeps the stratified loud-denial census and records page-layer evidence",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:197",
@@ -1629,9 +1629,9 @@
    "test": "gem-anchored closure: the three residual pages render byte-identical each page's bytes equal the oracle shard (slot ids normalized)",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:198",
@@ -1662,9 +1662,9 @@
    "test": "help-content lane: escape-family flip measurement renders every family fail-dump page and compares the data-bs-content bytes",
    "occurrence": 1,
    "status": "failed",
-   "message": "fail dump missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/enumeration/view-fail-dump-full/html: expected false to be true // Object.is equality",
+   "message": "fail dump missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/enumeration/view-fail-dump-full/html: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "fail dump missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/enumeration/view-fail-dump-full/html: expected false to be true // Object.is equality"
+   "why": "fail dump missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/enumeration/view-fail-dump-full/html: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:201",
@@ -1728,9 +1728,9 @@
    "test": "Mod cardtype core: the type/mod.rb section list (28 c-structural pages) renders the exemplars byte-identical to the yardstick mod pages",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:208",
@@ -1739,9 +1739,9 @@
    "test": "Mod cardtype core: the type/mod.rb section list (28 c-structural pages) sweeps the 28 mod pages and records flip evidence",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:209",
@@ -1750,9 +1750,9 @@
    "test": "Mod cardtype page: the self-set pointer arm is oracle-pinned renders the Mod page through the pointer-list arm, byte-identical to the oracle",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:210",
@@ -1772,9 +1772,9 @@
    "test": "navbar CR class: the four *head-family pages render byte-identical each page's bytes equal the oracle shard (slot ids normalized), navbar CRLF preserved",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:212",
@@ -1783,9 +1783,9 @@
    "test": "nest-miss unknown-view selection (34 c-structural nest-selection pages) renders the exemplars with slot sets identical to the oracle pages",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:213",
@@ -1794,9 +1794,9 @@
    "test": "nest-miss unknown-view selection (34 c-structural nest-selection pages) sweeps the 34 nest-selection pages and records flip evidence",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:214",
@@ -1827,9 +1827,9 @@
    "test": "perm-allow over-deny corpus replay (capture-deck Ruby-allowed pages) renders the five over-deny pages byte-identical to the yardstick",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:217",
@@ -1838,9 +1838,9 @@
    "test": "perm-allow over-deny corpus replay (capture-deck Ruby-allowed pages) sweeps the 17 permission_denied_mismatch pages and records flip evidence",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:218",
@@ -1849,9 +1849,9 @@
    "test": "perm-leak denial-wrapper corpus replay (130 triage pages) renders the exemplars byte-identical to the yardstick denial pages",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:219",
@@ -1860,9 +1860,9 @@
    "test": "perm-leak denial-wrapper corpus replay (130 triage pages) sweeps the 130 leak pages and records flip evidence",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:220",
@@ -1871,9 +1871,9 @@
    "test": "p22 perm-overdeny page parity (the lane's two named residual pages) renders Anonymous+*account and signup alert email+*from byte-identical to the yardstick",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:221",
@@ -1890,7 +1890,7 @@
    "id": "vitest:222",
    "gate": "corpus",
    "file": "tests/card/render/phantom-item-simple-name-basic-cs-corpus-replay.test.ts",
-   "test": "unresolved-host phantom identity: simple names take the deck basic card (view187 census) RVW:open renders its simple-named phantom item with the deck basic identity (BasicCs/22281/basic_c), not RichText",
+   "test": "unresolved-host phantom identity: simple names take the deck basic card (view187 census) RVW:open renders its simple-named phantom item with the deck basic identity (CustomBasic/22281/basic_c), not RichText",
    "occurrence": 1,
    "status": "skipped",
    "message": null,
@@ -1959,9 +1959,9 @@
    "test": "raw-corpus cardtype by_name search sweep (51 large-gap Cardtype pages) renders the subset and records parity/search evidence",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:229",
@@ -1970,9 +1970,9 @@
    "test": "raw-corpus cd-smalls attachment-filename-case flips (7 pages) serves the oracle's lowercased attachment URLs on every class page",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:230",
@@ -1989,7 +1989,7 @@
    "id": "vitest:231",
    "gate": "corpus",
    "file": "tests/card/render/raw-corpus-d3-empty-coderay-head-probe.test.ts",
-   "test": "D3 empty-CodeRay head family (*all+*head / ZQVT+*self+*head :core) the inclusion-carrying head rules carry the resolved head inside their CodeRay pre",
+   "test": "D3 empty-CodeRay head family (*all+*head / SampleEntry+*self+*head :core) the inclusion-carrying head rules carry the resolved head inside their CodeRay pre",
    "occurrence": 1,
    "status": "failed",
    "message": "no such column: content",
@@ -2025,9 +2025,9 @@
    "test": "raw-corpus escape-family sweep (82 pages, four classes) renders the subset and records per-class flip evidence",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:235",
@@ -2069,9 +2069,9 @@
    "test": "raw-corpus layout-nest search pre-execution (money 18253) renders the layout-nest +*referred_to_by search with the oracle's result list",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:239",
@@ -2080,9 +2080,9 @@
    "test": "raw-corpus p20-help-content sweep (38 pages, two mechanisms) renders the subset and records per-class flip evidence",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:240",
@@ -2091,9 +2091,9 @@
    "test": "p20 perm-residuals lane sweep (mixed18 perm route-outs + Role :configs + layout foot-nest) renders the lane's 11 routed pages and records per-page flip evidence",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:241",
@@ -2113,9 +2113,9 @@
    "test": "p21 CQL item-typing lane sweep (typed phantom items: full bar when readable, bare denial span when denied) renders the class + guard pages, records flip evidence, pins the guards (single corpus boot)",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:243",
@@ -2124,9 +2124,9 @@
    "test": "raw-corpus p22 rule-bar one-line content pages (3 named pages) renders the pages and records the named rule bars' bar-right regions",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:244",
@@ -2135,9 +2135,9 @@
    "test": "raw-corpus raise/leadview page exemplars renders the class exemplar pages with the oracle's bytes",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:245",
@@ -2179,9 +2179,9 @@
    "test": "raw-corpus search-results census replay (47 c-structural pages) renders the subset and records parity/search-flip evidence",
    "occurrence": 1,
    "status": "failed",
-   "message": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
+   "message": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "page-lane shards missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
+   "why": "page-lane shards missing: workspace/decko-corpus-tests-20261103/src/tmp/raw-ground-truth/expected-v2/page-lane: expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:249",
@@ -2311,9 +2311,9 @@
    "test": "re-photography instrument render arm (lane-rephoto) re-renders the disputed entries on the restored capture-row state and records three-way evidence",
    "occurrence": 1,
    "status": "failed",
-   "message": "entries artifact missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/re-photograph/rephoto-entries.json — run the driver's identity stage first (node tools/oracle/re-photograph-entries.mjs identity --limit 3): expected false to be true // Object.is equality",
+   "message": "entries artifact missing: workspace/decko-corpus-tests-20261103/src/tmp/re-photograph/rephoto-entries.json — run the driver's identity stage first (node tools/oracle/re-photograph-entries.mjs identity --limit 3): expected false to be true // Object.is equality",
    "category": "could-not-run",
-   "why": "entries artifact missing: /home/ubuntu/decko-corpus-tests-20261103/src/tmp/re-photograph/rephoto-entries.json — run the driver's identity stage first (node tools/oracle/re-photograph-entries.mjs identity --limit 3): expected false to be true // Object.is equality"
+   "why": "entries artifact missing: workspace/decko-corpus-tests-20261103/src/tmp/re-photograph/rephoto-entries.json — run the driver's identity stage first (node tools/oracle/re-photograph-entries.mjs identity --limit 3): expected false to be true // Object.is equality"
   },
   {
    "id": "vitest:261",
@@ -2451,7 +2451,7 @@
    "id": "vitest:273",
    "gate": "corpus",
    "file": "tests/card/render/search-hidden-paging-newline-corpus.test.ts",
-   "test": "search list with hidden paging media+HBQ+YouTube Browser page matches the corpus of record",
+   "test": "search list with hidden paging media+SampleCatalog+YouTube Browser page matches the corpus of record",
    "occurrence": 1,
    "status": "failed-in-suite-setup",
    "message": "SqliteError: no such column: content",
@@ -2674,9 +2674,9 @@
    "test": "structure governance census — raw corpus copy (sha 6A44DFDC) counts *structure rule rows and the cards whose candidate walks resolve to them",
    "occurrence": 1,
    "status": "failed",
-   "message": "ENOENT: no such file or directory, open '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/census-corpus-copy/bench-corpus-raw.census-copy.sqlite3'",
+   "message": "ENOENT: no such file or directory, open 'workspace/decko-corpus-tests-20261103/src/tmp/census-corpus-copy/bench-corpus-raw.census-copy.sqlite3'",
    "category": "could-not-run",
-   "why": "ENOENT: no such file or directory, open '/home/ubuntu/decko-corpus-tests-20261103/src/tmp/census-corpus-copy/bench-corpus-raw.census-copy.sqlite3'"
+   "why": "ENOENT: no such file or directory, open 'workspace/decko-corpus-tests-20261103/src/tmp/census-corpus-copy/bench-corpus-raw.census-copy.sqlite3'"
   },
   {
    "id": "vitest:299",

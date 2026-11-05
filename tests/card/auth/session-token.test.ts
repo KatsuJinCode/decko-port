@@ -1,7 +1,4 @@
-// Unit tests for the session-token primitives: token shape (32 bytes / 64
-// hex chars), sha256 digests against FIPS 180-4 test vectors, and the
-// constant-time comparator's contract (result only depends on content, never
-// throws on length mismatch, always processes the full inputs).
+
 
 import { describe, expect, it } from "vitest";
 import {
@@ -32,7 +29,7 @@ describe("generateSessionToken", () => {
 });
 
 describe("sha256Hex", () => {
-  // FIPS 180-4 / NIST test vectors for SHA-256.
+
   it("matches the empty-string vector", async () => {
     expect(await sha256Hex("")).toBe(
       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",

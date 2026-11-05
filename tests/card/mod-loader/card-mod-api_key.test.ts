@@ -1,40 +1,4 @@
-// The card-mod-api_key port: structural + behavioral tests for the
-// manifest registrations, the view-config table, and the headlessly-
-// portable HTML/JSON view bodies.
-//
-// Tested:
-//   1. registration: the two set files load into the right pattern's
-//      basket (cardModHelp's load() / kindOfSetPath shape) with the
-//      expected setModules, view names, and view configs (unknown: /
-//      perms:) - mod-registration.test.ts proves the same wiring for
-//      card-mod-help; this file pins the api_key-specific shape.
-//   2. event name preservation: the form's hidden trigger input name
-//      matches the event :generate_api_key's Ruby name (api_key.rb:4-6).
-//   3. locale strings inlined from config/locales/en.yml: the labels
-//      the views reference (api_key_label, api_key_generate, etc.) match
-//      the en.yml byte-for-byte.
-//   4. the :token JSON view returns the documented shape `{"token":
-//      <encoded>}` (api_key.rb:63-67); the encoded value is the
-//      sentinel because the JWT path requires a live Rails runtime.
-//   5. the :token_link view's href encodes format: :json + view: :token
-//      (api_key.rb:77-79).
-//   6. the :generate_button view's form carries the hidden trigger input
-//      + a btn-primary submit (api_key.rb:85-94).
-//   7. the :current view renders a readonly text input with the api_key
-//      content (api_key.rb:72 + current.haml).
-//   8. the :core view (HAML template) wraps the top + buttons sections
-//      and skips the top when content is blank (api_key.rb:70-71 +
-//      core.haml).
-//   9. the :api_key view (account.rb) nests the +*api_key child card
-//      with view :core (account.rb:5-9).
-//
-// NOT tested (honest remainder):
-//   - the save/validate event cycle (event :generate_api_key, event
-//     :validate_api_key), the Card::Auth::ApiKey mixin methods, the
-//     CardController::ApiKey mixin methods, the JWT token encoding, the
-//     include_set Abstract::AccountField directive: these are
-//     persistence / side effects / Rails-runtime deps with no TS
-//     surface.
+
 
 import { describe, it, expect, afterEach, beforeAll, afterAll } from "vitest";
 import { readFileSync } from "node:fs";
@@ -64,14 +28,6 @@ const FIXTURE = JSON.parse(
 ) as {
   rendered: Record<string, string>;
 };
-
-// ---------------------------------------------------------------------------
-// shared: read every view body the manifest registers, bypassing the mod
-// loader's live-record mutation. The tests below call these bodies
-// directly with a minimal ViewContext (just the card + a passthrough
-// renderView/nest), and assert the byte shape the Ruby HAML / set DSL
-// pins.
-// ---------------------------------------------------------------------------
 
 interface MinimalCard {
   name: { s: string };
@@ -129,9 +85,7 @@ class StubFmt implements MinimalFmt {
   }
   renderView(view: string, _opts: Record<string, unknown> = {}): string {
     this.renderCalls.push(view);
-    // The :core/:buttons/:generate_button views compose each other; the
-    // stub records the dispatch and returns a marker so the test can
-    // assert which subviews were invoked.
+
     return `[rendered:${view}]`;
   }
   nest(opts: {
@@ -151,14 +105,6 @@ class StubFmt implements MinimalFmt {
   }
 }
 
-/** Build a minimal ctx from a card + the format stub. The stub's surface
- *  covers everything the api_key mod's view bodies read (card.name.s,
- *  card.dbContent) + the two methods they call back (fmt.renderView,
- *  fmt.nest). The full ViewContext type would require the whole
- *  RenderFormat class; the structural cast documents that the api_key
- *  port only touches this subset, and that broader integration tests
- *  against the live RenderEngine are the next step (the structural +
- *  byte tests are the headless bar). */
 function makeCtx(fmt: StubFmt, view: string): {
   ctx: ViewContext;
   fmt: StubFmt;
@@ -168,9 +114,6 @@ function makeCtx(fmt: StubFmt, view: string): {
   return { ctx: ctx as unknown as ViewContext, fmt };
 }
 
-/** Every viewFn the api_key manifest registers, keyed by view name
- *  (html views under HTML_VIEWS; json views stored on the manifest's
- *  json format block). */
 function collectViewFns(manifest: DeckoModManifest): {
   html: Map<string, { viewFn: ViewFn; config: unknown }>;
   json: Map<string, { viewFn: ViewFn; config: unknown }>;
@@ -189,20 +132,12 @@ function collectViewFns(manifest: DeckoModManifest): {
   return { html, json };
 }
 
-// ---------------------------------------------------------------------------
-// harness: clean up the live HTML_VIEWS record after each test
-// ---------------------------------------------------------------------------
-
 let liveLoader: ModLoader | undefined;
 
 afterEach(() => {
   liveLoader?.reset();
   liveLoader = undefined;
 });
-
-// ---------------------------------------------------------------------------
-// 1. registration: the manifest's structure matches the gem tree
-// ---------------------------------------------------------------------------
 
 describe("card-mod-api_key manifest structure", () => {
   it("names + groups + gemName mirror the gem's metadata (dirs.rb:144-150)", () => {
@@ -212,8 +147,7 @@ describe("card-mod-api_key manifest structure", () => {
   });
 
   it("declares exactly the two set files the gem's set/ tree ships", () => {
-    // set/right/api_key.rb + set/right/account.rb (verdict
-    // mod-compat-report.json "setModules": 2)
+
     const paths = (cardModApiKey.setModules ?? []).map((m) => m.setPath);
     expect(paths).toEqual(["right/api_key", "right/account"]);
   });
@@ -248,10 +182,7 @@ describe("card-mod-api_key manifest structure", () => {
   });
 
   it("registers every mod-specific view the T6 verdict's missing list names", () => {
-    // compat-report mod-compat-report.json for card-mod-api_key-0.20.0
-    // classification.metrics.htmlViewsMissingNames:
-    //   ["api_key", "buttons", "current", "generate_button", "token",
-    //    "token_link"]
+
     const { html, json } = collectViewFns(cardModApiKey);
     const htmlNames = new Set(html.keys());
     const jsonNames = new Set(json.keys());
@@ -263,9 +194,7 @@ describe("card-mod-api_key manifest structure", () => {
 
   it("preserves the Ruby unknown: true tag on every mod-specific html view", () => {
     const { html } = collectViewFns(cardModApiKey);
-    // :buttons + :generate_button carry perms: :update on top of
-    // unknown: true (api_key.rb:81, 85). The other mod-specific views
-    // are pure unknown: true.
+
     for (const view of ["core", "current", "titled", "titled_content", "content"]) {
       expect(html.get(view)?.config).toEqual({ unknown: true });
     }
@@ -296,18 +225,13 @@ describe("card-mod-api_key manifest structure", () => {
   });
 
   it("registers every mod view into the views record and reset restores the pre-load state", () => {
-    // The mod loader's ViewRegistrationTable is one record shared
-    // across formats (the format dispatch lives at the render-engine
-    // level, not at the registration level - mod-loader.ts:101-103).
-    // The test verifies: every view declared by the manifest lands in
-    // the views record, and reset() restores the pre-load state for
-    // each touched key.
+
     const liveRecord = { ...HTML_VIEWS };
     const sentinel: ViewFn = () => "SENTINEL";
-    liveRecord["token"] = sentinel; // simulate a pre-existing json :token view
+    liveRecord["token"] = sentinel;
 
     const before = "token" in liveRecord;
-    expect(before).toBe(true); // baseline: the test owns the record (a clone)
+    expect(before).toBe(true);
 
     const loader = new ModLoader([{ manifest: cardModApiKey }], liveRecord);
     liveLoader = loader;
@@ -316,34 +240,20 @@ describe("card-mod-api_key manifest structure", () => {
     for (const view of ["core", "current", "titled", "titled_content", "content", "token_link", "buttons", "generate_button"]) {
       expect(typeof liveRecord[view]).toBe("function");
     }
-    // The :token JSON view lives in a json format block; the views
-    // record is one table shared across formats (mod-loader.ts:101),
-    // so the json :token OVERRIDES the sentinel - the mod's later
-    // registration wins, exactly the way Ruby's module reopening
-    // define_method replaces the prior method.
+
     expect(liveRecord["token"]).toBeDefined();
     expect(liveRecord["token"]).not.toBe(sentinel);
 
     loader.reset();
-    // After reset, every touched view goes back to its pre-load value
-    // (the sentinel for views that pre-existed, undefined for views
-    // the loader added).
+
     expect(liveRecord["token"]).toBe(sentinel);
     expect(loader.viewConfigFor("buttons")).toBeUndefined();
   });
 });
 
-// ---------------------------------------------------------------------------
-// 2. event name preservation: hidden trigger name matches the Ruby event
-// ---------------------------------------------------------------------------
-
 describe("card-mod-api_key view bodies", () => {
   it(":generate_button's hidden trigger input name matches the Ruby event", () => {
-    // api_key.rb:4-6 event :generate_api_key, :prepare_to_validate,
-    // trigger: :required - the event name an upstream handler keys on.
-    // api_key.rb:96-98 generate_button_hidden_tags: {card: {trigger:
-    // :generate_api_key}} - Rails renders the nested hash as
-    // name="card[trigger]" value="generate_api_key".
+
     const { html } = collectViewFns(cardModApiKey);
     const view = html.get("generate_button");
     expect(view).toBeDefined();
@@ -355,9 +265,7 @@ describe("card-mod-api_key view bodies", () => {
   });
 
   it(":generate_button submits to the api_key card's edit path (card-mod-format card_form :update)", () => {
-    // api_key.rb:86-94 card_form :update: Rails card_form helper emits
-    // <form action="<card_path(card, view: :edit)>" method="post" ...
-    // The TS port emits /<card_key>?view=edit (the same shape).
+
     const { html } = collectViewFns(cardModApiKey);
     const view = html.get("generate_button")!;
     const fmt = new StubFmt({ name: { s: "Joe User+*api key" }, dbContent: "" });
@@ -369,16 +277,14 @@ describe("card-mod-api_key view bodies", () => {
   });
 
   it(":generate_button's button label flips on content (api_key.rb:100-102)", () => {
-    // generate_button_text: card.content.present? ? :api_key_regenerate
-    // : :api_key_generate. The "Regenerate" branch fires when an api_key
-    // already exists; the "Generate" branch is the empty-card path.
+
     const { html } = collectViewFns(cardModApiKey);
     const view = html.get("generate_button")!;
 
     const emptyFmt = new StubFmt({ name: { s: "Joe User+*api key" }, dbContent: "" });
     const { ctx: emptyCtx } = makeCtx(emptyFmt, "generate_button");
     expect(view.viewFn(emptyCtx)).toContain("Generate API Key");
-    expect(emptyFmt.getRenderCalls()).toEqual([]); // no subviews invoked from the button itself
+    expect(emptyFmt.getRenderCalls()).toEqual([]);
 
     const presentFmt = new StubFmt({ name: { s: "Joe User+*api key" }, dbContent: "abc123def456ghi789jkl0" });
     const { ctx: presentCtx } = makeCtx(presentFmt, "generate_button");
@@ -386,8 +292,7 @@ describe("card-mod-api_key view bodies", () => {
   });
 
   it(":generate_button's submit class is btn-primary (api_key.rb:104-106 + bootstrap btn-primary)", () => {
-    // api_key.rb:104-106 generate_button_situation: :primary -> Rails
-    // submit_button(situation: :primary) emits class="btn btn-primary".
+
     const { html } = collectViewFns(cardModApiKey);
     const view = html.get("generate_button")!;
     const fmt = new StubFmt({ name: { s: "Joe User+*api key" }, dbContent: "" });
@@ -398,8 +303,7 @@ describe("card-mod-api_key view bodies", () => {
   });
 
   it(":generate_button carries the disable-with attribute (api_key.rb:91 disable_with: t(:api_key_generating))", () => {
-    // Rails submit_button helper renders disable_with as a
-    // data-disable-with attribute on the submit button.
+
     const { html } = collectViewFns(cardModApiKey);
     const view = html.get("generate_button")!;
     const fmt = new StubFmt({ name: { s: "Joe User+*api key" }, dbContent: "" });
@@ -408,8 +312,7 @@ describe("card-mod-api_key view bodies", () => {
   });
 
   it(":token_link's href encodes format: :json + view: :token (api_key.rb:77-79)", () => {
-    // link_to t(:api_key_get_jwt_token), path: {format: :json, view:
-    // :token} -> <a href="/<card_key>.json?view=token">get a JWT token</a>
+
     const { html } = collectViewFns(cardModApiKey);
     const view = html.get("token_link")!;
     const fmt = new StubFmt({ name: { s: "Joe User+*api key" }, dbContent: "abc123" });
@@ -420,9 +323,7 @@ describe("card-mod-api_key view bodies", () => {
   });
 
   it(":token (json) returns the documented {token: <encoded>} shape (api_key.rb:63-67)", () => {
-    // format :json view :token: {token: card.simple_token}. The TS port
-    // has no JWT surface; the encoded value is a sentinel. The JSON
-    // SHAPE is what we pin.
+
     const { json } = collectViewFns(cardModApiKey);
     const view = json.get("token");
     expect(view).toBeDefined();
@@ -433,13 +334,7 @@ describe("card-mod-api_key view bodies", () => {
   });
 
   it(":current renders a readonly text input with the api_key content (current.haml)", () => {
-    // current.haml:
-    //   .current-api-key.nodblclick
-    //     %label{ for: :current_api_key }
-    //       = t :api_key_label
-    //     = text_field_tag :current_api_key, card.content, readonly: true
-    // The TS port emits <input type="text" id="current_api_key"
-    // name="current_api_key" value="<content>" readonly="readonly" />.
+
     const { html } = collectViewFns(cardModApiKey);
     const view = html.get("current")!;
     const fmt = new StubFmt({ name: { s: "Joe User+*api key" }, dbContent: "abc123def456ghi789" });
@@ -454,9 +349,7 @@ describe("card-mod-api_key view bodies", () => {
   });
 
   it(":core's top section is conditional on card.content (core.haml `if card.content.present?`)", () => {
-    // core.haml: the top div (rendering :current via core_top_view) only
-    // appears when card.content.present?. Empty content -> no top; the
-    // buttons section still renders.
+
     const { html } = collectViewFns(cardModApiKey);
     const view = html.get("core")!;
 
@@ -466,17 +359,16 @@ describe("card-mod-api_key view bodies", () => {
     expect(emptyOut).toContain('<div class="api-key-core p-1">');
     expect(emptyOut).toContain('<div class="api-key-buttons d-flex my-2 py-3 justify-content-between w-100">');
     expect(emptyOut).not.toContain("api-key-top");
-    // The buttons section renders :buttons which delegates to
-    // :generate_button; the stub records those calls.
+
     expect(emptyFmt.getRenderCalls()).toEqual(["buttons"]);
 
     const presentFmt = new StubFmt({ name: { s: "Joe User+*api key" }, dbContent: "abc123" });
     const { ctx: presentCtx } = makeCtx(presentFmt, "core");
     const presentOut = view.viewFn(presentCtx);
     expect(presentOut).toContain('<div class="api-key-top d-flex my-2 py-3 border-bottom justify-content-between w-100">');
-    // :core_top_view returns :current, so the top section calls :current.
+
     expect(presentFmt.getRenderCalls()).toEqual(["current", "buttons"]);
-    // The current view body renders inside the top section's marker.
+
     expect(presentOut).toContain("[rendered:current]");
     expect(presentOut).toContain("[rendered:buttons]");
   });
@@ -492,42 +384,24 @@ describe("card-mod-api_key view bodies", () => {
   });
 
   it(":titled, :titled_content, :content all use super() to walk the MRO (api_key.rb:73-75)", () => {
-    // super() in Ruby means the parent class's same view, NOT a re-dispatch
-    // to a sibling view (:core). The faithful TS shape is
-    // superView(ctx, "Right::ApiKey", ctx.voo.requestedView) - it walks the
-    // per-card chain for the SAME view name and renders the next entry's
-    // view fn (mod-view-helpers.ts:55-99 + mod-registrar.ts:362-477).
-    //
-    // In this structural test the mod loader is not installed, so
-    // superView returns "" (the documented fallback at
-    // mod-view-helpers.ts:74-79: "superView falls back gracefully when no
-    // loader is registered (returns \"\")"). The chain-walking semantics -
-    // super() returning the parent's SAME :titled body - are the
-    // integration test's bar; the register loader hook below asserts the
-    // chain resolves past the api_key set when one IS installed.
+
     const { html } = collectViewFns(cardModApiKey);
     const fmt = new StubFmt({ name: { s: "Joe User+*api key" }, dbContent: "abc" });
     for (const view of ["titled", "titled_content", "content"]) {
       const fn = html.get(view)!;
       const { ctx } = makeCtx(fmt, view);
-      // superView falls back to "" with no loader registered. The
-      // renderView calls on the stub stay empty (superView doesn't go
-      // through ctx.fmt.renderView - it consults the loader's
-      // SetModuleViewTable directly).
+
       expect(fn.viewFn(ctx)).toBe("");
     }
     expect(fmt.getRenderCalls()).toEqual([]);
-    // Also assert the view body forwards the voo.requestedView (the SAME
-    // view name) to superView - mismatching the view name would be the
-    // sibling-rewire bug superView exists to prevent.
+
     expect(html.get("titled")).toBeDefined();
     expect(html.get("titled_content")).toBeDefined();
     expect(html.get("content")).toBeDefined();
   });
 
   it(":api_key (account.rb) nests the +*api_key child card with view :core", () => {
-    // account.rb:5-9 view :api_key: field_nest :api_key. The child is
-    // <account>+*api key; view :core.
+
     const { html } = collectViewFns(cardModApiKey);
     const view = html.get("api_key")!;
     const fmt = new StubFmt({ name: { s: "Joe User" }, dbContent: "" });
@@ -539,13 +413,8 @@ describe("card-mod-api_key view bodies", () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// 3. locale strings inlined from config/locales/en.yml
-// ---------------------------------------------------------------------------
-
 describe("card-mod-api_key locale strings (config/locales/en.yml)", () => {
-  // en.yml pins the 9 strings the gem's set files reference. The TS port
-  // inlines them into the view bodies; we pin the values the views emit.
+
   it("emits 'API Key' for api_key_label (en.yml:5)", () => {
     const { html } = collectViewFns(cardModApiKey);
     const fmt = new StubFmt({ name: { s: "Joe User+*api key" }, dbContent: "abc" });
@@ -582,61 +451,6 @@ describe("card-mod-api_key locale strings (config/locales/en.yml)", () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// 4. superView trio A/B against the live oracle
-// ---------------------------------------------------------------------------
-//
-// set/right/api_key.rb:73-75 declares :titled / :titled_content / :content as
-// pass-throughs to the parent set's SAME view via super() (`view(viewname,
-// unknown: true) { super() }`). The TS port expresses super() through the
-// superView helper (mod-view-helpers.ts:81-99), which walks the loader's
-// per-card chain to find the next entry. The byte proof that the chain
-// dispatch equals Ruby's super() is rendering the probe through the live
-// engine (with the api_key mod loaded) and asserting the bytes match the
-// captured oracle fixture.
-//
-// Probe = "Oracle ApiKey Account+*api key" - a +*api_key child of the
-// Oracle ApiKey Account (oracle seeds created these; the form id
-// edit_card_1298 in the captured bytes pins the probe's card id).
-// cardContent must satisfy Right::ApiKey's validate_api_key event
-// (api_key.rb:8-11) which enforces 20+ \w chars - we use
-// "probeapikeybody0123456789" (25 chars, all alnum).
-//
-// Engine-core stub: superView walks the loader's chain table looking for the
-// next entry's view fn. Without card-mod-format installed, the chain has
-// only Right::ApiKey's :titled/:titled_content/:content; superView would
-// terminate at "" (no next entry) and the captured bytes wouldn't be
-// produced. The stub re-registers the engine's own HTML_VIEWS view fns
-// (closure-captured BEFORE the loader mutates them) under setPath "all/base"
-// so the chain resolves Right::ApiKey -> All::Base.
-//
-// CURRENT BLOCKER (named for the next stream): the api_key probe's set_keys
-// include "RIGHT-Xapi_key" (the right codename "*api_key" has its "*"
-// normalized to "X" in the safe_key transform, name.ts:531-534). The chain
-// walker's safeKeyToModuleShortname ("RIGHT-Xapi_key") resolves to
-// "Right::XapiKey" (X preserved - the view-dispatch-chain.test.ts:74
-// pins this convention). The loader's setModuleShortname ("right/api_key")
-// resolves to "Right::ApiKey" (no X - the setPath doesn't carry the *).
-// The two names don't match, so superView(ctx, "Right::ApiKey", view) can't
-// find the chain entry it registered against. The mod's superView call
-// returns "" (chain-terminated, idx === -1) and the engine renders an empty
-// string instead of the captured bytes.
-//
-// The pin would hold as soon as one of:
-//   - safeKeyToModuleShortname drops leading "X" from anchor fragments
-//     when the X is a "*" visual marker (the chain walker would then
-//     produce "Right::ApiKey" matching the registration)
-//   - setModuleShortname applies the same X convention (the registration
-//     would then produce "Right::XapiKey" matching the resolution)
-// The capture is byte-correct (the Ruby oracle renders it); the structural
-// + superView chain tests (view-dispatch-superview.test.ts:204-243) already
-// pin the chain walker mechanics. This file's trio bytes are pinned
-// structurally; the A/B render path is BLOCKED on the naming fix above.
-
-/** The capture's normalizations: data-slot-id is SecureRandom.hex(10) by
- *  design (card-mod-format set/all/html/wrap.rb:45); the probe cards'
- *  data-card-id advances every create/trash cycle (seed state, not mod
- *  semantics). */
 function normalize(html: string): string {
   return html
     .replace(/data-slot-id=(["'])[0-9a-fA-F]+\1/g, 'data-slot-id="RANDOMIZED"')
@@ -647,9 +461,7 @@ let storage: RenderTestStorage | undefined;
 let loader: ModLoader | undefined;
 
 describe("card-mod-api_key superView trio (A/B against live oracle)", () => {
-  // Capture the engine's view fns BEFORE the loader mutates HTML_VIEWS
-  // (the closure references stay bound to the original functions even after
-  // the loader's flat last-wins table replaces them with api_key's views).
+
   const engineTitled = HTML_VIEWS["titled"]!;
   const engineTitledContent = HTML_VIEWS["titled_content"]!;
   const engineContent = HTML_VIEWS["content"]!;
@@ -657,11 +469,6 @@ describe("card-mod-api_key superView trio (A/B against live oracle)", () => {
   const engineTitle = HTML_VIEWS["title"]!;
   const engineMenu = HTML_VIEWS["menu"]!;
 
-  /** Stub manifest registering the engine's HTML_VIEWS view fns under
-   *  setPath "all/base" - the chain-walker's anchorless-token expansion
-   *  for "ALL" resolves to every All::* module registered in the basket.
-   *  With All::Base + Right::ApiKey both registered, the chain for the
-   *  api_key probe walks Right::ApiKey -> All::Base. */
   const engineCoreStub: DeckoModManifest = {
     name: "engine_core",
     setModules: [
@@ -687,29 +494,19 @@ describe("card-mod-api_key superView trio (A/B against live oracle)", () => {
     storage = await createRenderTestStorage();
     const s = storage;
 
-    // codename registry reads cards.codename; their type ids matter to the
-    // rule-cache join (Set-typed cards vs Setting-typed).
     await seedCard(s, { id: 2, name: "RichText" });
     await seedCard(s, { id: 10, name: "*all", codename: "all", typeId: 13 });
     await seedCard(s, { id: 11, name: "*self", codename: "self", typeId: 14 });
     await seedCard(s, { id: 12, name: "*api_key", codename: "api_key", typeId: 14 });
     await seedCard(s, { id: 13, name: "*set", codename: "set", typeId: 13 });
     await seedCard(s, { id: 14, name: "*setting", codename: "setting", typeId: 14 });
-    // The left card - the "Oracle ApiKey Account" the +*api_key right hangs
-    // off. Required so the type_plus_right pattern can find leftTypeName
-    // (the api_key set's superView trio's set_keys include the
-    // TYPE_PLUS_RIGHT-rich_text-Xapi_key token).
+
     await seedCard(s, {
       id: 1297,
       name: "Oracle ApiKey Account",
       dbContent: "account body",
     });
-    // The probe - id 1298 matches the form id "edit_card_1298" in the
-    // captured bytes (card_form :update emits id="edit_card_<card.id>").
-    // The compound name "Oracle ApiKey Account+*api key" is the junction
-    // of left_id=1297 + right_id=12 (the *api_key codename card).
-    // Content must satisfy the api_key set's validate_api_key event
-    // (api_key.rb:8-11: content.match?(/^\w{20,}$/)).
+
     await seedCard(s, {
       id: 1298,
       leftId: 1297,
@@ -717,9 +514,7 @@ describe("card-mod-api_key superView trio (A/B against live oracle)", () => {
       typeId: 2,
       dbContent: "probeapikeybody0123456789",
     });
-    // The set card "Oracle ApiKey Account+*api key+*self" - needed so the
-    // probe's set_keys include ALL_PLUS + SELF-oracle_api_key_account-Xapi_key
-    // (the ALL_PLUS pattern's anchor = the +*self rule card).
+
     await seedCard(s, { id: 1299, leftId: 1298, rightId: 11, typeId: 13 });
 
     loader = new ModLoader([
@@ -739,15 +534,6 @@ describe("card-mod-api_key superView trio (A/B against live oracle)", () => {
     loader = undefined;
   });
 
-  // RESOLVED (two engine fixes): (1) the chain walker now tries the
-  // star-marker candidates (safeKeyToModuleShortnameCandidates -
-  // "RIGHT-Xapi_key" resolves the registered "Right::ApiKey"; Ruby's
-  // safe_key renders the "*" as "X" while the set path carries the bare
-  // name), and (2) superView's terminal falls to the base format's view
-  // (view_definition.rb:18-21) instead of "". The trio renders the real
-  // delegated bytes; full captured-fixture byte parity stays labeled on
-  // :titled because :generate_button's Rails form internals still
-  // diverge (the capture lane's secondary note).
   it(":titled resolves Right::ApiKey through the RIGHT-Xapi_key token and renders the api key", async () => {
     const s = storage!;
     const html = await s.engine.render("Oracle ApiKey Account+*api key", "titled");
@@ -772,13 +558,8 @@ describe("card-mod-api_key superView trio (A/B against live oracle)", () => {
     expect(html).toContain("probeapikeybody0123456789");
   });
 
-  // The chain walker DOES resolve Right::ApiKey -> All::Base when the
-  // setKeys omit the "*" X-mark (the all/base stub provides All::Base).
-  // This proves the stub + chain-walker wiring is correct; the X-prefix
-  // gap is isolated to the safeKey resolution path.
   it("chain walker finds All::Base via ALL-RIGHT (the X-mark-free path)", () => {
-    // The structural surface (loader.viewChain) reproduces the chain the
-    // render path would walk IF the X-mark gap were closed.
+
     const chain = loader!.viewChain(
       "ALL ALL_PLUS TYPE-rich_text RSTAR RIGHT-api_key TYPE_PLUS_RIGHT-rich_text-api_key SELF-oracle_api_key_account-api_key",
       "titled",

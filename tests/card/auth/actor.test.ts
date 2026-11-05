@@ -1,7 +1,4 @@
-// Actor-resolution tests: the "always an actor" rule (current.rb:7-9) and
-// the system-actor constructors (as_bot -> DeckoBotID, proxy.rb:26-29),
-// resolved from the deck's own cards table by codename (the port of
-// codename.rb:108's boot-time constant generation). Synthetic cards only.
+
 
 import { beforeEach, describe, expect, it } from "vitest";
 import {
@@ -23,9 +20,7 @@ describe("system actor constructors", () => {
 
   beforeEach(() => {
     storage = createAuthTestStorage();
-    // Synthetic stand-ins for the two cards every deck starts with
-    // (setup.rb:44). Ids 1/2 mirror the classic bootstrap order but the
-    // port never assumes them — it reads the rows.
+
     insertAccountCard(storage, { id: 1, name: "Test Bot", codename: DECKOBOT_CODENAME });
     insertAccountCard(storage, { id: 2, name: "Test Anon", codename: ANONYMOUS_CODENAME });
   });
@@ -39,8 +34,7 @@ describe("system actor constructors", () => {
   });
 
   it("resolves by codename, not by hardcoded id (a deck with shifted ids still works)", async () => {
-    // codename is UNIQUE (cards_codename_index, schema.sqlite.sql:70), so
-    // the shift retires the old row's codename first, as a rename would.
+
     storage.exec("UPDATE cards SET codename = NULL WHERE id = 1");
     insertAccountCard(storage, { id: 4100, name: "Shifted Bot", codename: DECKOBOT_CODENAME });
     expect(await actorBot(storage.driver)).toEqual({ id: 4100, name: "Shifted Bot" });

@@ -1,39 +1,4 @@
-// Corpus proof for the unknown-nest fix: replays the captured Ruby views of
-// corpus entries whose content nests cards that DO NOT EXIST (the unknown-
-// card nest class) and requires byte-identical HTML.
-//
-// Ruby mechanism (card-1.110.0): a nest fetch miss does not raise -
-// format/nest/fetch.rb#new_card calls `Card.fetch cardish, new: new_card_args`
-// and fetch/results.rb returns the NEW unknown card (`card if new_opts ||
-// card.known?`). The requested view then routes through view/permission.rb
-// #alter_unknown -> format/error.rb#view_for_unknown: the default :titled
-// nest view has no `unknown:` config, so it substitutes :unknown, whose
-// createable branch is create-denied for the captured deck's anonymous
-// viewer - the nest renders the EMPTY STRING (pinned below by entries whose
-// expected HTML shows `<p></p>` where `{{absent}}` stood).
-//
-// Entries (fixtures/corpus/shard-000000.jsonl; all captured views replayed):
-//   640  uiqxodma               one absent-target nest (minimal oracle:
-//                               expected content view is `<p></p>`)
-//   643  zwtal                  one absent-target nest
-//   639  tgpqpf                 three absent-target nests inside blockquote
-//                               + hr markup
-//   1120 bxhxfeqsnktaziadgdhcr  four absent-target nests
-//
-// These entries are the shard-0 nestGap class the replay driver used to
-// count as `nest target not found` failures (docs/unknown-nest-notes.md).
-// Before this fix the TS engine threw `nest target not found` from
-// src/card/render/format.ts where Ruby rendered empty strings.
-//
-// Deliberately NOT proof entries:
-//   636 (the `{{}}` blank-reference edge case) and 650/1121/1123/1213:
-//   636's slot classes carry the RULE set-key the set-keys stream has in
-//   flight (observed-not-mine failure class), and 650/1121/1123/1213 are
-//   structure-rule cards - their captured record.content is the *structure
-//   rule template, not db_content (the replay driver's structure-pending
-//   class), so they judge the rules stream, not the nest renderer. The
-//   `{{}}` blank reference is exercised at unit level in
-//   unknown-nest-blank-reference.test.ts instead.
+
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -77,10 +42,7 @@ describe("corpus replay: unknown-card nests render Ruby's unknown views byte-ide
       const storage = await createRenderTestStorage();
       const registry = new HandlerRegistry();
       try {
-        // Seed the shard exactly like the replay driver (cards + type cards
-        // that sit outside the shard), PLUS the transitive side cards of
-        // every seeded junction - the same seeding loop
-        // tests/card/render/junction-depth-corpus-replay.test.ts uses.
+
         const corpus = new Database(CORPUS_DB, { readonly: true });
         const ids = lines.map((l) => l.id);
         const seeded = new Set<number>(ids);

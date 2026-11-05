@@ -1,30 +1,4 @@
-// PostgresDriver tests.
-//
-// This file proves the PostgresDriver's contract over an injected
-// connection WITHOUT a live PostgreSQL server. The driver is exercised
-// against a FakePostgresConnection that records every (sql, params) the
-// driver sends and hands back scripted PostgresResults. That proves:
-//   * the dialect mapping is the ONLY transformation the driver applies
-//     to the engine's SQL (param placeholder rewrite, function rename,
-//     NOCASE rewrite, ...);
-//   * param values are mapped through toPostgresValue;
-//   * the driver contract (query/batch, rows/rowsAffected/lastInsertRowId,
-//     error propagation) matches the other adapters.
-//
-// What this file does NOT prove (and what the live-PG rung in
-// docs/postgres-dialect-notes.md must cover):
-//   * real PG executes the rewritten SQL without errors;
-//   * real PG returns the expected row shapes and types;
-//   * collation, REGEXP, LASTVAL(), and id-generation semantics match
-//     the engine's storage contract.
-// Those rungs require a real PostgreSQL instance. The driver is not
-// proven byte-parity without them — the doc above is the spec.
-//
-// LIVE SKIP: a real PG URL via POSTGRES_URL would route the conformance
-// suite to a live path, but this file does NOT include that path — the
-// pg client is not a dependency in this repo today, and adding it is a
-// future stream's call. The live-PG rung is documented as the path
-// forward; the in-repo test surface is the dialect-mapping battery.
+
 
 import { describe, it, expect, afterAll } from "vitest";
 import { PostgresDriver } from "../../../src/server/drivers/postgres.js";
@@ -86,9 +60,7 @@ describe("PostgresDriver (FakePostgresConnection)", () => {
     });
 
     it("returns rows, rowsAffected, and (for INSERTs) leaves lastInsertRowId unset", async () => {
-      // PG has no connection-scoped last_insert_rowid the way SQLite does;
-      // the engine reads it via `SELECT lastval()` or RETURNING when it
-      // needs it. The driver must NOT invent a lastInsertRowId.
+
       const conn = new FakePostgresConnection({
         responses: [
           { rows: [{ id: 7, name: "alpha" }, { id: 11, name: "beta" }], rowCount: 2 },
@@ -131,9 +103,9 @@ describe("PostgresDriver (FakePostgresConnection)", () => {
     it("rewrites every statement and sends them in order; returns results in order", async () => {
       const conn = new FakePostgresConnection({
         responses: [
-          // First statement: INSERT
+
           { rows: [], rowCount: 1 },
-          // Second statement: SELECT COUNT
+
           { rows: [{ c: 2 }], rowCount: 1 },
         ],
       });
@@ -163,8 +135,7 @@ describe("PostgresDriver (FakePostgresConnection)", () => {
     it("propagates the first connection error and stops issuing further statements", async () => {
       const conn = new FakePostgresConnection();
       conn.enqueueError(new Error("PostgresError: relation \"x\" does not exist"));
-      // No result queued for the second statement — if the driver issues
-      // it, the fake will throw on an unexpected query.
+
       const driver = new PostgresDriver({ connection: conn });
       await expect(
         driver.batch([
@@ -172,7 +143,7 @@ describe("PostgresDriver (FakePostgresConnection)", () => {
           { sql: "SELECT 1", params: [] },
         ]),
       ).rejects.toThrow(/does not exist/);
-      // The driver should have stopped after the first failure.
+
       expect(conn.queries).toHaveLength(1);
     });
   });
@@ -182,26 +153,17 @@ describe("PostgresDriver (FakePostgresConnection)", () => {
       const conn = new FakePostgresConnection();
       const driver = new PostgresDriver({ connection: conn });
       driver.close();
-      // A second close() is a no-op (the driver owns the connection
-      // release lifecycle, not the fake). The fake records released
-      // state internally; we verify via a follow-up query() that rejects.
+
       expect(conn["released"]).toBe(true);
       driver.close();
-      // Still released, still no second release call.
+
       expect(conn["released"]).toBe(true);
     });
   });
 
   describe("live-PG skip (env gate)", () => {
     it("is skipped when POSTGRES_URL is not set; document this for the live rung", () => {
-      // The Postgres driver is intended to run against a live PG server
-      // when POSTGRES_URL is set. This repo does NOT carry the `pg`
-      // client dependency; the live-PG rung lives in a future stream
-      // (see docs/postgres-dialect-notes.md "Live-PG rung"). This test
-      // records the contract: POSTGRES_URL gates the live path, and the
-      // dialect-mapping path (everything above) runs unconditionally.
-      //
-      // If a future stream adds `pg`, the live tests plug in here.
+
       if (!process.env["POSTGRES_URL"]) {
         return;
       }

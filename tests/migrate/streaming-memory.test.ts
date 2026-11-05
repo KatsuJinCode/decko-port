@@ -1,14 +1,4 @@
-// streaming-memory.test.ts — the bounded-memory streaming proof.
-//
-// Generates a 1,000,000-row SYNTHETIC dump (sessions-shaped rows, written
-// incrementally so generation itself never holds the file) and imports it.
-// Assertions:
-//   1. all 1M rows arrive and land (count parity),
-//   2. the parser's retained text buffer stays at a fixed bound
-//      (maxBufferChars) no matter the input size — the whole-file load
-//      and per-line accumulation failure modes are excluded by this,
-//   3. heap growth during the import stays bounded (a row-accumulating
-//      implementation at this scale would exceed the cap several times).
+
 
 import { describe, it, expect, afterAll } from "vitest";
 import { openSync, writeSync, closeSync, mkdtempSync, rmSync } from "node:fs";
@@ -29,17 +19,16 @@ const BATCH = 500;
 
 const dirs: string[] = [];
 afterAll(() => {
-  // best-effort cleanup; Windows may still hold a handle briefly
+
   for (const dir of dirs) {
     try {
       rmSync(dir, { recursive: true, force: true });
     } catch {
-      // leftover %TEMP% dirs are acceptable
+
     }
   }
 });
 
-/** Write ROWS sessions tuples to fd, BATCH at a time (bounded memory). */
 function generateSessionsDump(path: string): number {
   const fd = openSync(path, "w");
   let bytes = 0;
@@ -71,11 +60,8 @@ describe("streaming bounded memory", () => {
       dirs.push(dir);
       const dumpPath = join(dir, "million.sql");
       const fileBytes = generateSessionsDump(dumpPath);
-      expect(fileBytes).toBeGreaterThan(80 * 1024 * 1024); // ~85+ MB dump
+      expect(fileBytes).toBeGreaterThan(80 * 1024 * 1024);
 
-      // Parser-side bound: the max retained buffer must stay far below the
-      // file size (it must never approach holding even one whole INSERT
-      // line's worth of accumulated text beyond the compaction bound).
       const parser = new MysqldumpInsertParser({});
       let parserRows = 0;
       {
@@ -101,11 +87,9 @@ describe("streaming bounded memory", () => {
         }
       }
       expect(parserRows).toBe(ROWS);
-      // bound: compaction keeps the buffer at ~chunk size + slack, not at
-      // file size and not at line size
+
       expect(parser.stats.maxBufferChars).toBeLessThan(8 * 1024 * 1024);
 
-      // Import with heap sampling through the progress callback.
       const driver = new LocalSqliteToolDriver(join(dir, "million.sqlite"));
       const heapBefore = process.memoryUsage().heapUsed;
       let heapPeak = heapBefore;
@@ -123,8 +107,7 @@ describe("streaming bounded memory", () => {
 
       expect(stats.counts["sessions"]).toBe(ROWS);
       expect(stats.errors).toEqual([]);
-      // 1M rows at ~200 bytes each would need >200 MB if accumulated;
-      // the streaming pipeline must stay far under that.
+
       expect(heapGrowth).toBeLessThan(150 * 1024 * 1024);
 
       const count = await driver.query<{ n: number }>(
@@ -132,7 +115,7 @@ describe("streaming bounded memory", () => {
         [],
       );
       expect(count.rows[0]?.n).toBe(ROWS);
-      // spot rows survive intact
+
       const spot = await driver.query<{ session_id: string }>(
         "SELECT session_id FROM sessions WHERE id = ?",
         [ROWS],

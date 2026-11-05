@@ -1,25 +1,4 @@
-// Stream E1 — set-card HTML views. Byte-parity assertions for the 7 pinned
-// "set-card-views mechanism" entries (corpus:217, 268, 273, 294, 300, 302,
-// 315). Each entry's captured oracle bytes come from
-// fixtures/corpus/shard-000000.jsonl (the line's `views.<view>` value);
-// the test seeds exactly the cards those renders need and asserts
-// byte-exact output. The structure-corpus-replay test
-// (tests/card/render/structure-corpus-replay.test.ts) markers for these
-// entries are FOREIGN_PENDING pins the coordinator removes once this
-// stream lands - this test is the closure proof.
-//
-// Three mechanisms the test pins:
-//   1. Set-card content view: 6 type=exi (SetType) cards (268, 273, 294,
-//      300, 302, 315) render the Rules section - <h4 class="mt-3">Rules
-//      </h4> + filter form + accordion list - per card-mod-rules-0.20.0
-//      set/type/set/html_views.rb:6-11 view :core.
-//   2. Set-card open view: the same 6 cards (273, 294, 300, 302, 315) add
-//      :template_closer to the data-slot hide list - html_views.rb:2-4
-//      `before :open do voo.hide :template_closer end`.
-//   3. Rule-card menu popover: corpus:217's closed view carries the set
-//      menu variant (card-mod-rules-0.20.0 set/rule/board_rules_editor.rb
-//      :17-27 help_text override: d-none edit_link span + rule-based help
-//      + "(N default rules)" setting link) - see help-popover.ts.
+
 
 import { describe, it, expect, afterAll } from "vitest";
 import Database from "better-sqlite3";
@@ -46,8 +25,6 @@ afterAll(() => {
   storage?.close();
 });
 
-/** Pull the seven target entries out of shard-000000.jsonl with their
- *  captured view bytes (the oracle). */
 function proofEntries(): ProofEntry[] {
   const lines: ShardLine[] = readShardLines();
   const byId = new Map<number, ShardLine>();
@@ -67,16 +44,10 @@ function proofEntries(): ProofEntry[] {
   return entries;
 }
 
-/** Extend the permission-seeded storage with everything the 7 set/rule
- *  cards' renders need: the type cards, the setting cards, the rule cards
- *  hanging off the set cards, the help rule cards, and the closure.
- *  The standard structure-corpus seeding only covers *structure rules;
- *  these 7 entries are rule cards with right=*default / *right / *type /
- *  *self settings, which need their own universe. */
 async function createSetCardSeededStorage(): Promise<RenderTestStorage> {
   const ids = new Set<number>(TARGET_IDS);
   const corpus = new Database(
-    "C:/localProjects/decko-ts/benchmarks/corpus-v2/bench-corpus-v2.sqlite3",
+    "benchmarks/corpus-v2/bench-corpus-v2.sqlite3",
     { readonly: true },
   );
   try {
@@ -87,14 +58,9 @@ async function createSetCardSeededStorage(): Promise<RenderTestStorage> {
       .prepare(`SELECT id FROM cards WHERE codename='setting' AND trash=0`)
       .get() as { id: number } | undefined)?.id;
     if (setTypeId === undefined || settingTypeId === undefined) {
-      throw new Error("corpus deck missing set/setting codename cards");
+      throw new Error("seeded deck missing set/setting codename cards");
     }
-    // All rule cards whose left_id is one of our 6 set cards. Also walk
-    // the closure (left_id, right_id, type_id) to fixpoint so the engine's
-    // set-key computation has the type cards it reads (e.g. *input type
-    // for rule 242 *input type+*right+*default - the left part of the
-    // set card is *input type whose type_id=SettingID; the set's left
-    // record is needed for the rule?'s set-card type-id comparison).
+
     const queue: number[] = [...TARGET_IDS];
     const visited = new Set<number>(TARGET_IDS);
     while (queue.length > 0) {
@@ -114,9 +80,7 @@ async function createSetCardSeededStorage(): Promise<RenderTestStorage> {
         }
       }
     }
-    // Help-rule cards (rule cards with right_id == help codename, whose
-    // left card has type_id == set). Same closure walk needed for the
-    // help-rule's set card and its type.
+
     const helpRules = corpus
       .prepare(
         `SELECT r.id, r.left_id, r.right_id, r.type_id FROM cards r
@@ -149,7 +113,7 @@ async function createSetCardSeededStorage(): Promise<RenderTestStorage> {
         }
       }
     }
-    // Codenames the engine needs.
+
     for (const cn of ["anyone", "anyone_signed_in", "anonymous", "read", "set", "setting", "help", "input_type"]) {
       const row = corpus
         .prepare(`SELECT id FROM cards WHERE codename=? AND trash=0`)
@@ -190,56 +154,21 @@ describe("corpus replay: set-card html views (7 pinned entries) are byte-exact",
         const actualNorm = normalizeSlotIds(actual);
         if (actualNorm !== expectedNorm) {
           const at = [...expectedNorm].findIndex((ch, i) => ch !== actualNorm[i]);
-          // Corpus data drift (verified 2026-09-22 against the dump): the
-          // capture-time deck carried rows the corpus dump lacks, so the
-          // engine faithfully rendering the DUMP cannot reproduce those
-          // oracle bytes. Two shapes occur here:
-          //   1. rule-COUNT aggregates — "(49 default rules)" at capture vs
-          //      the dump's true count (the R1 class);
-          //   2. *head rules on the six set cards — the capture deck had
-          //      <set>+*head rows (rendered rule bars); the dump has only
-          //      four *head rules total (none on these sets), so the Rules
-          //      section nests an absent card and the anonymous viewer gets
-          //      the quiet denial span where the oracle pins the bar.
+
           const ew = expectedNorm.slice(Math.max(0, at - 40), at + 100);
           const aw = actualNorm.slice(Math.max(0, at - 40), at + 100);
           const countPair =
             /\((\d+) [a-z ]+ rules\)/.exec(ew) !== null &&
             /\((\d+) [a-z ]+ rules\)/.exec(aw) !== null;
-          // The Rules section nests each setting's rule card inside a
-          // nav-item; an absent rule row renders the denial span where the
-          // capture deck's row rendered the rule-bar slot div.
+
           const missingHeadRule =
             /<li class="nav-item"><div id="/.test(ew) &&
             /<li class="nav-item"><span class="denied">/.test(aw);
-          // Round 7 (cluster 14 fix): the SANITIZED corpus fixtures captured
-          // settings-as-denied-spans because the rule children were scrubbed
-          // from the deck; the round-7 virtual construction
-          // (src/card/render/virtual-rule-card.ts + views.ts renderSetting
-          // ListItems) makes the engine render virtual bars for those same
-          // settings — the inverse of the missingHeadRule drift above.
-          // Authoritative citation: the RAW oracle at
-          // tmp/raw-ground-truth/expected/recapture-raw-shard-000000.jsonl:302
-          // for *captcha+*right shows the engine-emitted virtual bar slots
-          // (`Xcaptcha-Xright-Xfollow-bar-view`, `Xcaptcha-Xright-Xinput_type-
-          // bar-view`, ...) where the SANITIZED fixture for the same set
-          // card (corpus:302) carried denied spans. The same mechanism
-          // applies to every set card, so the drift classifier matches the
-          // inverted direction for all six set-card fixtures. Counted,
-          // never excused — the same disposition as missingHeadRule.
+
           const virtualRuleConstruction =
             /<li class="nav-item"><span class="denied">/.test(ew) &&
             /<li class="nav-item"><div id="[^"]+-bar-view"/.test(aw);
-          // Stale-fixture drift (verified 2026-09-25, round 5 cluster 35,
-          // against the RAW recapture oracle at
-          // tmp/raw-ground-truth/expected/recapture-raw-shard-000000.jsonl:302):
-          // Ruby's ruleSetCategories emits `_category-recent` between
-          // `_category-field` and `_category-common` unconditionally
-          // (card-mod-rules set/type/set/setting_categories.rb declaration
-          // order) - the raw oracle has it on every captured setting rule
-          // card. This fixture's capture predates that emission, so its
-          // bytes lack the class. The raw oracle is authoritative; the
-          // fixture entry is the stale side. Counted, never excused.
+
           const staleRecentCategory =
             ew.includes("_category-field _category-common") &&
             aw.includes("_category-field _category-recent _category-common");

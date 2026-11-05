@@ -1,15 +1,4 @@
-// Unit coverage for the driver-layer transport-chunking primitive
-// (src/server/chunked-row-reads.ts): whole-set reads ride chunked IN-list
-// statements grouped into batch round trips so a many-row page render stays
-// inside the edge per-invocation subrequest cap WITHOUT changing result
-// bytes. These tests pin the three contract axes:
-//   1. TRANSPORT: statement count = ceil(unique/IDS_PER_STATEMENT), driver
-//      calls = ceil(statements/STATEMENTS_PER_BATCH) — the subrequest math.
-//   2. IDENTITY: returned rows equal the rows the per-id point-read ladder
-//      (SELECT * ... WHERE id = ? AND trash = 0) returns, in first-
-//      occurrence input-id order.
-//   3. LADDER PARITY: trashed and absent ids yield no row (the point read's
-//      `trash = 0` + `LIMIT 1` answering undefined).
+
 
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
@@ -27,8 +16,6 @@ import { splitSqlStatements } from "../card/render/render-test-storage.js";
 
 const REPO_ROOT = fileURLToPath(new URL("../..", import.meta.url));
 
-/** Counting wrapper over LocalSqliteDriver: records every statement and
- *  every driver call (a batch = ONE call — the subrequest axis). */
 class CountingDriver implements SQLDatabaseDriver {
   queries = 0;
   batches = 0;
@@ -107,8 +94,6 @@ async function seedRow(
   return row;
 }
 
-/** The per-id point-read ladder the chunked read must be value-identical to
- *  (the fetch layer's retrieveFromDb shape: trash = 0, one row). */
 async function pointReadLadder(
   raw: LocalSqliteDriver,
   id: number,
@@ -145,8 +130,7 @@ describe("readCardRowsByIdChunked", () => {
   it("returns rows value-identical to the point-read ladder, in input order", async () => {
     const { raw, counting } = await createStorage();
     try {
-      // Seeded OUT of order on purpose: input order, not id order, is the
-      // contract (the caller walks its own result order).
+
       const seeded = [
         await seedRow(raw, { id: 305, name: "c", key: "c", db_content: "third" }),
         await seedRow(raw, { id: 301, name: "a", key: "a", db_content: "first" }),
@@ -156,7 +140,7 @@ describe("readCardRowsByIdChunked", () => {
       expect(rows.map((r) => r.id)).toEqual([305, 301, 303]);
       for (let i = 0; i < seeded.length; i++) {
         const viaLadder = await pointReadLadder(raw, rows[i]!.id);
-        expect(rows[i]).toEqual(viaLadder); // full SELECT * value identity
+        expect(rows[i]).toEqual(viaLadder);
       }
     } finally {
       raw.close();
@@ -171,7 +155,7 @@ describe("readCardRowsByIdChunked", () => {
       expect(rows).toHaveLength(1);
       expect(rows[0]).toEqual(await pointReadLadder(raw, row.id));
       expect(counting.batches).toBe(1);
-      expect(counting.batchSizes[0]).toBe(1); // ONE statement, not three
+      expect(counting.batchSizes[0]).toBe(1);
     } finally {
       raw.close();
     }
@@ -193,9 +177,7 @@ describe("readCardRowsByIdChunked", () => {
   it("chunks 50 ids per statement and groups 20 statements per batch call", async () => {
     const { raw, counting } = await createStorage();
     try {
-      // 205 ids: statements = ceil(205/50) = 5 (4 full + 1 partial of 5);
-      // batch calls = ceil(5/20) = 1. The subrequest math the lane exists
-      // for: 205 logical reads -> 1 round trip.
+
       const ids: number[] = [];
       for (let i = 0; i < 205; i++) {
         const row = await seedRow(raw, { name: `bulk ${i}`, key: `bulk_${i}` });
@@ -203,10 +185,10 @@ describe("readCardRowsByIdChunked", () => {
       }
       const rows = await readCardRowsByIdChunked(counting, ids);
       expect(rows).toHaveLength(205);
-      expect(counting.queries).toBe(0); // everything rode batches
+      expect(counting.queries).toBe(0);
       expect(counting.batches).toBe(1);
       expect(counting.batchSizes[0]).toBe(Math.ceil(205 / CHUNKED_READ_IDS_PER_STATEMENT));
-      // returned in input order
+
       expect(rows.map((r) => r.id)).toEqual(ids);
     } finally {
       raw.close();
@@ -216,13 +198,11 @@ describe("readCardRowsByIdChunked", () => {
   it("splits oversized statement lists across multiple batch calls", async () => {
     const { raw, counting } = await createStorage();
     try {
-      // 45 statements needed -> batches of 20 -> 3 batch calls (the
-      // statements-per-subrequest grouping axis).
+
       const statementCount = 2 * CHUNKED_READ_STATEMENTS_PER_BATCH + 5;
       const ids: number[] = [];
       for (let i = 0; i < statementCount * CHUNKED_READ_IDS_PER_STATEMENT; i++) {
-        // Only the ids of the FIRST chunk of each statement need rows; the
-        // missing ones simply answer no row.
+
         if (i < CHUNKED_READ_IDS_PER_STATEMENT) {
           const row = await seedRow(raw, { name: `present ${i}`, key: `present_${i}` });
           ids.push(row.id);
