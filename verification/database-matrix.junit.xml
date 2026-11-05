@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="5" failures="0" errors="0" time="107.9102242">
+    <testsuite name="tests/deploy/runtime-db-matrix.test.ts" timestamp="2026-11-04T01:27:29.646Z" hostname="Jace2" tests="5" failures="0" errors="0" skipped="0" time="107.9102242">
+        <testcase classname="tests/deploy/runtime-db-matrix.test.ts" name="matrix: hosted libsql &gt; saves: a create, an update and a delete are committed and read back" time="25.6637794">
+        </testcase>
+        <testcase classname="tests/deploy/runtime-db-matrix.test.ts" name="matrix: hosted libsql &gt; rollback: a failure in a later stage of a save leaves every table as it was" time="25.2014953">
+        </testcase>
+        <testcase classname="tests/deploy/runtime-db-matrix.test.ts" name="matrix: hosted libsql &gt; concurrent writes: two saves on two handles both commit, each with its own history" time="5.0536162">
+        </testcase>
+        <testcase classname="tests/deploy/runtime-db-matrix.test.ts" name="matrix: hosted libsql &gt; concurrent reads: a reader is never served a save&apos;s uncommitted rows" time="6.4158996">
+        </testcase>
+        <testcase classname="tests/deploy/runtime-db-matrix.test.ts" name="matrix: hosted libsql &gt; permissions: a rule that grants another party denies the write and writes nothing" time="4.5483089">
+        </testcase>
+    </testsuite>
+</testsuites>

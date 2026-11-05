@@ -1,0 +1,266 @@
+{
+  "scenarios": [
+    {
+      "id": "create-note-as-member",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "member",
+          "action": "create",
+          "card": "Harness Note 1",
+          "fields": {
+            "type": "Note",
+            "content": "<p>From a member.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "id": "create-note-as-anonymous-denied",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "anonymous",
+          "action": "create",
+          "card": "Harness Note 2",
+          "fields": {
+            "type": "Note",
+            "content": "<p>Should be refused.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "id": "create-topic-with-fields-as-admin",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "admin",
+          "action": "create",
+          "card": "Topic 031",
+          "fields": {
+            "type": "Topic",
+            "fields": {
+              "+summary": "<p>A new topic.</p>",
+              "+tags": "[[Tag 02]]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "update-content-adds-link",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "admin",
+          "action": "update",
+          "card": "Note 002",
+          "fields": {
+            "content": "<p>Now links [[Topic 004]] and [[Brand New Wanted]].</p>"
+          }
+        }
+      ]
+    },
+    {
+      "id": "update-topic-as-member",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "member",
+          "action": "update",
+          "card": "Topic 001",
+          "fields": {
+            "content": "member edit"
+          }
+        },
+        {
+          "op": "write",
+          "actor": "member",
+          "action": "update",
+          "card": "Topic 002+summary",
+          "fields": {
+            "content": "<p>Member summary edit.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "id": "update-as-anonymous-denied",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "anonymous",
+          "action": "update",
+          "card": "Note 003",
+          "fields": {
+            "content": "vandal"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rename-referenced-tag",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "admin",
+          "action": "update",
+          "card": "Tag 01",
+          "fields": {
+            "name": "Tag 01 Renamed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "delete-note",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "admin",
+          "action": "delete",
+          "card": "Note 005"
+        }
+      ]
+    },
+    {
+      "id": "delete-topic-with-fields",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "admin",
+          "action": "delete",
+          "card": "Topic 010"
+        }
+      ]
+    },
+    {
+      "id": "create-memo-member-then-read-denied-anonymous",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "member",
+          "action": "create",
+          "card": "Memo 99",
+          "fields": {
+            "type": "Memo",
+            "content": "<p>Members only.</p>"
+          }
+        },
+        {
+          "op": "ask",
+          "actor": "anonymous",
+          "q": "permissions",
+          "card": "Memo 99"
+        },
+        {
+          "op": "render",
+          "actor": "anonymous",
+          "card": "Memo 99",
+          "view": "core"
+        }
+      ]
+    },
+    {
+      "id": "create-duplicate-name",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "admin",
+          "action": "create",
+          "card": "Note 001",
+          "fields": {
+            "type": "RichText",
+            "content": "dup"
+          }
+        }
+      ]
+    },
+    {
+      "id": "create-tag-as-member",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "member",
+          "action": "create",
+          "card": "Tag 11",
+          "fields": {
+            "type": "Tag",
+            "content": "<p>New tag.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "id": "create-compound-on-new-left",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "admin",
+          "action": "create",
+          "card": "Fresh Left+Fresh Right",
+          "fields": {
+            "type": "RichText",
+            "content": "<p>Both sides new.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "id": "create-number-invalid",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "admin",
+          "action": "create",
+          "card": "Number Bad",
+          "fields": {
+            "type": "Number",
+            "content": "not a number"
+          }
+        }
+      ]
+    },
+    {
+      "id": "update-then-render",
+      "steps": [
+        {
+          "op": "write",
+          "actor": "admin",
+          "action": "update",
+          "card": "Chain 25",
+          "fields": {
+            "content": "<p>The bottom moved.</p>"
+          }
+        },
+        {
+          "op": "render",
+          "actor": "anonymous",
+          "card": "Chain 20",
+          "view": "core"
+        }
+      ]
+    },
+    {
+      "id": "sign-in",
+      "steps": [
+        {
+          "op": "signin",
+          "email": "mira.member@example.test",
+          "password": "Fixture member pass 1#"
+        },
+        {
+          "op": "signin",
+          "email": "mira.member@example.test",
+          "password": "wrong password"
+        },
+        {
+          "op": "signin",
+          "email": "nobody@example.test",
+          "password": "whatever"
+        }
+      ]
+    }
+  ]
+}

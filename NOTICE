@@ -1,0 +1,215 @@
+Decko TypeScript port
+=====================
+
+Copyright (C) 2026 The Decko TS port contributors
+
+This program is a modified version of Decko. It was modified in 2026 by The
+Decko TS port contributors, starting from Decko card 1.110.0 and decko 0.20.0:
+the Ruby card engine and the parts of its mods this project covers were ported
+to TypeScript, and the port was extended to run on Node and edge hosts. The
+current canonical reference runtime for its comparisons is Decko on Ruby 3.2.3
+on a Linux machine; VERIFICATION.md states the reference each quoted result used.
+It is not an upstream Decko release.
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version. This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details. The complete GPL version 3 is in LICENSE.
+
+HANDOVER-MANIFEST.json inventories this package's current file bytes.
+Both sourceCommit and engineCommit are
+50ed25ff0ee049895fc9953d4291d8c176d50d44: the package's src/ engine is the
+comment-stripped export of that development commit. VERIFICATION.md distinguishes
+the measured development sources from the release-engine page comparison.
+This notice states licensing and provenance only; it is not a build,
+comparison or compatibility result.
+
+
+Upstream project
+----------------
+
+    Decko
+    https://github.com/decko-commons/decko
+    https://decko.org
+
+    Authors (as listed in the upstream gemspecs): Ethan McCutchen,
+    Philipp Kühl, Gerry Gleason, and the Decko contributors.
+    License: GPL-3.0-or-later (declared in the upstream gemspecs; the
+    upstream LICENSE file carries the GNU GPL version 3 text).
+
+Ported code retains the upstream copyright and GPL-3.0-or-later terms.
+Because this project contains ported GPL-3.0-or-later code, the whole project
+is GPL-3.0-or-later. RUBY-MAP.md, generated at export, lists the Ruby
+citations recorded for every packaged TypeScript module and is the port
+record that ships; comments are removed from the packaged source. No
+commercial license is asserted for
+any part of this package.
+
+
+Third-party components
+----------------------
+
+Third-party components keep their own licenses, and each component is
+governed by the full terms of its license. The tables below identify each
+license and where its full text ships; they do not restate or summarize its
+conditions. Each component ships its license text beside its own bytes;
+where bytes are concatenated or embedded, the record named below maps them
+to that text.
+
+### Vendored assets under `vendor/`
+
+| Component | License | Where its license and provenance ship |
+| --- | --- | --- |
+| Material Icons font and stylesheet (Google) | Apache-2.0 | `vendor/decko-material-icons/LICENSE.txt` and `provenance.json`. Modified: the stylesheet's font URL was changed to the local font file; the font and license bytes are unchanged. |
+| Font Awesome Free 6.7.2 (Fonticons, Inc., https://fontawesome.com) | CSS: MIT. Font files: SIL OFL 1.1, Reserved Font Name "Font Awesome". Icon artwork: CC BY 4.0, attribution "Font Awesome Free by Fonticons, Inc." (upstream applies the OFL to the icons as packaged in the font files) | `vendor/fontawesome-free-6.7.2/LICENSE.txt` (upstream's full distributed license), `PROVENANCE.md`, `provenance.json`. No Pro assets or Kit credentials are included. |
+| Bootstrap Icons fonts (from card-mod-bootstrap 0.20.0; https://github.com/twbs/icons) | MIT, "Copyright (c) 2019-2024 The Bootstrap Authors" | `vendor/decko-bootstrap-fonts/LICENSE.md`, `PROVENANCE.md`, `provenance.json` |
+| jQuery UI smoothness theme images (PNG, from card-mod-style 0.20.0) | MIT, "Copyright jQuery Foundation and other contributors" | `vendor/decko-mod-style-images/PROVENANCE.md` and `provenance.json`; the full MIT text for this copyright holder is section (1) of `fixtures/vendor/mod-script-assets/card-mod-format/assets/script/jquery/LICENSE.txt` |
+| Decko logo and favicons (from card-mod-carrierwave 0.20.0) | GPL-3.0-or-later, as part of Decko. No trademark rights are granted: the GPL grants copyright permissions only, and the Decko name and logo identify the upstream project. | `vendor/decko-coded-attachments/PROVENANCE.md` and `provenance.json`; LICENSE |
+
+### `vendor/uglifier-4.2.1-uglify-harmony/` — the JavaScript minifier
+
+The five source files the `uglifier` 4.2.1 gem loads to compress script
+assets. What the directory is and where it came from is in
+`PROVENANCE-AND-LICENSE.md` there.
+
+| Component | License | License text |
+| --- | --- | --- |
+| Uglifier (the gem's own code) | MIT | `vendor/uglifier-4.2.1-uglify-harmony/uglifier-gem-LICENSE-MIT.txt` |
+| uglify-js harmony (the minifier) | BSD-2-Clause | `vendor/uglifier-4.2.1-uglify-harmony/uglify-harmony-js-LICENSE-BSD-2-Clause.txt` |
+| split.js | MIT | `vendor/uglifier-4.2.1-uglify-harmony/split-js-LICENSE-MIT.txt` |
+| source-map.js (Mozilla's notice and the Base 64 VLQ module's) | BSD-3-Clause and the notice stated for the VLQ module | `vendor/uglifier-4.2.1-uglify-harmony/source-map-js-LICENSE-NOTICES.txt` |
+
+### `src/card/assets/uglify-harmony-static.generated.ts` — embedded minifier
+
+This generated module embeds the source of the same five files from
+`vendor/uglifier-4.2.1-uglify-harmony/`, with their in-file notices;
+`tools/vendor/build-uglify-harmony-static.mjs` generates it. The embedded
+third-party sources keep their own licenses:
+
+| Embedded source | License | License text |
+| --- | --- | --- |
+| uglify-js harmony (`uglify-harmony.js`) | BSD-2-Clause | `vendor/uglifier-4.2.1-uglify-harmony/uglify-harmony-js-LICENSE-BSD-2-Clause.txt` |
+| source-map (`source-map.js`) | BSD-3-Clause, with the notice stated for its Base 64 VLQ module | `vendor/uglifier-4.2.1-uglify-harmony/source-map-js-LICENSE-NOTICES.txt` |
+| split.js, the Uglifier wrapper and its ES5 shims | MIT | `vendor/uglifier-4.2.1-uglify-harmony/split-js-LICENSE-MIT.txt` and `uglifier-gem-LICENSE-MIT.txt` |
+
+### `vendor/edge-*-snapshot.js` — the asset sources as JavaScript modules
+
+Three generated modules embed the `fixtures/vendor/` asset trees as string
+literals so an edge runtime can read them without a filesystem. Each embeds
+its components' license texts, the same files the `fixtures/vendor/` table
+below names. `tools/vendor/build-edge-asset-source-snapshot.mjs` generates
+them.
+
+| Snapshot | Embeds | Components it carries |
+| --- | --- | --- |
+| `edge-bootstrap-scss-snapshot.js` | `fixtures/vendor/bootstrap-scss/` | Bootstrap Sass source (MIT) |
+| `edge-script-source-snapshot.js` | `fixtures/vendor/mod-script-assets/` | Bootstrap JS (MIT); Bootstrap Colorpicker (**Apache-2.0**); jQuery UI, Autosize and the jQuery UI Autocomplete HTML Extension (MIT); jQuery File Upload (MIT); **TinyMCE (LGPL-2.1)**, with its full LGPL-2.1 text; the mods' own scripts (GPL-3.0-or-later) |
+| `edge-style-source-snapshot.js` | `fixtures/vendor/mod-style-assets/` and `fixtures/vendor/bootswatch/` | Bootstrap Icons font CSS (MIT); Bootstrap Colorpicker Sass (**Apache-2.0**); Select2 and its Bootstrap 5 theme (MIT); jQuery UI smoothness theme CSS (MIT); Bootswatch themes (MIT); the mods' own Sass (GPL-3.0-or-later) |
+
+### LibSass — the Sass compiler
+
+| Component | Version | License | License text |
+| --- | --- | --- | --- |
+| LibSass (as bundled by the sassc 2.4.0 gem) | 3.6.4 | MIT, "Copyright (C) 2012-2016 by the Sass Open Source Foundation" | `tools/libsass/libsass/LICENSE`, with `PROVENANCE.md` beside it |
+| utf8-cpp (headers vendored by LibSass) | as vendored by LibSass 3.6.4 | BSL-1.0, "Copyright 2006 Nemanja Trifunovic" | reproduced in full in the header of `tools/libsass/libsass/src/utf8.h` |
+| JSON parser and C99 compatibility functions (`json.cpp`, `json.hpp`, `c99func.c`, vendored by LibSass) | as vendored by LibSass 3.6.4 | MIT, "Copyright (C) 2011 Joseph A. Adams" | reproduced in full in the headers of `tools/libsass/libsass/src/json.cpp` and `tools/libsass/libsass/src/c99func.c` |
+| sass2scss (vendored by LibSass) | as vendored by LibSass 3.6.4 | MIT, "Copyright (c) Marcel Greter" | the notice in the header of `tools/libsass/libsass/src/sass2scss.cpp` |
+| MurmurHash2 (vendored by LibSass) | as vendored by LibSass 3.6.4 | Public domain (Austin Appleby) | the dedication in the header of `tools/libsass/libsass/src/MurmurHash2.hpp` |
+| libb64 base64 encoder headers (vendored by LibSass) | as vendored by LibSass 3.6.4 | Public domain | the dedication in the headers of `tools/libsass/libsass/src/b64/cencode.h` and `tools/libsass/libsass/src/b64/encode.h` |
+| LibSass compiled to WebAssembly | 3.6.4 | MIT; it also contains the components vendored by LibSass listed above, under their own terms | `vendor/libsass-wasm/LICENSE` and `PROVENANCE.md`; built from `tools/libsass/sassc-wasm.c` with `tools/libsass/build-wasm.mjs` |
+| Emscripten 6.0.12 system libraries linked into that module (Emscripten 6.0.12's default link set for this build's flags, as recorded in `vendor/libsass-wasm/LICENSES-EMSCRIPTEN-SYSTEM-LIBRARIES.md`) | 6.0.12 | libc++, libc++abi, libunwind and compiler-rt builtins: Apache-2.0 WITH LLVM-exception; LLVM libc headers compiled into libc++: Apache-2.0 WITH LLVM-exception; musl libc: MIT; Emscripten's own system code: MIT or University of Illinois/NCSA; dlmalloc: CC0 1.0 | Verbatim texts in `vendor/libsass-wasm/licenses/` (`llvm-libcxx-LICENSE.TXT`, `llvm-libcxxabi-LICENSE.TXT`, `llvm-libunwind-LICENSE.TXT`, `llvm-compiler-rt-LICENSE.TXT`, `llvm-libc-LICENSE.TXT`, `musl-COPYRIGHT.txt`, `emscripten-LICENSE.txt`), with their upstream sources in `SOURCES.md`; dlmalloc is dedicated to the public domain under CC0 1.0, which requires no notice, so none ships for it and its source is not part of this package; the library list and its basis are in `vendor/libsass-wasm/LICENSES-EMSCRIPTEN-SYSTEM-LIBRARIES.md` |
+
+### Third-party code ported into `src/`
+
+These are ported into this project's own source, so each license text ships
+in the named `vendor/` directory, and this table together with RUBY-MAP.md
+(and, for CodeRay, `vendor/coderay-1.1.3/PROVENANCE.md`) is the port record.
+
+| Component | Version | License | Ported into | License text |
+| --- | --- | --- | --- | --- |
+| kramdown (Markdown-subset converter) | 2.5.2 | MIT, "Copyright (C) 2009-2013 Thomas Leitner" | `src/card/render/kramdown.ts` | `vendor/kramdown-2.5.2/LICENSE` |
+| CodeRay (syntax highlighter) | 1.1.3 | MIT, "Copyright (C) 2005-2012 Kornelius Kalnbach" | the modules under `src/card/render/code-highlighting/`, each listed in `vendor/coderay-1.1.3/PROVENANCE.md` | `vendor/coderay-1.1.3/LICENSE` |
+| ActiveSupport (English inflection tables) | 7.2.3.2 | MIT, "Copyright (c) David Heinemeier Hansson" | `src/card/name/inflect.ts` | `vendor/activesupport-7.2.3.2/LICENSE` |
+| Rails / ActiveSupport (`number_to_human_size`) | not recorded | MIT, same grant and copyright line as above | `src/card/mod-loader/mods/rails-number-to-human-size.ts` | `vendor/activesupport-7.2.3.2/LICENSE` |
+| Haml (attribute rendering) | 5.2.2 | MIT, "Copyright (c) 2006-2019 Hampton Catlin and Natalie Weizenbaum" | `src/card/render/haml-slice-compiler.ts` | `vendor/haml-5.2.2/LICENSE` |
+
+### HTML text extraction
+
+| Component | Version | License | License text |
+| --- | --- | --- | --- |
+| htmlentities XHTML1 name table | 4.4.2 | MIT, "Copyright (c) 2005-2013 Paul Battley" | `vendor/htmlentities-4.4.2/LICENSE.txt` |
+| htmlparser2 | 10.0.0 | MIT | `vendor/html-text-licenses/htmlparser2-LICENSE` |
+| domhandler | 5.0.3 | BSD-2-Clause | `vendor/html-text-licenses/domhandler-LICENSE` |
+| domelementtype | 2.3.0 | BSD-2-Clause | `vendor/html-text-licenses/domelementtype-LICENSE` |
+| domutils | 3.2.2 | BSD-2-Clause | `vendor/html-text-licenses/domutils-LICENSE` |
+| dom-serializer | 2.0.0 | MIT | `vendor/html-text-licenses/dom-serializer-LICENSE` |
+| entities | 6.0.0 | BSD-2-Clause | `vendor/html-text-licenses/entities-LICENSE` |
+
+Other dependency versions and integrity records are in package-lock.json.
+
+### `fixtures/vendor/` — the vendored Ruby mod asset trees
+
+Byte-copies of the asset trees the Ruby `card-mod-*` gems ship. Each
+component's license file sits beside its bytes:
+
+| Component | Version | License | License text |
+| --- | --- | --- | --- |
+| Bootstrap (JavaScript) | 5.1.3 | MIT, "Copyright 2011-2021 The Bootstrap Authors" | `fixtures/vendor/mod-script-assets/card-mod-bootstrap/vendor/bootstrap/LICENSE.txt` |
+| Bootstrap (Sass source) | 5.1.3 | MIT, "Copyright 2011-2021 The Bootstrap Authors" | `fixtures/vendor/bootstrap-scss/LICENSE.txt` |
+| Bootstrap Icons (font CSS) | not stated in the vendored file | MIT | `fixtures/vendor/mod-style-assets/card-mod-bootstrap/assets/style/LICENSE.txt` |
+| Bootstrap Colorpicker (JavaScript) | 2.5.2 | **Apache-2.0** | `fixtures/vendor/mod-script-assets/card-mod-bootstrap/vendor/bootstrap-colorpicker/LICENSE.txt` |
+| Bootstrap Colorpicker (Sass) | 2.5.2 | **Apache-2.0** | `fixtures/vendor/mod-style-assets/card-mod-bootstrap/vendor/bootstrap-colorpicker/LICENSE.txt` |
+| Select2 (CSS) | 4.x | MIT | `fixtures/vendor/mod-style-assets/card-mod-bootstrap/vendor/select2/LICENSE.txt` |
+| Select2 Bootstrap 5 Theme (Sass) | not stated in the files | MIT | `fixtures/vendor/mod-style-assets/card-mod-bootstrap/vendor/select2-bootstrap-5-theme/LICENSE.txt` |
+| jQuery UI | 1.12.1 | MIT, "Copyright jQuery Foundation and other contributors" | `fixtures/vendor/mod-script-assets/card-mod-format/assets/script/jquery/LICENSE.txt` |
+| Autosize | 1.18.13 | MIT (the file states no copyright line) | same file as jQuery UI |
+| jQuery UI Autocomplete HTML Extension | as vendored | MIT option of an MIT/GPL-2.0 dual license, "Copyright 2010, Scott González" | same file as jQuery UI |
+| jQuery UI smoothness theme CSS | 1.12.1 | MIT, "Copyright jQuery Foundation and other contributors" (stated in the file's header) | `fixtures/vendor/mod-style-assets/card-mod-style/assets/style/jquery_ui_smoothness.css` header; full MIT text in the jQuery UI license file above |
+| jQuery File Upload Plugin | not stated in the file | MIT, "Copyright 2010, Sebastian Tschan" | `fixtures/vendor/mod-script-assets/card-mod-format/vendor/jquery_file_upload/LICENSE.txt` |
+| TinyMCE | 5.10.7 | **LGPL-2.1** or Tiny commercial; "Copyright (c) Tiny Technologies, Inc." | `fixtures/vendor/mod-script-assets/card-mod-tinymce_editor/assets/script/LICENSE.txt` and `License-lgpl-2.1.txt` (the full LGPL-2.1 text) |
+| Bootswatch themes | not stated in the trees | MIT, "Copyright (c) 2013 Thomas Park" | `fixtures/vendor/bootswatch/LICENSE` |
+| Rails / ActionView `en` locale strings (test fixture) | 7.2.3.2 | MIT | `fixtures/vendor/LICENSE.txt` |
+| Files from Decko's own mod gems (`fixtures/vendor/card-mod-*-0.20.0/`), including the TinyMCE nest plugin | 0.20.0 | GPL-3.0-or-later, as part of Decko | LICENSE; the nest plugin's upstream source is recorded in `fixtures/vendor/card-mod-tinymce_editor-0.20.0/public/plugins/nest/SOURCE.md` |
+
+### Compiled bundles inside the reference-harness fixture decks
+
+The fixture decks `reference-harness/fixtures/synthetic-v1/` and
+`reference-harness/fixtures/write-battery-v1/` store their compiled site
+script (`deck/files/307/*.js`) and stylesheet (`deck/files/447/*.css`) as
+card content. These are concatenations of the `fixtures/vendor/` components
+above, including TinyMCE (LGPL-2.1) and Bootstrap Colorpicker (Apache-2.0).
+`reference-harness/fixtures/DECK-BUNDLE-PROVENANCE.md` maps every
+third-party component in them to its license text.
+
+
+Source obligations
+------------------
+
+This notice does not summarize any license's conditions, which differ from
+one license to another; each component's full license text, named above,
+states its terms. This program as a whole is GPL-3.0-or-later: conveying it
+in object code form (this package includes minified and compiled files) is
+subject to the Corresponding Source requirements of section 6 of the GPL
+("Conveying Non-Source Forms", in LICENSE), as well as the GPL's other
+terms. Each third-party component remains subject to its own license as
+well.
+
+This notice records which licenses apply and where their full texts ship. It
+is not legal advice, and it does not state that any license obligation has
+been reviewed or met.
+
+### TinyMCE corresponding source
+
+TinyMCE 5.10.7 is LGPL-2.1, and the LGPL's source requirements apply to it
+in addition to its other terms. TinyMCE ships as minified library bytes and
+inside the compiled bundles above; its complete
+official preferred-form source tree accompanies those bytes under
+`third-party-source/tinymce-5.10.7/upstream/`, with the full upstream
+license, build scripts, workspace manifests and lockfile. `PROVENANCE.md` and
+`SOURCE-MANIFEST.json` beside it pin the official tag commit and every source
+file. TinyMCE is also available from Tiny under a commercial license; that
+choice belongs to whoever redistributes this package and does not change the
+bytes.

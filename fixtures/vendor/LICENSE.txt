@@ -1,0 +1,81 @@
+Third-party components directly inside this directory
+======================================================
+
+`fixtures/vendor/` holds two kinds of file: the per-mod Ruby asset trees
+(`mod-script-assets/`, `mod-style-assets/`, `mod-script-assets/`, the
+bootstrap-scss and bootswatch trees), and files that sit directly here. The
+per-mod trees carry their own license file beside their own third-party
+bytes, each naming the component, its version, the copyright line its
+vendored header states, and the full license text. This file covers what
+sits directly in `fixtures/vendor/`.
+
+----------------------------------------------------------------------
+Rails / ActionView locale strings
+----------------------------------------------------------------------
+
+    File:     ./actionview-7.2.3.2-locale-en.yml
+    Component: the `en` locale file of the `actionview` gem, Rails 7.2.3.2
+    Upstream: https://github.com/rails/rails  (gem `actionview`)
+
+Copyright
+---------
+
+**The vendored file states no copyright line.** It is a YAML locale file
+opening with `"en":` and a comment about `distance_of_time_in_words()`. The
+upstream project is named here from the file's own embedded metadata — the
+filename records the gem and version, and the YAML keys are the Rails
+ActionView locale tree — rather than from a copyright statement, because the
+file carries none. No copyright holder is asserted for these bytes beyond
+what upstream publishes at the Rails repository.
+
+License: the MIT License, reproduced in full below. Rails is MIT-licensed;
+upstream's copy is at https://github.com/rails/rails/blob/main/MIT-LICENSE.
+
+Why it is vendored
+------------------
+
+It is a **test fixture**, not a stylesheet or script source: a byte-copy of
+the gem file so a suite can load the locale on a machine that does not have
+the gem installed (`tests/card/mod-loader/card-mod-edit-views.test.ts`). It
+contributes nothing to the compiled `all-style.css` or `all-script.js`
+deployment bundles.
+
+The MIT License (MIT)
+
+Copyright (c) Rails contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+Scope of the MIT grant inside this project
+------------------------------------------
+
+MIT is permissive and GPL-compatible, so vendoring these bytes does not
+disturb this project's GPL-3.0-or-later scope (see NOTICE at the repository
+root).
+
+--------------------------------------------------------------------
+The rest of this directory
+--------------------------------------------------------------------
+
+`bootstrap-scss/`, `bootswatch/`, `mod-script-assets/`, `mod-style-assets/`
+and `mod-script-assets/` each carry their own license file beside their own
+third-party bytes. Bootswatch already shipped one
+(`bootswatch/LICENSE`). The canonical inventory of every third-party
+component in the repository is `NOTICE` at the repository root; this file
+covers only what is directly in `fixtures/vendor/`.

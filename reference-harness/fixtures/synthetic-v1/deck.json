@@ -1,0 +1,1467 @@
+{
+  "format": "decko-reference-deck/1",
+  "name": "synthetic-v1",
+  "generator": {
+    "script": "reference-harness/corpus/generate-deck.mjs",
+    "version": 1
+  },
+  "base": {
+    "seed": "decko setup",
+    "decko": "0.20.0",
+    "card": "1.110.0"
+  },
+  "clock": "2026-09-19T12:00:00Z",
+  "environment": {
+    "origin": "http://deck.example",
+    "default_html_view": "titled"
+  },
+  "actors": {
+    "anonymous": {
+      "card": "Anonymous"
+    },
+    "member": {
+      "card": "Mira Member",
+      "email": "mira.member@example.test",
+      "password": "Fixture member pass 1#"
+    },
+    "admin": {
+      "card": "Ada Admin",
+      "email": "ada.admin@example.test",
+      "password": "Fixture admin pass 2#"
+    }
+  },
+  "cards": [
+    {
+      "name": "Topic",
+      "type": "Cardtype"
+    },
+    {
+      "name": "Note",
+      "type": "Cardtype"
+    },
+    {
+      "name": "Memo",
+      "type": "Cardtype"
+    },
+    {
+      "name": "Brief",
+      "type": "Cardtype"
+    },
+    {
+      "name": "Tag",
+      "type": "Cardtype"
+    },
+    {
+      "name": "Member",
+      "type": "Role"
+    },
+    {
+      "name": "Ada Admin",
+      "type": "User",
+      "fields": {
+        "+*account": {
+          "fields": {
+            "+*email": "ada.admin@example.test",
+            "+*password": "Fixture admin pass 2#",
+            "+*status": "active"
+          }
+        }
+      }
+    },
+    {
+      "name": "Mira Member",
+      "type": "User",
+      "fields": {
+        "+*account": {
+          "fields": {
+            "+*email": "mira.member@example.test",
+            "+*password": "Fixture member pass 1#",
+            "+*status": "active"
+          }
+        }
+      }
+    },
+    {
+      "name": "Administrator+*members",
+      "content": "[[Ada Admin]]"
+    },
+    {
+      "name": "Member+*members",
+      "content": "[[Mira Member]]"
+    },
+    {
+      "name": "Topic+*type+*structure",
+      "type": "RichText",
+      "content": "{{+summary}}\n{{+tags|link}}\n{{+related|closed}}"
+    },
+    {
+      "name": "Note+*type+*default",
+      "type": "RichText",
+      "content": "<p>Write a note here.</p>"
+    },
+    {
+      "name": "summary+*right+*default",
+      "type": "RichText",
+      "content": "<p>No summary yet.</p>"
+    },
+    {
+      "name": "tags+*right+*default",
+      "type": "Pointer",
+      "content": ""
+    },
+    {
+      "name": "related+*right+*default",
+      "type": "Pointer",
+      "content": ""
+    },
+    {
+      "name": "Memo+*type+*read",
+      "type": "Pointer",
+      "content": "[[Member]]"
+    },
+    {
+      "name": "Brief+*type+*read",
+      "type": "Pointer",
+      "content": "[[Administrator]]"
+    },
+    {
+      "name": "Topic+*type+*update",
+      "type": "Pointer",
+      "content": "[[Member]]"
+    },
+    {
+      "name": "Note+*type+*create",
+      "type": "Pointer",
+      "content": "[[Anyone Signed In]]"
+    },
+    {
+      "name": "Tag+*type+*create",
+      "type": "Pointer",
+      "content": "[[Member]]"
+    },
+    {
+      "name": "Memo+*type+*create",
+      "type": "Pointer",
+      "content": "[[Member]]"
+    },
+    {
+      "name": "Tag 01",
+      "type": "Tag",
+      "content": "<p>Signal quarry atlas granite ember.</p>"
+    },
+    {
+      "name": "Tag 02",
+      "type": "Tag",
+      "content": "<p>Cobalt kestrel ember harbor copper.</p>"
+    },
+    {
+      "name": "Tag 03",
+      "type": "Tag",
+      "content": "<p>Kestrel hollow falcon signal meadow.</p>"
+    },
+    {
+      "name": "Tag 04",
+      "type": "Tag",
+      "content": "<p>Delta willow island orchard tundra.</p>"
+    },
+    {
+      "name": "Tag 05",
+      "type": "Tag",
+      "content": "<p>Quarry kestrel quarry island quarry.</p>"
+    },
+    {
+      "name": "Tag 06",
+      "type": "Tag",
+      "content": "<p>Falcon falcon falcon delta harbor.</p>"
+    },
+    {
+      "name": "Tag 07",
+      "type": "Tag",
+      "content": "<p>Hollow falcon willow kestrel river.</p>"
+    },
+    {
+      "name": "Tag 08",
+      "type": "Tag",
+      "content": "<p>Atlas signal willow granite beacon.</p>"
+    },
+    {
+      "name": "Tag 09",
+      "type": "Tag",
+      "content": "<p>Juniper hollow quarry river canyon.</p>"
+    },
+    {
+      "name": "Tag 10",
+      "type": "Tag",
+      "content": "<p>Tundra willow kestrel meadow falcon.</p>"
+    },
+    {
+      "name": "Topic 001",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 001+summary",
+      "type": "RichText",
+      "content": "<p>Signal hollow granite willow juniper orchard ember ember. See [[Topic 008]].</p><p>Missing: [[Unwritten 001]].</p>"
+    },
+    {
+      "name": "Topic 001+tags",
+      "type": "Pointer",
+      "content": "[[Tag 01]]\n[[Tag 02]]"
+    },
+    {
+      "name": "Topic 001+related",
+      "type": "Pointer",
+      "content": "[[Topic 002]]\n[[Topic 012]]"
+    },
+    {
+      "name": "Topic 002",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 002+summary",
+      "type": "RichText",
+      "content": "<p>Island quarry island tundra willow orchard island granite. See [[Topic 009]].</p>"
+    },
+    {
+      "name": "Topic 002+tags",
+      "type": "Pointer",
+      "content": "[[Tag 02]]\n[[Tag 05]]"
+    },
+    {
+      "name": "Topic 002+related",
+      "type": "Pointer",
+      "content": "[[Topic 003]]\n[[Topic 013]]"
+    },
+    {
+      "name": "Topic 003",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 003+summary",
+      "type": "RichText",
+      "content": "<p>Summit cobalt garnet hollow willow cobalt juniper kestrel. See [[Topic 010]].</p>"
+    },
+    {
+      "name": "Topic 003+tags",
+      "type": "Pointer",
+      "content": "[[Tag 03]]\n[[Tag 08]]"
+    },
+    {
+      "name": "Topic 004",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 004+summary",
+      "type": "RichText",
+      "content": "<p>Orchard summit river granite falcon kestrel beacon granite. See [[Topic 011]].</p>"
+    },
+    {
+      "name": "Topic 004+tags",
+      "type": "Pointer",
+      "content": "[[Tag 04]]\n[[Tag 01]]"
+    },
+    {
+      "name": "Topic 004+related",
+      "type": "Pointer",
+      "content": "[[Topic 005]]\n[[Topic 015]]"
+    },
+    {
+      "name": "Topic 005",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 005+summary",
+      "type": "RichText",
+      "content": "<p>Harbor island signal island meadow hollow willow beacon. See [[Topic 012]].</p>"
+    },
+    {
+      "name": "Topic 005+tags",
+      "type": "Pointer",
+      "content": "[[Tag 05]]\n[[Tag 04]]"
+    },
+    {
+      "name": "Topic 005+related",
+      "type": "Pointer",
+      "content": "[[Topic 006]]\n[[Topic 016]]"
+    },
+    {
+      "name": "Topic 006",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 006+summary",
+      "type": "RichText",
+      "content": "<p>Canyon delta garnet lantern cobalt signal atlas atlas. See [[Topic 013]].</p><p>Missing: [[Unwritten 006]].</p>"
+    },
+    {
+      "name": "Topic 006+tags",
+      "type": "Pointer",
+      "content": "[[Tag 06]]\n[[Tag 07]]"
+    },
+    {
+      "name": "Topic 007",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 007+summary",
+      "type": "RichText",
+      "content": "<p>Kestrel falcon ember orchard summit copper hollow beacon. See [[Topic 014]].</p>"
+    },
+    {
+      "name": "Topic 007+tags",
+      "type": "Pointer",
+      "content": "[[Tag 07]]\n[[Tag 10]]"
+    },
+    {
+      "name": "Topic 007+related",
+      "type": "Pointer",
+      "content": "[[Topic 008]]\n[[Topic 018]]"
+    },
+    {
+      "name": "Topic 008",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 008+summary",
+      "type": "RichText",
+      "content": "<p>Granite atlas ember lantern canyon granite atlas quarry. See [[Topic 015]].</p>"
+    },
+    {
+      "name": "Topic 008+tags",
+      "type": "Pointer",
+      "content": "[[Tag 08]]\n[[Tag 03]]"
+    },
+    {
+      "name": "Topic 008+related",
+      "type": "Pointer",
+      "content": "[[Topic 009]]\n[[Topic 019]]"
+    },
+    {
+      "name": "Topic 009",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 009+summary",
+      "type": "RichText",
+      "content": "<p>Atlas kestrel orchard canyon summit delta delta copper. See [[Topic 016]].</p>"
+    },
+    {
+      "name": "Topic 009+tags",
+      "type": "Pointer",
+      "content": "[[Tag 09]]\n[[Tag 06]]"
+    },
+    {
+      "name": "Topic 010",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 010+summary",
+      "type": "RichText",
+      "content": "<p>Quarry hollow granite meadow canyon orchard river orchard. See [[Topic 017]].</p>"
+    },
+    {
+      "name": "Topic 010+tags",
+      "type": "Pointer",
+      "content": "[[Tag 10]]\n[[Tag 09]]"
+    },
+    {
+      "name": "Topic 010+related",
+      "type": "Pointer",
+      "content": "[[Topic 011]]\n[[Topic 021]]"
+    },
+    {
+      "name": "Topic 011",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 011+summary",
+      "type": "RichText",
+      "content": "<p>Ember quarry copper harbor kestrel garnet ember kestrel. See [[Topic 018]].</p><p>Missing: [[Unwritten 011]].</p>"
+    },
+    {
+      "name": "Topic 011+tags",
+      "type": "Pointer",
+      "content": "[[Tag 01]]\n[[Tag 02]]"
+    },
+    {
+      "name": "Topic 011+related",
+      "type": "Pointer",
+      "content": "[[Topic 012]]\n[[Topic 022]]"
+    },
+    {
+      "name": "Topic 012",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 012+summary",
+      "type": "RichText",
+      "content": "<p>Juniper meadow island willow beacon granite quarry meadow. See [[Topic 019]].</p>"
+    },
+    {
+      "name": "Topic 012+tags",
+      "type": "Pointer",
+      "content": "[[Tag 02]]\n[[Tag 05]]"
+    },
+    {
+      "name": "Topic 013",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 013+summary",
+      "type": "RichText",
+      "content": "<p>Willow orchard canyon delta ember willow juniper river. See [[Topic 020]].</p>"
+    },
+    {
+      "name": "Topic 013+tags",
+      "type": "Pointer",
+      "content": "[[Tag 03]]\n[[Tag 08]]"
+    },
+    {
+      "name": "Topic 013+related",
+      "type": "Pointer",
+      "content": "[[Topic 014]]\n[[Topic 024]]"
+    },
+    {
+      "name": "Topic 014",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 014+summary",
+      "type": "RichText",
+      "content": "<p>Juniper quarry copper garnet cobalt lantern copper summit. See [[Topic 021]].</p>"
+    },
+    {
+      "name": "Topic 014+tags",
+      "type": "Pointer",
+      "content": "[[Tag 04]]\n[[Tag 01]]"
+    },
+    {
+      "name": "Topic 014+related",
+      "type": "Pointer",
+      "content": "[[Topic 015]]\n[[Topic 025]]"
+    },
+    {
+      "name": "Topic 015",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 015+summary",
+      "type": "RichText",
+      "content": "<p>Harbor harbor tundra river copper beacon falcon beacon. See [[Topic 022]].</p>"
+    },
+    {
+      "name": "Topic 015+tags",
+      "type": "Pointer",
+      "content": "[[Tag 05]]\n[[Tag 04]]"
+    },
+    {
+      "name": "Topic 016",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 016+summary",
+      "type": "RichText",
+      "content": "<p>Canyon cobalt garnet juniper kestrel summit signal beacon. See [[Topic 023]].</p><p>Missing: [[Unwritten 016]].</p>"
+    },
+    {
+      "name": "Topic 016+tags",
+      "type": "Pointer",
+      "content": "[[Tag 06]]\n[[Tag 07]]"
+    },
+    {
+      "name": "Topic 016+related",
+      "type": "Pointer",
+      "content": "[[Topic 017]]\n[[Topic 027]]"
+    },
+    {
+      "name": "Topic 017",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 017+summary",
+      "type": "RichText",
+      "content": "<p>Signal river signal copper atlas delta river juniper. See [[Topic 024]].</p>"
+    },
+    {
+      "name": "Topic 017+tags",
+      "type": "Pointer",
+      "content": "[[Tag 07]]\n[[Tag 10]]"
+    },
+    {
+      "name": "Topic 017+related",
+      "type": "Pointer",
+      "content": "[[Topic 018]]\n[[Topic 028]]"
+    },
+    {
+      "name": "Topic 018",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 018+summary",
+      "type": "RichText",
+      "content": "<p>Copper willow lantern willow signal meadow signal willow. See [[Topic 025]].</p>"
+    },
+    {
+      "name": "Topic 018+tags",
+      "type": "Pointer",
+      "content": "[[Tag 08]]\n[[Tag 03]]"
+    },
+    {
+      "name": "Topic 019",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 019+summary",
+      "type": "RichText",
+      "content": "<p>Cobalt juniper island juniper cobalt beacon river ember. See [[Topic 026]].</p>"
+    },
+    {
+      "name": "Topic 019+tags",
+      "type": "Pointer",
+      "content": "[[Tag 09]]\n[[Tag 06]]"
+    },
+    {
+      "name": "Topic 019+related",
+      "type": "Pointer",
+      "content": "[[Topic 020]]\n[[Topic 030]]"
+    },
+    {
+      "name": "Topic 020",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 020+summary",
+      "type": "RichText",
+      "content": "<p>Juniper ember hollow harbor delta signal beacon harbor. See [[Topic 027]].</p>"
+    },
+    {
+      "name": "Topic 020+tags",
+      "type": "Pointer",
+      "content": "[[Tag 10]]\n[[Tag 09]]"
+    },
+    {
+      "name": "Topic 020+related",
+      "type": "Pointer",
+      "content": "[[Topic 021]]\n[[Topic 001]]"
+    },
+    {
+      "name": "Topic 021",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 021+summary",
+      "type": "RichText",
+      "content": "<p>Cobalt juniper atlas lantern hollow garnet canyon island. See [[Topic 028]].</p><p>Missing: [[Unwritten 021]].</p>"
+    },
+    {
+      "name": "Topic 021+tags",
+      "type": "Pointer",
+      "content": "[[Tag 01]]\n[[Tag 02]]"
+    },
+    {
+      "name": "Topic 022",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 022+summary",
+      "type": "RichText",
+      "content": "<p>Signal quarry ember granite falcon harbor quarry signal. See [[Topic 029]].</p>"
+    },
+    {
+      "name": "Topic 022+tags",
+      "type": "Pointer",
+      "content": "[[Tag 02]]\n[[Tag 05]]"
+    },
+    {
+      "name": "Topic 022+related",
+      "type": "Pointer",
+      "content": "[[Topic 023]]\n[[Topic 003]]"
+    },
+    {
+      "name": "Topic 023",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 023+summary",
+      "type": "RichText",
+      "content": "<p>Garnet meadow harbor cobalt falcon harbor lantern beacon. See [[Topic 030]].</p>"
+    },
+    {
+      "name": "Topic 023+tags",
+      "type": "Pointer",
+      "content": "[[Tag 03]]\n[[Tag 08]]"
+    },
+    {
+      "name": "Topic 023+related",
+      "type": "Pointer",
+      "content": "[[Topic 024]]\n[[Topic 004]]"
+    },
+    {
+      "name": "Topic 024",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 024+summary",
+      "type": "RichText",
+      "content": "<p>Kestrel signal island orchard delta granite atlas island. See [[Topic 001]].</p>"
+    },
+    {
+      "name": "Topic 024+tags",
+      "type": "Pointer",
+      "content": "[[Tag 04]]\n[[Tag 01]]"
+    },
+    {
+      "name": "Topic 025",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 025+summary",
+      "type": "RichText",
+      "content": "<p>Orchard falcon island lantern cobalt delta signal granite. See [[Topic 002]].</p>"
+    },
+    {
+      "name": "Topic 025+tags",
+      "type": "Pointer",
+      "content": "[[Tag 05]]\n[[Tag 04]]"
+    },
+    {
+      "name": "Topic 025+related",
+      "type": "Pointer",
+      "content": "[[Topic 026]]\n[[Topic 006]]"
+    },
+    {
+      "name": "Topic 026",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 026+summary",
+      "type": "RichText",
+      "content": "<p>Summit island island summit orchard summit river granite. See [[Topic 003]].</p><p>Missing: [[Unwritten 026]].</p>"
+    },
+    {
+      "name": "Topic 026+tags",
+      "type": "Pointer",
+      "content": "[[Tag 06]]\n[[Tag 07]]"
+    },
+    {
+      "name": "Topic 026+related",
+      "type": "Pointer",
+      "content": "[[Topic 027]]\n[[Topic 007]]"
+    },
+    {
+      "name": "Topic 027",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 027+summary",
+      "type": "RichText",
+      "content": "<p>Hollow quarry meadow signal quarry ember meadow willow. See [[Topic 004]].</p>"
+    },
+    {
+      "name": "Topic 027+tags",
+      "type": "Pointer",
+      "content": "[[Tag 07]]\n[[Tag 10]]"
+    },
+    {
+      "name": "Topic 028",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 028+summary",
+      "type": "RichText",
+      "content": "<p>Canyon granite cobalt granite harbor summit juniper lantern. See [[Topic 005]].</p>"
+    },
+    {
+      "name": "Topic 028+tags",
+      "type": "Pointer",
+      "content": "[[Tag 08]]\n[[Tag 03]]"
+    },
+    {
+      "name": "Topic 028+related",
+      "type": "Pointer",
+      "content": "[[Topic 029]]\n[[Topic 009]]"
+    },
+    {
+      "name": "Topic 029",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 029+summary",
+      "type": "RichText",
+      "content": "<p>Granite quarry copper atlas garnet signal willow hollow. See [[Topic 006]].</p>"
+    },
+    {
+      "name": "Topic 029+tags",
+      "type": "Pointer",
+      "content": "[[Tag 09]]\n[[Tag 06]]"
+    },
+    {
+      "name": "Topic 029+related",
+      "type": "Pointer",
+      "content": "[[Topic 030]]\n[[Topic 010]]"
+    },
+    {
+      "name": "Topic 030",
+      "type": "Topic",
+      "content": ""
+    },
+    {
+      "name": "Topic 030+summary",
+      "type": "RichText",
+      "content": "<p>Copper lantern cobalt atlas signal island quarry meadow. See [[Topic 007]].</p>"
+    },
+    {
+      "name": "Topic 030+tags",
+      "type": "Pointer",
+      "content": "[[Tag 10]]\n[[Tag 09]]"
+    },
+    {
+      "name": "Topic 003+*self+*read",
+      "type": "Pointer",
+      "content": "[[Administrator]]"
+    },
+    {
+      "name": "Memo 01",
+      "type": "Memo",
+      "content": "<p>Falcon willow river meadow summit ember quarry.</p>"
+    },
+    {
+      "name": "Memo 02",
+      "type": "Memo",
+      "content": "<p>Orchard delta falcon ember hollow tundra tundra.</p>"
+    },
+    {
+      "name": "Memo 03",
+      "type": "Memo",
+      "content": "<p>Beacon quarry orchard tundra summit lantern granite.</p>"
+    },
+    {
+      "name": "Memo 04",
+      "type": "Memo",
+      "content": "<p>River willow kestrel river meadow canyon copper.</p>"
+    },
+    {
+      "name": "Memo 05",
+      "type": "Memo",
+      "content": "<p>Quarry delta hollow island willow beacon falcon.</p>"
+    },
+    {
+      "name": "Memo 06",
+      "type": "Memo",
+      "content": "<p>Harbor summit island atlas delta copper granite.</p>"
+    },
+    {
+      "name": "Memo 07",
+      "type": "Memo",
+      "content": "<p>Beacon atlas ember summit meadow orchard juniper.</p>"
+    },
+    {
+      "name": "Memo 08",
+      "type": "Memo",
+      "content": "<p>Meadow granite canyon canyon garnet hollow harbor.</p>"
+    },
+    {
+      "name": "Memo 09",
+      "type": "Memo",
+      "content": "<p>Cobalt garnet quarry tundra garnet granite orchard.</p>"
+    },
+    {
+      "name": "Memo 10",
+      "type": "Memo",
+      "content": "<p>Island beacon juniper signal cobalt kestrel delta.</p>"
+    },
+    {
+      "name": "Memo 11",
+      "type": "Memo",
+      "content": "<p>Orchard canyon canyon canyon garnet copper falcon.</p>"
+    },
+    {
+      "name": "Memo 12",
+      "type": "Memo",
+      "content": "<p>Hollow cobalt signal garnet garnet island garnet.</p>"
+    },
+    {
+      "name": "Memo 13",
+      "type": "Memo",
+      "content": "<p>Granite canyon copper beacon cobalt beacon ember.</p>"
+    },
+    {
+      "name": "Memo 14",
+      "type": "Memo",
+      "content": "<p>Orchard delta lantern meadow beacon atlas delta.</p>"
+    },
+    {
+      "name": "Memo 15",
+      "type": "Memo",
+      "content": "<p>Cobalt copper juniper quarry canyon atlas summit.</p>"
+    },
+    {
+      "name": "Brief 01",
+      "type": "Brief",
+      "content": "<p>Garnet copper cobalt beacon canyon tundra.</p>"
+    },
+    {
+      "name": "Brief 02",
+      "type": "Brief",
+      "content": "<p>Lantern canyon cobalt harbor atlas orchard.</p>"
+    },
+    {
+      "name": "Brief 03",
+      "type": "Brief",
+      "content": "<p>Tundra garnet meadow meadow harbor ember.</p>"
+    },
+    {
+      "name": "Brief 04",
+      "type": "Brief",
+      "content": "<p>Signal juniper ember island juniper lantern.</p>"
+    },
+    {
+      "name": "Brief 05",
+      "type": "Brief",
+      "content": "<p>Kestrel willow hollow juniper copper copper.</p>"
+    },
+    {
+      "name": "Brief 06",
+      "type": "Brief",
+      "content": "<p>Lantern delta hollow ember island quarry.</p>"
+    },
+    {
+      "name": "Brief 07",
+      "type": "Brief",
+      "content": "<p>Summit orchard granite canyon garnet quarry.</p>"
+    },
+    {
+      "name": "Brief 08",
+      "type": "Brief",
+      "content": "<p>Granite harbor atlas signal hollow tundra.</p>"
+    },
+    {
+      "name": "Brief 09",
+      "type": "Brief",
+      "content": "<p>Beacon atlas granite granite juniper juniper.</p>"
+    },
+    {
+      "name": "Brief 10",
+      "type": "Brief",
+      "content": "<p>Meadow falcon canyon delta garnet kestrel.</p>"
+    },
+    {
+      "name": "Note 001",
+      "type": "RichText",
+      "content": "<p>Garnet delta atlas island island meadow ember harbor willow harbor.</p>\n<p>Topic: [[Topic 001]]</p>\n<p>[[Wanted 001|a card nobody wrote]]</p>"
+    },
+    {
+      "name": "Note 002",
+      "type": "RichText",
+      "content": "<p>Falcon ember island orchard island lantern atlas kestrel river orchard.</p>\n{{Topic 004+summary|content}}"
+    },
+    {
+      "name": "Note 003",
+      "type": "RichText",
+      "content": "<p>Orchard hollow ember meadow kestrel cobalt ember cobalt harbor canyon.</p>\n<p>Topic: [[Topic 003]]</p>\n{{Memo 03}}"
+    },
+    {
+      "name": "Note 004",
+      "type": "RichText",
+      "content": "<p>Hollow beacon harbor hollow copper copper granite canyon orchard granite.</p>\n{{Brief 04|titled}}"
+    },
+    {
+      "name": "Note 005",
+      "type": "RichText",
+      "content": "<p>Garnet canyon delta juniper quarry summit ember canyon atlas canyon.</p>\n<p>Topic: [[Topic 005]]</p>\n{{Topic 010|open}}"
+    },
+    {
+      "name": "Note 006",
+      "type": "RichText",
+      "content": "<p>Garnet atlas summit tundra summit garnet summit orchard granite summit.</p>\n{{Topic 008+summary|content}}"
+    },
+    {
+      "name": "Note 007",
+      "type": "RichText",
+      "content": "<p>Atlas quarry quarry quarry quarry canyon kestrel canyon willow kestrel.</p>\n<p>Topic: [[Topic 007]]</p>"
+    },
+    {
+      "name": "Note 008",
+      "type": "RichText",
+      "content": "<p>Copper kestrel falcon island kestrel signal falcon copper hollow river.</p>\n{{Memo 08}}"
+    },
+    {
+      "name": "Note 009",
+      "type": "RichText",
+      "content": "<p>Granite cobalt orchard kestrel garnet ember falcon meadow garnet beacon.</p>\n<p>Topic: [[Topic 009]]</p>"
+    },
+    {
+      "name": "Note 010",
+      "type": "RichText",
+      "content": "<p>Cobalt falcon river river garnet atlas delta falcon river copper.</p>\n{{Topic 012+summary|content}}\n<p>[[Wanted 010|a card nobody wrote]]</p>"
+    },
+    {
+      "name": "Note 011",
+      "type": "RichText",
+      "content": "<p>Granite meadow atlas ember copper orchard falcon hollow island canyon.</p>\n<p>Topic: [[Topic 011]]</p>\n{{Brief 01|titled}}\n{{Topic 016|open}}"
+    },
+    {
+      "name": "Note 012",
+      "type": "RichText",
+      "content": "<p>Falcon delta garnet island summit juniper copper lantern meadow lantern.</p>"
+    },
+    {
+      "name": "Note 013",
+      "type": "RichText",
+      "content": "<p>Willow beacon lantern falcon atlas hollow tundra delta meadow hollow.</p>\n<p>Topic: [[Topic 013]]</p>\n{{Memo 13}}"
+    },
+    {
+      "name": "Note 014",
+      "type": "RichText",
+      "content": "<p>Summit juniper summit meadow copper orchard kestrel cobalt canyon kestrel.</p>\n{{Topic 016+summary|content}}"
+    },
+    {
+      "name": "Note 015",
+      "type": "RichText",
+      "content": "<p>Kestrel river cobalt atlas falcon cobalt island harbor beacon kestrel.</p>\n<p>Topic: [[Topic 015]]</p>"
+    },
+    {
+      "name": "Note 016",
+      "type": "RichText",
+      "content": "<p>Falcon copper lantern cobalt signal atlas garnet hollow tundra atlas.</p>"
+    },
+    {
+      "name": "Note 017",
+      "type": "RichText",
+      "content": "<p>Hollow ember meadow falcon summit copper copper delta canyon copper.</p>\n<p>Topic: [[Topic 017]]</p>\n{{Topic 022|open}}"
+    },
+    {
+      "name": "Note 018",
+      "type": "RichText",
+      "content": "<p>Hollow quarry granite canyon atlas signal harbor signal hollow hollow.</p>\n{{Topic 020+summary|content}}\n{{Memo 03}}\n{{Brief 08|titled}}"
+    },
+    {
+      "name": "Note 019",
+      "type": "RichText",
+      "content": "<p>Willow ember copper lantern beacon river quarry tundra harbor hollow.</p>\n<p>Topic: [[Topic 019]]</p>\n<p>[[Wanted 019|a card nobody wrote]]</p>"
+    },
+    {
+      "name": "Note 020",
+      "type": "RichText",
+      "content": "<p>Lantern island tundra beacon harbor hollow meadow granite falcon tundra.</p>"
+    },
+    {
+      "name": "Note 021",
+      "type": "RichText",
+      "content": "<p>Delta island tundra copper river harbor meadow island hollow beacon.</p>\n<p>Topic: [[Topic 021]]</p>"
+    },
+    {
+      "name": "Note 022",
+      "type": "RichText",
+      "content": "<p>Garnet copper lantern willow atlas atlas falcon meadow copper meadow.</p>\n{{Topic 024+summary|content}}"
+    },
+    {
+      "name": "Note 023",
+      "type": "RichText",
+      "content": "<p>Meadow kestrel delta tundra garnet orchard quarry river falcon island.</p>\n<p>Topic: [[Topic 023]]</p>\n{{Memo 08}}\n{{Topic 028|open}}"
+    },
+    {
+      "name": "Note 024",
+      "type": "RichText",
+      "content": "<p>Copper atlas ember orchard hollow signal orchard harbor island falcon.</p>"
+    },
+    {
+      "name": "Note 025",
+      "type": "RichText",
+      "content": "<p>Lantern kestrel signal river harbor river willow falcon river summit.</p>\n<p>Topic: [[Topic 025]]</p>\n{{Brief 05|titled}}"
+    },
+    {
+      "name": "Note 026",
+      "type": "RichText",
+      "content": "<p>Granite delta cobalt tundra orchard atlas kestrel meadow delta harbor.</p>\n{{Topic 028+summary|content}}"
+    },
+    {
+      "name": "Note 027",
+      "type": "RichText",
+      "content": "<p>Beacon delta lantern canyon harbor harbor harbor harbor island atlas.</p>\n<p>Topic: [[Topic 027]]</p>"
+    },
+    {
+      "name": "Note 028",
+      "type": "RichText",
+      "content": "<p>Summit garnet garnet copper orchard signal cobalt river lantern tundra.</p>\n{{Memo 13}}\n<p>[[Wanted 028|a card nobody wrote]]</p>"
+    },
+    {
+      "name": "Note 029",
+      "type": "RichText",
+      "content": "<p>Ember falcon copper ember tundra kestrel falcon lantern orchard falcon.</p>\n<p>Topic: [[Topic 029]]</p>\n{{Topic 004|open}}"
+    },
+    {
+      "name": "Note 030",
+      "type": "RichText",
+      "content": "<p>Kestrel copper ember cobalt hollow juniper orchard summit atlas signal.</p>\n{{Topic 002+summary|content}}"
+    },
+    {
+      "name": "Note 031",
+      "type": "RichText",
+      "content": "<p>Atlas cobalt beacon delta quarry harbor cobalt summit island garnet.</p>\n<p>Topic: [[Topic 001]]</p>"
+    },
+    {
+      "name": "Note 032",
+      "type": "RichText",
+      "content": "<p>Beacon copper falcon canyon juniper willow kestrel copper cobalt juniper.</p>\n{{Brief 02|titled}}"
+    },
+    {
+      "name": "Note 033",
+      "type": "RichText",
+      "content": "<p>Juniper copper ember granite river summit cobalt orchard copper quarry.</p>\n<p>Topic: [[Topic 003]]</p>\n{{Memo 03}}"
+    },
+    {
+      "name": "Note 034",
+      "type": "RichText",
+      "content": "<p>Island granite tundra delta island canyon summit tundra kestrel garnet.</p>\n{{Topic 006+summary|content}}"
+    },
+    {
+      "name": "Note 035",
+      "type": "RichText",
+      "content": "<p>Harbor signal garnet delta garnet summit kestrel granite kestrel river.</p>\n<p>Topic: [[Topic 005]]</p>\n{{Topic 010|open}}"
+    },
+    {
+      "name": "Note 036",
+      "type": "RichText",
+      "content": "<p>Kestrel delta granite hollow orchard canyon river delta beacon harbor.</p>"
+    },
+    {
+      "name": "Note 037",
+      "type": "RichText",
+      "content": "<p>Hollow hollow cobalt signal signal granite harbor harbor tundra juniper.</p>\n<p>Topic: [[Topic 007]]</p>\n<p>[[Wanted 037|a card nobody wrote]]</p>"
+    },
+    {
+      "name": "Note 038",
+      "type": "RichText",
+      "content": "<p>Meadow orchard cobalt beacon harbor copper summit granite orchard harbor.</p>\n{{Topic 010+summary|content}}\n{{Memo 08}}"
+    },
+    {
+      "name": "Note 039",
+      "type": "RichText",
+      "content": "<p>Tundra river canyon island river garnet island canyon meadow beacon.</p>\n<p>Topic: [[Topic 009]]</p>\n{{Brief 09|titled}}"
+    },
+    {
+      "name": "Note 040",
+      "type": "RichText",
+      "content": "<p>Meadow ember hollow falcon tundra hollow tundra hollow hollow kestrel.</p>"
+    },
+    {
+      "name": "Typed Note 01",
+      "type": "Note",
+      "content": "<p>Ember garnet granite delta island kestrel.</p>"
+    },
+    {
+      "name": "Typed Note 02",
+      "type": "Note"
+    },
+    {
+      "name": "Typed Note 03",
+      "type": "Note",
+      "content": "<p>Quarry juniper meadow harbor canyon juniper.</p>"
+    },
+    {
+      "name": "Typed Note 04",
+      "type": "Note"
+    },
+    {
+      "name": "Typed Note 05",
+      "type": "Note",
+      "content": "<p>Canyon garnet quarry falcon orchard willow.</p>"
+    },
+    {
+      "name": "Typed Note 06",
+      "type": "Note"
+    },
+    {
+      "name": "Typed Note 07",
+      "type": "Note",
+      "content": "<p>Atlas cobalt beacon canyon river kestrel.</p>"
+    },
+    {
+      "name": "Typed Note 08",
+      "type": "Note"
+    },
+    {
+      "name": "Chain 01",
+      "type": "RichText",
+      "content": "<p>Depth 1.</p> {{Chain 02}}"
+    },
+    {
+      "name": "Chain 02",
+      "type": "RichText",
+      "content": "<p>Depth 2.</p> {{Chain 03}}"
+    },
+    {
+      "name": "Chain 03",
+      "type": "RichText",
+      "content": "<p>Depth 3.</p> {{Chain 04}}"
+    },
+    {
+      "name": "Chain 04",
+      "type": "RichText",
+      "content": "<p>Depth 4.</p> {{Chain 05}}"
+    },
+    {
+      "name": "Chain 05",
+      "type": "RichText",
+      "content": "<p>Depth 5.</p> {{Chain 06}}"
+    },
+    {
+      "name": "Chain 06",
+      "type": "RichText",
+      "content": "<p>Depth 6.</p> {{Chain 07}}"
+    },
+    {
+      "name": "Chain 07",
+      "type": "RichText",
+      "content": "<p>Depth 7.</p> {{Chain 08}}"
+    },
+    {
+      "name": "Chain 08",
+      "type": "RichText",
+      "content": "<p>Depth 8.</p> {{Chain 09}}"
+    },
+    {
+      "name": "Chain 09",
+      "type": "RichText",
+      "content": "<p>Depth 9.</p> {{Chain 10}}"
+    },
+    {
+      "name": "Chain 10",
+      "type": "RichText",
+      "content": "<p>Depth 10.</p> {{Chain 11}}"
+    },
+    {
+      "name": "Chain 11",
+      "type": "RichText",
+      "content": "<p>Depth 11.</p> {{Chain 12}}"
+    },
+    {
+      "name": "Chain 12",
+      "type": "RichText",
+      "content": "<p>Depth 12.</p> {{Chain 13}}"
+    },
+    {
+      "name": "Chain 13",
+      "type": "RichText",
+      "content": "<p>Depth 13.</p> {{Chain 14}}"
+    },
+    {
+      "name": "Chain 14",
+      "type": "RichText",
+      "content": "<p>Depth 14.</p> {{Chain 15}}"
+    },
+    {
+      "name": "Chain 15",
+      "type": "RichText",
+      "content": "<p>Depth 15.</p> {{Chain 16}}"
+    },
+    {
+      "name": "Chain 16",
+      "type": "RichText",
+      "content": "<p>Depth 16.</p> {{Chain 17}}"
+    },
+    {
+      "name": "Chain 17",
+      "type": "RichText",
+      "content": "<p>Depth 17.</p> {{Chain 18}}"
+    },
+    {
+      "name": "Chain 18",
+      "type": "RichText",
+      "content": "<p>Depth 18.</p> {{Chain 19}}"
+    },
+    {
+      "name": "Chain 19",
+      "type": "RichText",
+      "content": "<p>Depth 19.</p> {{Chain 20}}"
+    },
+    {
+      "name": "Chain 20",
+      "type": "RichText",
+      "content": "<p>Depth 20.</p> {{Chain 21}}"
+    },
+    {
+      "name": "Chain 21",
+      "type": "RichText",
+      "content": "<p>Depth 21.</p> {{Chain 22}}"
+    },
+    {
+      "name": "Chain 22",
+      "type": "RichText",
+      "content": "<p>Depth 22.</p> {{Chain 23}}"
+    },
+    {
+      "name": "Chain 23",
+      "type": "RichText",
+      "content": "<p>Depth 23.</p> {{Chain 24}}"
+    },
+    {
+      "name": "Chain 24",
+      "type": "RichText",
+      "content": "<p>Depth 24.</p> {{Chain 25}}"
+    },
+    {
+      "name": "Chain 25",
+      "type": "RichText",
+      "content": "<p>Depth 25.</p>"
+    },
+    {
+      "name": "Loop A",
+      "type": "RichText",
+      "content": "<p>A</p>{{Loop B}}"
+    },
+    {
+      "name": "Loop B",
+      "type": "RichText",
+      "content": "<p>B</p>{{Loop A}}"
+    },
+    {
+      "name": "All Topics",
+      "type": "Search",
+      "content": "{\"type\":\"Topic\",\"sort\":\"name\"}"
+    },
+    {
+      "name": "Recent Notes",
+      "type": "Search",
+      "content": "{\"type\":\"RichText\",\"complete\":\"Note\",\"sort\":\"name\",\"limit\":10}"
+    },
+    {
+      "name": "Topic Summaries",
+      "type": "Search",
+      "content": "{\"right\":\"summary\",\"sort\":\"name\",\"limit\":15}"
+    },
+    {
+      "name": "Memo List",
+      "type": "Search",
+      "content": "{\"type\":\"Memo\",\"sort\":\"name\"}"
+    },
+    {
+      "name": "Brief List",
+      "type": "Search",
+      "content": "{\"type\":\"Brief\",\"sort\":\"name\"}"
+    },
+    {
+      "name": "Links To Topic 001",
+      "type": "Search",
+      "content": "{\"link_to\":\"Topic 001\"}"
+    },
+    {
+      "name": "Tagged 01",
+      "type": "Search",
+      "content": "{\"right_plus\":[\"tags\",{\"refer_to\":\"Tag 01\"}],\"sort\":\"name\"}"
+    },
+    {
+      "name": "Chain Cards",
+      "type": "Search",
+      "content": "{\"complete\":\"Chain\",\"sort\":\"name\",\"dir\":\"desc\",\"limit\":5}"
+    },
+    {
+      "name": "Typed Notes",
+      "type": "Search",
+      "content": "{\"type\":\"Note\",\"sort\":\"name\"}"
+    },
+    {
+      "name": "Not Topics",
+      "type": "Search",
+      "content": "{\"not\":{\"type\":[\"in\",\"Topic\",\"Memo\",\"Brief\",\"RichText\",\"Pointer\"]},\"sort\":\"name\",\"limit\":20}"
+    },
+    {
+      "name": "Tags In Use",
+      "type": "Search",
+      "content": "{\"referred_to_by\":{\"right\":\"tags\"},\"sort\":\"name\"}"
+    },
+    {
+      "name": "Count Of Notes",
+      "type": "Search",
+      "content": "{\"type\":\"RichText\",\"complete\":\"Note\",\"return\":\"count\"}"
+    },
+    {
+      "name": "Search Page",
+      "type": "RichText",
+      "content": "{{All Topics|open}}\n{{Memo List|content}}\n{{Brief List|content}}\n{{Count Of Notes|core}}"
+    },
+    {
+      "name": "Phrase 1",
+      "type": "Phrase",
+      "content": "Kestrel garnet meadow"
+    },
+    {
+      "name": "Phrase 2",
+      "type": "Phrase",
+      "content": "Atlas island harbor"
+    },
+    {
+      "name": "Phrase 3",
+      "type": "Phrase",
+      "content": "Falcon ember summit"
+    },
+    {
+      "name": "Phrase 4",
+      "type": "Phrase",
+      "content": "Hollow garnet lantern"
+    },
+    {
+      "name": "Phrase 5",
+      "type": "Phrase",
+      "content": "Willow copper lantern"
+    },
+    {
+      "name": "Number 1",
+      "type": "Number",
+      "content": "137"
+    },
+    {
+      "name": "Number 2",
+      "type": "Number",
+      "content": "274"
+    },
+    {
+      "name": "Number 3",
+      "type": "Number",
+      "content": "411"
+    },
+    {
+      "name": "Number 4",
+      "type": "Number",
+      "content": "548"
+    },
+    {
+      "name": "Number 5",
+      "type": "Number",
+      "content": "685"
+    },
+    {
+      "name": "Plain 1",
+      "type": "PlainText",
+      "content": "Lantern beacon meadow ember.\n<b>not bold</b> & 1"
+    },
+    {
+      "name": "Plain 2",
+      "type": "PlainText",
+      "content": "Hollow summit orchard granite.\n<b>not bold</b> & 2"
+    },
+    {
+      "name": "Plain 3",
+      "type": "PlainText",
+      "content": "Cobalt kestrel island hollow.\n<b>not bold</b> & 3"
+    },
+    {
+      "name": "Plain 4",
+      "type": "PlainText",
+      "content": "Lantern beacon delta orchard.\n<b>not bold</b> & 4"
+    },
+    {
+      "name": "Plain 5",
+      "type": "PlainText",
+      "content": "Harbor cobalt canyon granite.\n<b>not bold</b> & 5"
+    },
+    {
+      "name": "Markup 1",
+      "type": "HTML",
+      "content": "<div class=\"box-1\"><em>Hollow hollow delta.</em></div>"
+    },
+    {
+      "name": "Markup 2",
+      "type": "HTML",
+      "content": "<div class=\"box-2\"><em>Hollow quarry signal.</em></div>"
+    },
+    {
+      "name": "Markup 3",
+      "type": "HTML",
+      "content": "<div class=\"box-3\"><em>Orchard delta ember.</em></div>"
+    },
+    {
+      "name": "Toggle 1",
+      "type": "Toggle",
+      "content": "1"
+    },
+    {
+      "name": "Toggle 2",
+      "type": "Toggle",
+      "content": "0"
+    },
+    {
+      "name": "Toggle 3",
+      "type": "Toggle",
+      "content": "1"
+    },
+    {
+      "name": "Date 1",
+      "type": "Date",
+      "content": "2026-01-11"
+    },
+    {
+      "name": "Date 2",
+      "type": "Date",
+      "content": "2026-02-12"
+    },
+    {
+      "name": "Date 3",
+      "type": "Date",
+      "content": "2026-03-13"
+    },
+    {
+      "name": "Report 1",
+      "type": "File",
+      "file": "files/report-1.txt"
+    },
+    {
+      "name": "Report 2",
+      "type": "File",
+      "file": "files/report-2.txt"
+    },
+    {
+      "name": "Report 3",
+      "type": "File",
+      "file": "files/report-3.txt"
+    },
+    {
+      "name": "Report 4",
+      "type": "File",
+      "file": "files/report-4.txt"
+    },
+    {
+      "name": "Report Index",
+      "type": "RichText",
+      "content": "{{Report 1}}\n{{Report 2|core}}\n[[Report 3]]"
+    },
+    {
+      "name": "email stylesheet",
+      "type": "SCSS"
+    },
+    {
+      "name": "*all+Mira Member+*follow",
+      "content": "*always"
+    }
+  ]
+}

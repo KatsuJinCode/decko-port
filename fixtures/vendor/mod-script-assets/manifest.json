@@ -1,0 +1,424 @@
+{
+  "mods": {
+    "format": [
+      {
+        "group": "mod: format+*script+group: jquery",
+        "groupType": "local_script_manifest_group",
+        "files": [
+          {
+            "file": "card-mod-format/assets/script/jquery/jquery-ui.min.js",
+            "name": "jquery-ui.min.js",
+            "type": "java_script",
+            "sha256": "28ce75d953678c4942df47a11707a15e3c756021cf89090e3e6aa7ad6b6971c3"
+          },
+          {
+            "file": "card-mod-format/assets/script/jquery/jquery.ui.autocomplete.html.js",
+            "name": "jquery.ui.autocomplete.html.js",
+            "type": "java_script",
+            "sha256": "44f200a760c0ca8eccf83d82c25cb1b4d7d2358525ba6ff649f28e4518b1db91"
+          },
+          {
+            "file": "card-mod-format/assets/script/jquery/jquery.autosize.js",
+            "name": "jquery.autosize.js",
+            "type": "java_script",
+            "sha256": "f78bd9053a6bd42695bc2fc748c90c4b8f771e554ecb95f8b45221946d384f12"
+          },
+          {
+            "file": "card-mod-format/vendor/jquery_file_upload/js/jquery.fileupload.js",
+            "name": "jquery.fileupload.js",
+            "type": "java_script",
+            "sha256": "f233076c34329027babb3bc5c68d9635e31c99369f8fb6ea4dea68f0fb6b65d2"
+          },
+          {
+            "file": "card-mod-format/vendor/jquery_file_upload/js/jquery.iframe-transport.js",
+            "name": "jquery.iframe-transport.js",
+            "type": "java_script",
+            "sha256": "a2b1f8b26a7047785ad53090273f91c2684abd0d694224941262517e7da2536e"
+          }
+        ]
+      },
+      {
+        "group": "mod: format+*script+group: decko",
+        "groupType": "local_script_manifest_group",
+        "files": [
+          {
+            "file": "card-mod-format/assets/script/decko/decko.js.coffee",
+            "name": "decko.js.coffee",
+            "type": "coffee_script",
+            "sha256": "e6f63e749e8cce77cac6c775d865b6a70f0791c8060d3ffcddc0d452ab42c92f"
+          },
+          {
+            "file": "card-mod-format/assets/script/decko/decko_jquery.js.coffee",
+            "name": "decko_jquery.js.coffee",
+            "type": "coffee_script",
+            "sha256": "b7dabf4de6c00a148c6be6774f8672037af72a0b585705631c5de8433fa94280"
+          },
+          {
+            "file": "card-mod-format/assets/script/decko/slot.js.coffee",
+            "name": "slot.js.coffee",
+            "type": "coffee_script",
+            "sha256": "68a0e1f3daf9a2f472f6ca8d13b74b1a9354c66409745505f442380948ea7ce4"
+          },
+          {
+            "file": "card-mod-format/assets/script/decko/slotter.js.coffee",
+            "name": "slotter.js.coffee",
+            "type": "coffee_script",
+            "sha256": "7ea88826fa623aa9ab39f4ee31a3733459c61ca82d7ed799ca4c6954e74b2487"
+          },
+          {
+            "file": "card-mod-format/assets/script/decko/slot_ready.js.coffee",
+            "name": "slot_ready.js.coffee",
+            "type": "coffee_script",
+            "sha256": "13bcd1cfff27ba133bad9190d00fa1d39efd9fc85280207ee7c428523cae33b9"
+          },
+          {
+            "file": "card-mod-format/assets/script/decko/clicks_and_hovers.js.coffee",
+            "name": "clicks_and_hovers.js.coffee",
+            "type": "coffee_script",
+            "sha256": "5fded2d05c21a9a991bdc323659f53a3804172f29348250b88c470f01907a178"
+          }
+        ]
+      }
+    ],
+    "list": [
+      {
+        "group": "mod: list+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-list/assets/script/pointer_config.js.coffee",
+            "name": "pointer_config.js.coffee",
+            "type": "coffee_script",
+            "sha256": "fc78f87de0528e47b99913215c1a672d2709455acfbc05bddec190b390c826ca"
+          },
+          {
+            "file": "card-mod-list/assets/script/pointer_list_editor.js.coffee",
+            "name": "pointer_list_editor.js.coffee",
+            "type": "coffee_script",
+            "sha256": "0d91901a63db3e53446d8f13ca2adc32cfef27ad59e9a0d72d45d3d56c783d94"
+          }
+        ]
+      }
+    ],
+    "search": [
+      {
+        "group": "mod: search+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-search/assets/script/autocomplete.js.coffee",
+            "name": "autocomplete.js.coffee",
+            "type": "coffee_script",
+            "sha256": "1d916590b77f98ed5fc2b5507cef8b97782c93c34af000212d9b363e319abc00"
+          },
+          {
+            "file": "card-mod-search/assets/script/search_box.js.coffee",
+            "name": "search_box.js.coffee",
+            "type": "coffee_script",
+            "sha256": "026c69623d48c282638dda939fbbc8c72d8ac2db244f137784dc9a9a45257c9f"
+          }
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "group": "mod: rules+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-rules/assets/script/rules.js.coffee",
+            "name": "rules.js.coffee",
+            "type": "coffee_script",
+            "sha256": "162dd5157651e3f085d7a04488d8ca2a96137f43497f5288524771a4a821599d"
+          }
+        ]
+      }
+    ],
+    "edit": [
+      {
+        "group": "mod: edit+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-edit/assets/script/autosave.js.coffee",
+            "name": "autosave.js.coffee",
+            "type": "coffee_script",
+            "sha256": "6243b06f717324e90edfaea6e9f442b21a337777eb3cbb7d491a12d9efa3c1c5"
+          },
+          {
+            "file": "card-mod-edit/assets/script/board.js.coffee",
+            "name": "board.js.coffee",
+            "type": "coffee_script",
+            "sha256": "e602b9b2611bf2b570233cfe473c8e72a521005b7e98937ec9dfd83809fcfc01"
+          },
+          {
+            "file": "card-mod-edit/assets/script/components.js.coffee",
+            "name": "components.js.coffee",
+            "type": "coffee_script",
+            "sha256": "b48126bb3cd4f9e231b7a800b4e427be1bf4b2955987d534a43615a86158ec02"
+          },
+          {
+            "file": "card-mod-edit/assets/script/doubleclick.js.coffee",
+            "name": "doubleclick.js.coffee",
+            "type": "coffee_script",
+            "sha256": "878601106c7c70624efe1644bb914b9281a33ba9d453d062e63c5a93920291f3"
+          },
+          {
+            "file": "card-mod-edit/assets/script/editor.js.coffee",
+            "name": "editor.js.coffee",
+            "type": "coffee_script",
+            "sha256": "00cefd3d726f769bd06c9965ba0a40218950cb7ac3e0b82b64bbcf6a9d78420f"
+          },
+          {
+            "file": "card-mod-edit/assets/script/name_editor.js.coffee",
+            "name": "name_editor.js.coffee",
+            "type": "coffee_script",
+            "sha256": "7bcd5e4d253373459575567e3db1debd7d356ad069877669126c14ec88af16a5"
+          },
+          {
+            "file": "card-mod-edit/assets/script/tooltip.js.coffee",
+            "name": "tooltip.js.coffee",
+            "type": "coffee_script",
+            "sha256": "ba0523a2233d03e886c49878fb6897ac486935e85c80476be2770e0fd9425cc3"
+          },
+          {
+            "file": "card-mod-edit/assets/script/type_editor.js.coffee",
+            "name": "type_editor.js.coffee",
+            "type": "coffee_script",
+            "sha256": "8b274aeeb04d502e4e9df939080bfd9b7c8acb980cab05f49b13a0c1a6afc26c"
+          }
+        ]
+      }
+    ],
+    "account": [
+      {
+        "group": "mod: account+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-account/assets/script/toggle_visibility.js.coffee",
+            "name": "toggle_visibility.js.coffee",
+            "type": "coffee_script",
+            "sha256": "29358ed66c2d29e2251da5c10e4c546ebd38b1fcb00d709e903f91c9e2655436"
+          }
+        ]
+      }
+    ],
+    "carrierwave": [
+      {
+        "group": "mod: carrierwave+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-carrierwave/assets/script/upload.js.coffee",
+            "name": "upload.js.coffee",
+            "type": "coffee_script",
+            "sha256": "234f4e78cf0f13655a416c6d077a6d25f0b15d2897e81418d75345a8018e3b67"
+          }
+        ]
+      }
+    ],
+    "ace_editor": [
+      {
+        "group": "mod: ace editor+*script+group: ace_config",
+        "groupType": "local_script_manifest_group",
+        "files": [
+          {
+            "file": "card-mod-ace_editor/assets/script/decko_ace_config.js.coffee",
+            "name": "decko_ace_config.js.coffee",
+            "type": "coffee_script",
+            "sha256": "2849ff1470bcfcd9b2f2c0eac186f3f56135c7b90898d929a1948c9c9b4c6972"
+          }
+        ]
+      }
+    ],
+    "bar_and_box": [
+      {
+        "group": "mod: bar and box+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-bar_and_box/assets/script/bar_and_box.js.coffee",
+            "name": "bar_and_box.js.coffee",
+            "type": "coffee_script",
+            "sha256": "4ade7528ec29a0542be20830deb74c5dc799b637aab04504c252fe5f930c5a8f"
+          },
+          {
+            "file": "card-mod-bar_and_box/assets/script/click_select.js.coffee",
+            "name": "click_select.js.coffee",
+            "type": "coffee_script",
+            "sha256": "051b8ced30b21f2466f866a44711f8ea2cf2b17dc726a867c5ee4d4de7d217e6"
+          }
+        ]
+      }
+    ],
+    "bootstrap": [
+      {
+        "group": "mod: bootstrap+*script+group: bootstrap",
+        "groupType": "local_script_manifest_group",
+        "files": [
+          {
+            "file": "card-mod-bootstrap/vendor/bootstrap/dist/js/bootstrap.bundle.js",
+            "name": "bootstrap.bundle.js",
+            "type": "java_script",
+            "sha256": "86db0050e22037cc64a28b69414ce6bda09b428eb1d8f34c4c3ee42d623ac984"
+          },
+          {
+            "file": "card-mod-bootstrap/assets/script/decko_modal.js.coffee",
+            "name": "decko_modal.js.coffee",
+            "type": "coffee_script",
+            "sha256": "0fccf616412f8e8268d37c700a42e13a1dbbb5952d825dee69bbb8901976d934"
+          },
+          {
+            "file": "card-mod-bootstrap/assets/script/decko_popover.js.coffee",
+            "name": "decko_popover.js.coffee",
+            "type": "coffee_script",
+            "sha256": "be12457a79c85daa19c383eda81601ae711e8cc5ec64bec0e0e0d6457a5cb30f"
+          },
+          {
+            "file": "card-mod-bootstrap/assets/script/script_load_select2.js.coffee",
+            "name": "script_load_select2.js.coffee",
+            "type": "coffee_script",
+            "sha256": "0eae8e7a796d6dc2d2738522c4f1438382bb5482145b5e8346d3efc4fdd976f6"
+          },
+          {
+            "file": "card-mod-bootstrap/vendor/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js",
+            "name": "bootstrap-colorpicker.min.js",
+            "type": "java_script",
+            "sha256": "69b3257b29b4e281afca8de78d3f3f85834b60ea7b9464d41870829c6b77a55e"
+          },
+          {
+            "file": "card-mod-bootstrap/assets/script/script_colorpicker.js.coffee",
+            "name": "script_colorpicker.js.coffee",
+            "type": "coffee_script",
+            "sha256": "7bf0d0da4498b1a360b030993664bf14f9413405d322b22525bfa65313779080"
+          }
+        ]
+      }
+    ],
+    "follow": [
+      {
+        "group": "mod: follow+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-follow/assets/script/follow.js.coffee",
+            "name": "follow.js.coffee",
+            "type": "coffee_script",
+            "sha256": "b2493c849e2b400d6651a6ffaa1e976ff41810609f54d4d464397f30ebbcd104"
+          }
+        ]
+      }
+    ],
+    "tabs": [
+      {
+        "group": "mod: tabs+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-tabs/assets/script/tab.js.coffee",
+            "name": "tab.js.coffee",
+            "type": "coffee_script",
+            "sha256": "9787c12750d490af7d69425115c78cd8ec8b0a47ac370f5684d9931a5df17c2d"
+          }
+        ]
+      }
+    ],
+    "layout": [
+      {
+        "group": "mod: layout+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-layout/assets/script/layout.js.coffee",
+            "name": "layout.js.coffee",
+            "type": "coffee_script",
+            "sha256": "d4a49390dff3ef08741288d7302bf6850e1d6090038bcc2489369c1073406ad4"
+          },
+          {
+            "file": "card-mod-layout/assets/script/modal.js.coffee",
+            "name": "modal.js.coffee",
+            "type": "coffee_script",
+            "sha256": "9ebaf2fc6b3c84639b43032e69614a52e2011176b608593b2549b1bed4ec7eb1"
+          },
+          {
+            "file": "card-mod-layout/assets/script/overlay.js.coffee",
+            "name": "overlay.js.coffee",
+            "type": "coffee_script",
+            "sha256": "21f20a7ffd95ed471b9be0265f42a11ecae5d45dfe217b23ca3ebab88742148c"
+          }
+        ]
+      }
+    ],
+    "recaptcha": [
+      {
+        "group": "mod: recaptcha+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-recaptcha/assets/script/recaptcha.js.coffee",
+            "name": "recaptcha.js.coffee",
+            "type": "coffee_script",
+            "sha256": "87e0bcf5dae0abb89230767bf5273e80062c6d2e946bdc9ed6f79eedb3353549"
+          }
+        ]
+      }
+    ],
+    "tinymce_editor": [
+      {
+        "group": "mod: tinymce editor+*script+group: local",
+        "groupType": "local_script_folder_group",
+        "files": [
+          {
+            "file": "card-mod-tinymce_editor/assets/script/image_editor.js.coffee",
+            "name": "image_editor.js.coffee",
+            "type": "coffee_script",
+            "sha256": "141072c657722e5f35d2539560671b15f15f820d1f4f4322f8f25a7a93bffd08"
+          },
+          {
+            "file": "card-mod-tinymce_editor/assets/script/link_editor.js.coffee",
+            "name": "link_editor.js.coffee",
+            "type": "coffee_script",
+            "sha256": "5232d48e88a0dde46bc6cd5af1409dafe50d5c5ba4c7af37040e03f1832d255e"
+          },
+          {
+            "file": "card-mod-tinymce_editor/assets/script/nest_editor.js.coffee",
+            "name": "nest_editor.js.coffee",
+            "type": "coffee_script",
+            "sha256": "42f19b236cc1c36e24d3d1060991a2b6511e3e5048181e1f930604136fd29d05"
+          },
+          {
+            "file": "card-mod-tinymce_editor/assets/script/nest_editor_name.js.coffee",
+            "name": "nest_editor_name.js.coffee",
+            "type": "coffee_script",
+            "sha256": "6846cbc9714b2ff0c0f327a617edfd5cecb5448a7099fdc2b12bf7d9faaa6473"
+          },
+          {
+            "file": "card-mod-tinymce_editor/assets/script/nest_editor_options.js.coffee",
+            "name": "nest_editor_options.js.coffee",
+            "type": "coffee_script",
+            "sha256": "550414a2491a9ac491753aea46db3ea66080d7c33a0ac8013bdcaad8ca089db8"
+          },
+          {
+            "file": "card-mod-tinymce_editor/assets/script/nest_editor_rules.js.coffee",
+            "name": "nest_editor_rules.js.coffee",
+            "type": "coffee_script",
+            "sha256": "6a3cf5192354f71615ac51034b3e97c20eda99643fcaf5bbe6d41ad59bd12167"
+          },
+          {
+            "file": "card-mod-tinymce_editor/assets/script/script_tinymce.js",
+            "name": "script_tinymce.js",
+            "type": "java_script",
+            "sha256": "3c6a5feeb3fb4dd9b5ab70f3e13b6cb0715136ddb50344b6d3069e9233dc8a9c"
+          },
+          {
+            "file": "card-mod-tinymce_editor/assets/script/tinymce_config.js.coffee",
+            "name": "tinymce_config.js.coffee",
+            "type": "coffee_script",
+            "sha256": "92dbb1316d3816417a5b674ec7088ea824e8c4aa9d2bd9d0488915841378ac5a"
+          }
+        ]
+      }
+    ]
+  }
+}

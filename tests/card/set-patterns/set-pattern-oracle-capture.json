@@ -1,0 +1,488 @@
+{
+  "concrete": [
+    {
+      "pattern_code": "self",
+      "pattern_id": 27,
+      "pattern_card_name": "*self",
+      "compound_only": false,
+      "assigns_type": false,
+      "anchorless": false,
+      "anchor_parts_count": 1,
+      "responds_anchor_name": true
+    },
+    {
+      "pattern_code": "type_plus_right",
+      "pattern_id": 25,
+      "pattern_card_name": "*type plus right",
+      "compound_only": true,
+      "assigns_type": true,
+      "anchorless": false,
+      "anchor_parts_count": 2,
+      "responds_anchor_name": true
+    },
+    {
+      "pattern_code": "right",
+      "pattern_id": 26,
+      "pattern_card_name": "*right",
+      "compound_only": true,
+      "assigns_type": true,
+      "anchorless": false,
+      "anchor_parts_count": 1,
+      "responds_anchor_name": true
+    },
+    {
+      "pattern_code": "rule",
+      "pattern_id": 24,
+      "pattern_card_name": "*rule",
+      "compound_only": true,
+      "assigns_type": false,
+      "anchorless": true,
+      "anchor_parts_count": 0,
+      "responds_anchor_name": false
+    },
+    {
+      "pattern_code": "rstar",
+      "pattern_id": 23,
+      "pattern_card_name": "*rstar",
+      "compound_only": true,
+      "assigns_type": false,
+      "anchorless": true,
+      "anchor_parts_count": 0,
+      "responds_anchor_name": false
+    },
+    {
+      "pattern_code": "star",
+      "pattern_id": 22,
+      "pattern_card_name": "*star",
+      "compound_only": false,
+      "assigns_type": false,
+      "anchorless": true,
+      "anchor_parts_count": 0,
+      "responds_anchor_name": false
+    },
+    {
+      "pattern_code": "type",
+      "pattern_id": 21,
+      "pattern_card_name": "*type",
+      "compound_only": false,
+      "assigns_type": false,
+      "anchorless": false,
+      "anchor_parts_count": 1,
+      "responds_anchor_name": true
+    },
+    {
+      "pattern_code": "all_plus",
+      "pattern_id": 20,
+      "pattern_card_name": "*all plus",
+      "compound_only": true,
+      "assigns_type": false,
+      "anchorless": true,
+      "anchor_parts_count": 0,
+      "responds_anchor_name": false
+    },
+    {
+      "pattern_code": "all",
+      "pattern_id": 7,
+      "pattern_card_name": "*all",
+      "compound_only": false,
+      "assigns_type": false,
+      "anchorless": true,
+      "anchor_parts_count": 0,
+      "responds_anchor_name": false
+    }
+  ],
+  "ids": [
+    27,
+    25,
+    26,
+    24,
+    23,
+    22,
+    21,
+    20,
+    7
+  ],
+  "codes": [
+    "self",
+    "type_plus_right",
+    "right",
+    "rule",
+    "rstar",
+    "star",
+    "type",
+    "all_plus",
+    "all"
+  ],
+  "grouped_codes": [
+    [
+      "all"
+    ],
+    [
+      "abstract"
+    ],
+    [
+      "all_plus",
+      "type",
+      "star",
+      "rstar",
+      "rule",
+      "right",
+      "type_plus_right",
+      "self"
+    ]
+  ],
+  "grouped_codes_no_all": [
+    [
+      "abstract"
+    ],
+    [
+      "all_plus",
+      "type",
+      "star",
+      "rstar",
+      "rule",
+      "right",
+      "type_plus_right",
+      "self"
+    ]
+  ],
+  "pattern_card_ids_by_codename": {
+    "self": "self",
+    "type_plus_right": "type_plus_right",
+    "right": "right",
+    "rule": "rule",
+    "rstar": "rstar",
+    "star": "star",
+    "type": "type",
+    "all_plus": "all_plus",
+    "all": "all"
+  },
+  "cards": [
+    {
+      "name": "Oracle Basics",
+      "patterns": [
+        "Oracle Basics+*self",
+        "RichText+*type",
+        "*all"
+      ],
+      "rule_lookup_keys": [
+        "605+self",
+        "2+type",
+        "all"
+      ],
+      "safe_set_keys": "ALL TYPE-rich_text SELF-oracle_basic",
+      "set_names": [
+        "Oracle Basics+*self",
+        "RichText+*type",
+        "*all"
+      ]
+    },
+    {
+      "name": "Oracle Junction",
+      "patterns": [
+        "Oracle Junction+*self",
+        "RichText+*type",
+        "*all"
+      ],
+      "rule_lookup_keys": [
+        "606+self",
+        "2+type",
+        "all"
+      ],
+      "safe_set_keys": "ALL TYPE-rich_text SELF-oracle_junction",
+      "set_names": [
+        "Oracle Junction+*self",
+        "RichText+*type",
+        "*all"
+      ]
+    },
+    {
+      "name": "Oracle Junction+child_one",
+      "patterns": [
+        "Oracle Junction+child_one+*self",
+        "RichText+child_one+*type plus right",
+        "child_one+*right",
+        "RichText+*type",
+        "*all plus",
+        "*all"
+      ],
+      "rule_lookup_keys": [
+        "608+self",
+        "607+right",
+        "2+type",
+        "all_plus",
+        "all"
+      ],
+      "safe_set_keys": "ALL ALL_PLUS TYPE-rich_text RIGHT-child_one TYPE_PLUS_RIGHT-rich_text-child_one SELF-oracle_junction-child_one",
+      "set_names": [
+        "Oracle Junction+child_one+*self",
+        "RichText+child_one+*type plus right",
+        "child_one+*right",
+        "RichText+*type",
+        "*all plus",
+        "*all"
+      ]
+    },
+    {
+      "name": "*read",
+      "patterns": [
+        "*read+*self",
+        "*star",
+        "Setting+*type",
+        "*all"
+      ],
+      "rule_lookup_keys": [
+        "9+self",
+        "star",
+        "6+type",
+        "all"
+      ],
+      "safe_set_keys": "ALL TYPE-setting STAR SELF-Xread",
+      "set_names": [
+        "*read+*self",
+        "*star",
+        "Setting+*type",
+        "*all"
+      ]
+    },
+    {
+      "name": "*all+*read",
+      "patterns": [
+        "*all+*read+*self",
+        "Set+*read+*type plus right",
+        "*read+*right",
+        "*rule",
+        "*rstar",
+        "List+*type",
+        "*all plus",
+        "*all"
+      ],
+      "rule_lookup_keys": [
+        "10+self",
+        "9+right",
+        "rule",
+        "rstar",
+        "4+type",
+        "all_plus",
+        "all"
+      ],
+      "safe_set_keys": "ALL ALL_PLUS TYPE-list RSTAR RULE RIGHT-Xread TYPE_PLUS_RIGHT-set-Xread SELF-Xall-Xread",
+      "set_names": [
+        "*all+*read+*self",
+        "Set+*read+*type plus right",
+        "*read+*right",
+        "*rule",
+        "*rstar",
+        "List+*type",
+        "*all plus",
+        "*all"
+      ]
+    }
+  ],
+  "new_cards": {
+    "simple": {
+      "patterns": [
+        "RichText+*type",
+        "*all"
+      ],
+      "rule_lookup_keys": [
+        "2+type",
+        "all"
+      ]
+    },
+    "field": {
+      "patterns": [
+        "RichText+field+*type plus right",
+        "field+*right",
+        "RichText+*type",
+        "*all plus",
+        "*all"
+      ],
+      "rule_lookup_keys": [
+        "2+type",
+        "all_plus",
+        "all"
+      ]
+    }
+  },
+  "rule_name_check": {
+    "candidate_rule_names": [
+      "Oracle Junction+*self+*read",
+      "RichText+*type+*read",
+      "*all+*read"
+    ],
+    "rule_card_read": "*all+*read",
+    "rule_card_read_id": 10,
+    "rule_lookup_key_sample": {
+      "all+read": 10,
+      "46+self+read": 48,
+      "51+self+read": 53,
+      "all_plus+read": 72,
+      "101+self+read": 103,
+      "205+right+read": 208,
+      "211+right+read": 213,
+      "216+right+read": 218,
+      "221+right+read": 223,
+      "224+right+read": 226,
+      "288+self+read": 290,
+      "291+self+read": 293
+    }
+  },
+  "set_cards": [
+    {
+      "set_name": "*all",
+      "type": "Set",
+      "anchor_name": null,
+      "pattern_name": "*all",
+      "label": "All cards",
+      "compound_only": null,
+      "prototype_name": "",
+      "prototype_type": "RichText"
+    },
+    {
+      "set_name": "*all plus",
+      "type": "Set",
+      "anchor_name": null,
+      "pattern_name": "*all plus",
+      "label": "All \"+\" cards",
+      "compound_only": true,
+      "prototype_name": "+",
+      "prototype_type": "RichText"
+    },
+    {
+      "set_name": "RichText+*type",
+      "type": "Set",
+      "anchor_name": "RichText",
+      "pattern_name": "*type",
+      "label": "All \"RichText\" cards",
+      "compound_only": null,
+      "prototype_name": "",
+      "prototype_type": "RichText"
+    },
+    {
+      "set_name": "*star",
+      "type": "Set",
+      "anchor_name": null,
+      "pattern_name": "*star",
+      "label": "All \"*\" cards",
+      "compound_only": null,
+      "prototype_name": "*dummy",
+      "prototype_type": "RichText"
+    },
+    {
+      "set_name": "*rstar",
+      "type": "Set",
+      "anchor_name": null,
+      "pattern_name": "*rstar",
+      "label": "All \"+*\" cards",
+      "compound_only": true,
+      "prototype_name": "*dummy+*dummy",
+      "prototype_type": "RichText"
+    },
+    {
+      "set_name": "*rule",
+      "type": "Set",
+      "anchor_name": null,
+      "pattern_name": "*rule",
+      "label": "All rule cards",
+      "compound_only": true,
+      "prototype_name": "*all+*create",
+      "prototype_type": "List"
+    },
+    {
+      "set_name": "child_one+*right",
+      "type": "Set",
+      "anchor_name": "child_one",
+      "pattern_name": "*right",
+      "label": "All \"+child_one\" cards",
+      "compound_only": true,
+      "prototype_name": "*dummy+child_one",
+      "prototype_type": "RichText"
+    },
+    {
+      "set_name": "RichText+child_one+*type plus right",
+      "type": "Set",
+      "anchor_name": "RichText+child_one",
+      "pattern_name": "*type plus right",
+      "label": "All \"+child_one\" cards on \"RichText\" cards",
+      "compound_only": true,
+      "prototype_name": "*dummy+child_one",
+      "prototype_type": "RichText"
+    },
+    {
+      "set_name": "Oracle Junction+*self",
+      "type": "Set",
+      "anchor_name": "Oracle Junction",
+      "pattern_name": "*self",
+      "label": "The card \"Oracle Junction\"",
+      "compound_only": null,
+      "prototype_name": "Oracle Junction",
+      "prototype_type": "RichText"
+    }
+  ],
+  "labels": [
+    {
+      "code": "self",
+      "label": "The card \"Book\"",
+      "short_label": "Book",
+      "generic_label": "a single card"
+    },
+    {
+      "code": "type_plus_right",
+      "label": "All \"+Book\" cards on \"\" cards",
+      "short_label": "all \"+Book\" on \"s\"",
+      "generic_label": "given field cards on a given type"
+    },
+    {
+      "code": "right",
+      "label": "All \"+Book\" cards",
+      "short_label": "all \"+Books\"",
+      "generic_label": "given field cards"
+    },
+    {
+      "code": "rule",
+      "label": "All rule cards",
+      "short_label": "all rule cards",
+      "generic_label": "All rule cards"
+    },
+    {
+      "code": "rstar",
+      "label": "All \"+*\" cards",
+      "short_label": "all \"+*\" cards",
+      "generic_label": "All \"+*\" cards"
+    },
+    {
+      "code": "star",
+      "label": "All \"*\" cards",
+      "short_label": "all \"*\" cards",
+      "generic_label": "All \"*\" cards"
+    },
+    {
+      "code": "type",
+      "label": "All \"Book\" cards",
+      "short_label": "all \"Books\"",
+      "generic_label": "cards of a given type"
+    },
+    {
+      "code": "all_plus",
+      "label": "All \"+\" cards",
+      "short_label": "all \"+\" cards",
+      "generic_label": "All \"+\" cards"
+    },
+    {
+      "code": "all",
+      "label": "All cards",
+      "short_label": "everything",
+      "generic_label": "All cards"
+    }
+  ],
+  "find": {
+    "type": "Card::Set::Type",
+    "bogus": "nil"
+  },
+  "rule_class_name": {
+    "all_read": "*all",
+    "type_read": null,
+    "self_read": "*self"
+  }
+}

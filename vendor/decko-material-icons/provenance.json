@@ -1,0 +1,34 @@
+{
+  "capturedAt": "2026-10-18T20:37:30.361Z",
+  "observedFailure": "Google font ERR_CONNECTION_CLOSED during a full browser-journey run",
+  "cssUrl": "https://fonts.googleapis.com/css2?family=Material+Icons",
+  "fontUrl": "https://fonts.gstatic.com/s/materialicons/v145/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2",
+  "licenseUrl": "https://raw.githubusercontent.com/google/material-design-icons/master/LICENSE",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+  "originalCssSha256": "e8c6cdaa1c533d3f67707d78451c5ed9541f77c70a8fc79b0ca6f235263bef7c",
+  "fontSha256": "8265f64786397d6b832d1ca0aafdf149ad84e72759fffa9f7272e91a0fb015d1",
+  "licenseSha256": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd",
+  "modification": "Only the exact observed font URL in the stylesheet becomes ./material-icons.woff2; font and license bytes unchanged.",
+  "prefix": "/mod/bootstrap/material-icons/99a4ae20a885/",
+  "files": [
+    {
+      "path": "material-icons.css",
+      "sha256": "223cc0ae3054a639a94bed737e0267bc92411b7f67dc47df2134e2c9f782827a",
+      "bytes": 510,
+      "contentType": "text/css; charset=utf-8"
+    },
+    {
+      "path": "material-icons.woff2",
+      "sha256": "8265f64786397d6b832d1ca0aafdf149ad84e72759fffa9f7272e91a0fb015d1",
+      "bytes": 128352,
+      "contentType": "font/woff2"
+    },
+    {
+      "path": "LICENSE.txt",
+      "sha256": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd",
+      "bytes": 11357,
+      "contentType": "text/plain; charset=utf-8"
+    }
+  ],
+  "assetSetSha256": "99a4ae20a8857e2ff19d44117747f1a8b9db3c2376baf752e383af4676d7d43a"
+}

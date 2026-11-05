@@ -1,0 +1,370 @@
+{
+  "mods": {
+    "format": [
+      {
+        "name": "mod: format+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-format/assets/style/common.scss",
+            "type": "scss",
+            "sha256": "9f8b0c9901e3af5264001446ecab81503d51558c8df05a073582e11eaabc0dce"
+          },
+          {
+            "file": "card-mod-format/assets/style/logo_and_credit.scss",
+            "type": "scss",
+            "sha256": "cf0511ae875c655658f9f09345c0d898ae2e308d31e9ec53469785387a8cf067"
+          },
+          {
+            "file": "card-mod-format/assets/style/menu.scss",
+            "type": "scss",
+            "sha256": "fb3d94db0418827acb2fe01445a8f0d8eb3b9c961483394e59f2207a8f95eb2f"
+          },
+          {
+            "file": "card-mod-format/assets/style/messaging.scss",
+            "type": "scss",
+            "sha256": "d314be713482b439541d49752bd2bc50e521bb4209c08407c3dd85a0360b9999"
+          },
+          {
+            "file": "card-mod-format/assets/style/misc.scss",
+            "type": "scss",
+            "sha256": "68d11b554e378feaa64d56e21f85f990c542f47fbfd915ec7a79c3e4b2dbc278"
+          },
+          {
+            "file": "card-mod-format/assets/style/open_and_closed.scss",
+            "type": "scss",
+            "sha256": "bd68b689413b84e277d68b1bb8ef5b3df9a01b317598e4574c4e07db73572154"
+          }
+        ]
+      }
+    ],
+    "list": [
+      {
+        "name": "mod: list+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-list/assets/style/list.scss",
+            "type": "scss",
+            "sha256": "0dbcade129255c1ff717a89c4312beb24e6243b345ea72460c26779a252734b5"
+          }
+        ]
+      }
+    ],
+    "permissions": [
+      {
+        "name": "mod: permissions+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-permissions/assets/style/permissions.scss",
+            "type": "scss",
+            "sha256": "65445bb6e4634136ea0659c00575dbe46d4e733ada7aab9306623f44517c8e58"
+          }
+        ]
+      }
+    ],
+    "help": [
+      {
+        "name": "mod: help+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-help/assets/style/help.scss",
+            "type": "scss",
+            "sha256": "da04eec99e6a0f330440372fc4bb0a6a07d06b23a8e32b28770f2a3c5d882f84"
+          }
+        ]
+      }
+    ],
+    "search": [
+      {
+        "name": "mod: search+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-search/assets/style/search.scss",
+            "type": "scss",
+            "sha256": "fd05dd5490ee0afbd2e9f0604f478383bd44256dca22fb69a8dc9bf9f7990060"
+          }
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "name": "mod: rules+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-rules/assets/style/rules.scss",
+            "type": "scss",
+            "sha256": "5d9cacbfc751d1360fcf030ee846b7054879ed3bb2ee35dca360b5308260111a"
+          }
+        ]
+      }
+    ],
+    "edit": [
+      {
+        "name": "mod: edit+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-edit/assets/style/board.scss",
+            "type": "scss",
+            "sha256": "81b3c0a2dacd48123bd056dc8f14299256a31660638c0473822247b1453a320b"
+          },
+          {
+            "file": "card-mod-edit/assets/style/edit.scss",
+            "type": "scss",
+            "sha256": "e94abdbd051489c511458d95b2f11b16ade010cef43eae6f0c5add4722c91190"
+          }
+        ]
+      }
+    ],
+    "account": [
+      {
+        "name": "mod: account+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-account/assets/style/account.scss",
+            "type": "scss",
+            "sha256": "215aa2e5fc0809188d4caa4a671cc4e04d407a11d6bed2aaf6c2c08b0f2d49a5"
+          }
+        ]
+      }
+    ],
+    "history": [
+      {
+        "name": "mod: history+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-history/assets/style/history.scss",
+            "type": "scss",
+            "sha256": "4bf35d09a5c31c2df3f517d22d4573cb0f7523d0e86495cdd3104f3222e92d02"
+          }
+        ]
+      }
+    ],
+    "carrierwave": [
+      {
+        "name": "mod: carrierwave+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-carrierwave/assets/style/file.scss",
+            "type": "scss",
+            "sha256": "fc143f58cd7448a7e4da08148e416d0d14f2e19cf97bbac0a0f0bbbc8f456e5f"
+          }
+        ]
+      }
+    ],
+    "api_key": [
+      {
+        "name": "mod: api key+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-api_key/assets/style/api_key_style.scss",
+            "type": "scss",
+            "sha256": "afb969435568bc13f5005b4efe2bb3a2ed54ad3b732c7a55e17276e425a55ac1"
+          }
+        ]
+      }
+    ],
+    "style": [
+      {
+        "name": "mod: style+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-style/assets/style/jquery_ui_decko.scss",
+            "type": "scss",
+            "sha256": "1ffa008615bec0685169500769439deabcfb9a04f7732d78662a3c194e7e20d5"
+          },
+          {
+            "file": "card-mod-style/assets/style/jquery_ui_smoothness.css",
+            "type": "css",
+            "sha256": "131b8d9d6753c6e1bb703b80333986e4656ddbf68cc89be0a773a70e0059cf8b"
+          }
+        ]
+      }
+    ],
+    "bar_and_box": [
+      {
+        "name": "mod: bar and box+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-bar_and_box/assets/style/bar.scss",
+            "type": "scss",
+            "sha256": "be30ed74f9ab1ca52ddd25412a80cb09595e3d2c7a43318dfe7154d7564f79ca"
+          },
+          {
+            "file": "card-mod-bar_and_box/assets/style/box.scss",
+            "type": "scss",
+            "sha256": "2191367ace3e80d5595aee260245be986e5d03182b0984430d9f46df0b78a08b"
+          },
+          {
+            "file": "card-mod-bar_and_box/assets/style/image_box.scss",
+            "type": "scss",
+            "sha256": "7d595cc98152cb8d6da28b95d42369133ef0edb8a4b9830c6ffc2348c8b1440c"
+          }
+        ]
+      }
+    ],
+    "bootstrap": [
+      {
+        "name": "mod: bootstrap+*style+group: bootstrap_decko",
+        "type": "local_style_manifest_group",
+        "files": [
+          {
+            "file": "card-mod-bootstrap/assets/style/decko_bootstrap.scss",
+            "type": "scss",
+            "sha256": "692b6c57bea7bb296ca7758b296a4ec13e5ec18feac4a994fb08648a823574ef"
+          }
+        ]
+      },
+      {
+        "name": "mod: bootstrap+*style+group: libraries",
+        "type": "local_style_manifest_group",
+        "files": [
+          {
+            "file": "card-mod-bootstrap/assets/style/bootstrap-icons.css",
+            "type": "css",
+            "sha256": "52917609c243114f401bbd14daf727430ad0ec0ad3240ada27c89c276677932b"
+          },
+          {
+            "file": "card-mod-bootstrap/assets/style/bootstrap_colorpicker.scss",
+            "type": "scss",
+            "sha256": "27166b0e6b957e2f2295ffec37567f5464f781abc9b1dbd690ad2086122a6ace"
+          },
+          {
+            "file": "card-mod-bootstrap/vendor/bootstrap-colorpicker/src/sass/_colorpicker.scss",
+            "type": "scss",
+            "sha256": "c1cd01bdb761494886401809b2f56f8ea465ece8911d2f593023d4c79de7ecd8"
+          }
+        ]
+      },
+      {
+        "name": "mod: bootstrap+*style+group: select2",
+        "type": "local_style_manifest_group",
+        "files": [
+          {
+            "file": "card-mod-bootstrap/vendor/select2/dist/css/select2.css",
+            "type": "css",
+            "sha256": "28847158c8759bcf9aa555d7929cac2bff03a25d0212cf612c409d4bcff75ca1"
+          },
+          {
+            "file": "card-mod-bootstrap/vendor/select2-bootstrap-5-theme/src/_variables.scss",
+            "type": "scss",
+            "sha256": "a163a003d6ce6a290a1a23abd165e89f9f61839f11bc2c538904a08ebc7dd7fb"
+          },
+          {
+            "file": "card-mod-bootstrap/vendor/select2-bootstrap-5-theme/src/_layout.scss",
+            "type": "scss",
+            "sha256": "5dcb71393b246ada41fe17660447898d5bba5cd73c31ebad82ef675c79b4cbf8"
+          },
+          {
+            "file": "card-mod-bootstrap/vendor/select2-bootstrap-5-theme/src/_dropdown.scss",
+            "type": "scss",
+            "sha256": "033eb2c3ce76e3d21f7f012ef8d1e705a75a43c0ffc241d260956a0fd888f1ca"
+          },
+          {
+            "file": "card-mod-bootstrap/vendor/select2-bootstrap-5-theme/src/_single.scss",
+            "type": "scss",
+            "sha256": "cdd9501d2baecf6a0570e19c65b963d9ecf9443c35d8b893fdefe430e3bf536b"
+          },
+          {
+            "file": "card-mod-bootstrap/vendor/select2-bootstrap-5-theme/src/_multiple.scss",
+            "type": "scss",
+            "sha256": "37bb596c9c0c3718a35f39bb1da3b83a440d7682d8ef3c9d05787f3ce0d2d819"
+          },
+          {
+            "file": "card-mod-bootstrap/vendor/select2-bootstrap-5-theme/src/_disabled.scss",
+            "type": "scss",
+            "sha256": "d1629696c0dd737ab8551d371c888ee25995b4cbf1458fedd9a9bfbfaca87eb6"
+          },
+          {
+            "file": "card-mod-bootstrap/vendor/select2-bootstrap-5-theme/src/_input-group.scss",
+            "type": "scss",
+            "sha256": "17900598dab77ca8bc1f3dc6db4982a26ef79d5a6cf0eb0f06fb8838c1229ab8"
+          },
+          {
+            "file": "card-mod-bootstrap/vendor/select2-bootstrap-5-theme/src/_validation.scss",
+            "type": "scss",
+            "sha256": "d1bf733a5e338d51b59d0e1ebd63a506629de3b37af615b5f98b4a5d5c9ea19b"
+          },
+          {
+            "file": "card-mod-bootstrap/vendor/select2-bootstrap-5-theme/src/_sizing.scss",
+            "type": "scss",
+            "sha256": "7d4beaa40afd6a07b391ed33055f676d87f2a37dd230974e9c8bd940205a9c1f"
+          }
+        ]
+      }
+    ],
+    "comment": [
+      {
+        "name": "mod: comment+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-comment/assets/style/comments.scss",
+            "type": "scss",
+            "sha256": "28453f697848b886efa51c61d1928f88db082e162503ff39e6f90eacb29651be"
+          }
+        ]
+      }
+    ],
+    "follow": [
+      {
+        "name": "mod: follow+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-follow/assets/style/follow.scss",
+            "type": "scss",
+            "sha256": "41069d3b9e7f999dacd4e0c5644a233d0cb73488f5c3576676c81f769e06ba4e"
+          }
+        ]
+      }
+    ],
+    "layout": [
+      {
+        "name": "mod: layout+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-layout/assets/style/layout.scss",
+            "type": "scss",
+            "sha256": "441d77c3894b02b8b59152b7dca794f100f1fceba93d8b26231fdbcfdced391c"
+          },
+          {
+            "file": "card-mod-layout/assets/style/modal.scss",
+            "type": "scss",
+            "sha256": "069ee3450e3636dc5060a173486159b53f45f2c09353a31a24a01acbdc96be12"
+          },
+          {
+            "file": "card-mod-layout/assets/style/overlay.scss",
+            "type": "scss",
+            "sha256": "30f2d7bba1af3a52b8e3cbb4933a97da3270839f75b8a9192747ef2c7f3e37cb"
+          }
+        ]
+      }
+    ],
+    "tinymce_editor": [
+      {
+        "name": "mod: tinymce editor+*style+group: local",
+        "type": "local_style_folder_group",
+        "files": [
+          {
+            "file": "card-mod-tinymce_editor/assets/style/nest_editor.scss",
+            "type": "scss",
+            "sha256": "377179f1f9ede5036d3df1c42d45eb10619147caf76dc610a958d01a77fefc23"
+          }
+        ]
+      }
+    ]
+  }
+}

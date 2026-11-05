@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-05T07:03:18.227Z",
+  "required": 52,
+  "verifiedPasses": 52,
+  "remainder": [],
+  "invalid": [],
+  "complete": true,
+  "ledgerSha256": "519303865508fa3dc6ccc1762c0095ada2fe3002ab6743fbcee66d371c74aad1",
+  "scope": "Read and validated individual captures and comparisons; retains tested source versions; no combined browser rerun",
+  "executionReceipt": ".test-results/verify-browser-ledger-evidence.remote.mjs.final-52.execution.json",
+  "applicationCandidate": "50ed25ff0ee049895fc9953d4291d8c176d50d44",
+  "referenceCorrectionCommit": "794df34f088f9ed8790bf4e283e1d9e632f74f56",
+  "publicPublicationApproved": false
+}

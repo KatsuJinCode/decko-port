@@ -1,0 +1,15 @@
+
+ RUN  v5.0.1 C:/localProjects/decko-ts-o6-bunny-hosted-20261103
+
+ ✓ tests/server/drivers/libsql-bunny-hosted.test.ts (5 tests) 1765ms
+   ✓ real Bunny Database through LibSqlHttpAdapter (5)
+     ✓ hosted driver conformance (5)
+       ✓ creates a table, inserts with params, and maps rows/rowsAffected/lastInsertRowId 1133ms
+       ✓ runs a batch of two statements and returns results in order 321ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  17:24:13
+   Duration  1.96s (tests 95%, transform 4%, setup 1%)
+
+JUNIT report written to C:/localProjects/fleet-briefs/routing-20261101/o6-bunny/driver.junit.xml

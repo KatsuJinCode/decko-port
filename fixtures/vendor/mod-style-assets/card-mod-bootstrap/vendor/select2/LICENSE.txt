@@ -1,0 +1,68 @@
+Third-party license for the file in this directory
+===================================================
+
+Component
+---------
+
+    Select2, the compiled stylesheet only (no JavaScript in this directory).
+
+    Upstream: https://select2.org/   (source: https://github.com/select2/select2)
+    File:     ./dist/css/select2.css
+
+Copyright
+---------
+
+**The vendored file carries no banner at all** — it opens with a CSS rule,
+not a comment. The upstream project is named here from the file's own
+embedded metadata: the `.select2-container` class prefix and the
+`select2` component name the stylesheet is written for, plus the fact that
+this directory is the plugin's own `vendor/select2` tree in the Decko
+bootstrap mod. No copyright line is stated, so none is asserted here.
+
+License: the MIT License, reproduced in full below. Upstream publishes its
+copy at https://github.com/select2/select2/blob/develop/LICENSE.md.
+
+Version
+-------
+
+The vendored CSS states no version number. Its feature set —
+`select2-selection--single` / `--multiple`, the `--clearable` choice
+remove, `select2-selection__choice__display`, the `--inline` search, and
+the `select2-container--{above,below,classic,default,disabled,focus,open}`
+container modifiers — places it in the Select2 4.x line. The Select2 release
+the compiled deck loads is recorded separately in the deployment config
+(`src/card/render/deployment-follow-live-config.ts`, the `scriptIntegrityBySrc`
+entry for `select2.full.min.js`). No exact patch version is claimed here,
+because the vendored file does not state one. The Bootstrap 5 adaptation of
+this stylesheet is a separate component, in `../select2-bootstrap-5-theme/`.
+
+The MIT License (MIT)
+
+Copyright (c) 2012-2024 The Select2 Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+Scope of the MIT grant inside this project
+------------------------------------------
+
+MIT is permissive and GPL-compatible, so vendoring these bytes does not
+disturb this project's GPL-3.0-or-later scope (see NOTICE at the repository
+root). The MIT terms require only that the notice above travel with the
+software, which this file does; the vendored stylesheet itself carries no
+banner, so this file is the only place the notice travels with it.

@@ -1,0 +1,96 @@
+{
+  "results_format": 2,
+  "fixture": "synthetic-v1",
+  "runs": {
+    "render": {
+      "started": "2026-10-15T19:50:33.945Z",
+      "finished": "2026-10-15T20:00:52.380Z",
+      "complete": true,
+      "selection": null,
+      "ops_total": 1752,
+      "ops_run": 1752,
+      "adapter": "decko-ruby-mysql",
+      "lane": "mysql",
+      "adapter_checkout": {
+        "commit": "e44ff83fd3dfc87b6fb5f8b04d4cfa4bed0fff12",
+        "dirty": true
+      },
+      "engine": {
+        "ready": true,
+        "protocol": 1,
+        "engine": "decko-ruby",
+        "version": {
+          "decko": "0.20.0",
+          "card": "1.110.0",
+          "ruby": "3.3.12",
+          "ruby_platform": "x64-mingw-ucrt",
+          "ruby_engine": "ruby"
+        }
+      },
+      "fixture_digest": "7a96292d07200136b2de4f9727d9f2aafed105a79d37d8f834ac1788dd1f823b",
+      "fixture_problems": [],
+      "ms_per_op": 318,
+      "session_writes": {}
+    },
+    "semantics": {
+      "started": "2026-10-15T20:00:52.385Z",
+      "finished": "2026-10-15T20:08:39.337Z",
+      "complete": true,
+      "selection": null,
+      "ops_total": 2388,
+      "ops_run": 2388,
+      "adapter": "decko-ruby-mysql",
+      "lane": "mysql",
+      "adapter_checkout": {
+        "commit": "e44ff83fd3dfc87b6fb5f8b04d4cfa4bed0fff12",
+        "dirty": true
+      },
+      "engine": {
+        "ready": true,
+        "protocol": 1,
+        "engine": "decko-ruby",
+        "version": {
+          "decko": "0.20.0",
+          "card": "1.110.0",
+          "ruby": "3.3.12",
+          "ruby_platform": "x64-mingw-ucrt",
+          "ruby_engine": "ruby"
+        }
+      },
+      "fixture_digest": "7a96292d07200136b2de4f9727d9f2aafed105a79d37d8f834ac1788dd1f823b",
+      "fixture_problems": [],
+      "ms_per_op": 172,
+      "session_writes": {}
+    },
+    "scenarios": {
+      "started": "2026-10-15T20:08:39.339Z",
+      "finished": "2026-10-15T20:15:50.229Z",
+      "complete": true,
+      "selection": null,
+      "ops_total": 16,
+      "ops_run": 16,
+      "adapter": "decko-ruby-mysql",
+      "lane": "mysql",
+      "adapter_checkout": {
+        "commit": "e44ff83fd3dfc87b6fb5f8b04d4cfa4bed0fff12",
+        "dirty": true
+      },
+      "engine": {
+        "ready": true,
+        "protocol": 1,
+        "engine": "decko-ruby",
+        "version": {
+          "decko": "0.20.0",
+          "card": "1.110.0",
+          "ruby": "3.3.12",
+          "ruby_platform": "x64-mingw-ucrt",
+          "ruby_engine": "ruby"
+        }
+      },
+      "fixture_digest": "7a96292d07200136b2de4f9727d9f2aafed105a79d37d8f834ac1788dd1f823b",
+      "fixture_problems": [],
+      "steps_total": 22,
+      "steps_run": 22
+    }
+  }
+}

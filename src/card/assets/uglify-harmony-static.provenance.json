@@ -1,0 +1,36 @@
+{
+  "format": 1,
+  "generator": "tools/vendor/build-uglify-harmony-static.mjs",
+  "source": "vendor/uglifier-4.2.1-uglify-harmony/",
+  "sources": {
+    "es5.js": "2b07ae9bb832c97dd626abf842fa9eb679097d3d89247c14995025eb34edf945",
+    "split.js": "a3bf0ca991071d83b773bc084731cc7d1b57c9076696c5236619f6ef61402c8b",
+    "source-map.js": "6fe2072f87a800ca765308a4f1a9379276c388ca1ff22ab44e416f1c484763c4",
+    "uglify-harmony.js": "f8fe16073c3f2ec536984d18cffade623bc399cfc2997353d6d919df14f8c1d0",
+    "uglifier.js": "0a83872140a20fe90b176b6a7119fb36a746cec854421f42e12a3463ae619f1f"
+  },
+  "licenses": {
+    "source-map-js-LICENSE-NOTICES.txt": "314c9f4df204ee1fd1ff25652c75515ba1cde8637caeb68df1944f5035de1095",
+    "split-js-LICENSE-MIT.txt": "56df9591f1d18b7526cf2bcffdb91bd5b1ad398040377469e1b21c0a6f3fe77d",
+    "uglifier-gem-LICENSE-MIT.txt": "cbad7cc82846e05b3adb896d6395bdfcae1664c40a605a0f291ada692e38c001",
+    "uglify-harmony-js-LICENSE-BSD-2-Clause.txt": "54f55d920ebb1505eaa6f78e3e9278cef07c004bf396c8a0cf21ac9b5e07c4a8"
+  },
+  "executableConstructorOffsets": [
+    5813,
+    9870,
+    342731,
+    342873,
+    346400
+  ],
+  "trustedInitializationCalls": 201,
+  "trustedFactorySignatures": 201,
+  "preservedNamedFactories": 163,
+  "nameMetadata": "Original dynamic anonymous and returned named function names, preserved through bundling",
+  "factorySignaturesSha256": "4df5a2d2bb6e15f4c39d6551b43e11b5b56bfd20b6a67d14c3a16c6ccd3c13ab",
+  "prewarm": "empty source; fixed OutputStream predicate at offset138968",
+  "wrapper": "explicit ESM-local UMD namespace; fresh static function per call",
+  "parserSurface": "Existing pinned parse/TreeWalker; string literal values and exact source ranges only",
+  "output": "src/card/assets/uglify-harmony-static.generated.ts",
+  "outputBytes": 580477,
+  "outputSha256": "b857f805266530e954ed18369b5737a46bd87e101c59af3718fab694824ec6c6"
+}

@@ -1,0 +1,16 @@
+.api-key-top {
+  .current-api-key {
+    width: 50%;
+    input {
+      width: 100%;
+      font-family: monospace;
+      font-size: 1.3rem;
+      border: 1px solid  transparent;
+      box-shadow: none;
+      background-color: lightyellow;
+    }
+  }
+  .current-api-key:hover input {
+    border: 1px solid #DDD;
+  }
+}

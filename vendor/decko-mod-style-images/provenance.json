@@ -1,0 +1,64 @@
+{
+  "gem": "card-mod-style",
+  "version": "0.20.0",
+  "surface": "the mod public-files surface (/mod/style/jquery-ui-smoothness/)",
+  "license": "MIT (stated in the vendored theme file header: Copyright jQuery Foundation and other contributors; Licensed MIT)",
+  "licenseSource": "assets/style/jquery_ui_smoothness.css file header in the same gem; the grant is quoted in the vendored copy at fixtures/vendor/mod-style-assets/card-mod-style/assets/style/jquery_ui_smoothness.css",
+  "files": [
+    {
+      "path": "public/jquery-ui-smoothness/ui-bg_glass_55_fbf9ee_1x400.png",
+      "bytes": 335,
+      "sha256": "17bc03257ece61580f65ac33bc1db18fa180cd22d8cd3fdbde3d2405940f4ec8"
+    },
+    {
+      "path": "public/jquery-ui-smoothness/ui-bg_glass_65_ffffff_1x400.png",
+      "bytes": 207,
+      "sha256": "73a97330bc6ca49caccc1390f4fcece4868f3722d7cac771d78af8e8686bfef0"
+    },
+    {
+      "path": "public/jquery-ui-smoothness/ui-bg_glass_75_dadada_1x400.png",
+      "bytes": 262,
+      "sha256": "d0df072fe39b319b2d25adad82b41dceb5f8b11eb013c3963e340d89ff7ce029"
+    },
+    {
+      "path": "public/jquery-ui-smoothness/ui-bg_glass_75_e6e6e6_1x400.png",
+      "bytes": 262,
+      "sha256": "f11866ba1c5cee2017950eb10ec748be349440270630de2cc48d6211b763db53"
+    },
+    {
+      "path": "public/jquery-ui-smoothness/ui-bg_glass_95_fef1ec_1x400.png",
+      "bytes": 332,
+      "sha256": "eb6b8d53204ddb419c0817fe6e49f3424169a6e7ddd4471770f8fa92d51b96ea"
+    },
+    {
+      "path": "public/jquery-ui-smoothness/ui-bg_highlight-soft_75_cccccc_1x100.png",
+      "bytes": 280,
+      "sha256": "fefeed5621c088d3fe5f1c5d2c7b005b5b0aad45699f583f24dc52ff44479e7d"
+    },
+    {
+      "path": "public/jquery-ui-smoothness/ui-icons_222222_256x240.png",
+      "bytes": 4970,
+      "sha256": "085c1b823b35381ab939accd95c4ecf3e24949bd7800ee9b64da0c6ef3bcc819"
+    },
+    {
+      "path": "public/jquery-ui-smoothness/ui-icons_2e83ff_256x240.png",
+      "bytes": 4510,
+      "sha256": "1ba13f665ddff1100ac4f8a34ab59b3e546ae8e0ae6d50ef473c0006e6ea5a47"
+    },
+    {
+      "path": "public/jquery-ui-smoothness/ui-icons_454545_256x240.png",
+      "bytes": 4974,
+      "sha256": "a06bb25c00db82f77e907fe7575a1a350c72589e1dd9b6713cc4cfa78eff1972"
+    },
+    {
+      "path": "public/jquery-ui-smoothness/ui-icons_888888_256x240.png",
+      "bytes": 4979,
+      "sha256": "866f38714e6090cdd171df0c91a864e370a8e8b8d40d7722b0fd944761dc8f7d"
+    },
+    {
+      "path": "public/jquery-ui-smoothness/ui-icons_cd0a0a_256x240.png",
+      "bytes": 4510,
+      "sha256": "dd72f986e8462c6b394c80a64cf6efeb886a20aa7d3a8e7f71c4b5056bf1982c"
+    }
+  ]
+}

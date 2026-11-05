@@ -1,0 +1,2517 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="143" failures="43" errors="0" time="10.479471924">
+    <testsuite name="tests/card/render/deep-nesting-trip-attribution.test.ts" timestamp="2026-11-03T20:26:07.127Z" hostname="brandon-portal-vm" tests="2" failures="1" errors="0" skipped="0" time="0.160190742">
+        <testcase classname="tests/card/render/deep-nesting-trip-attribution.test.ts" name="deep-nesting round-trip attribution &gt; names the cause of every cold round trip" time="0.116599901">
+            <failure message="chain d1: trips with no named cause: expected [ { kind: &apos;query&apos;, …(3) }, …(1) ] to deeply equal []" type="AssertionError">
+AssertionError: chain d1: trips with no named cause: expected [ { kind: &apos;query&apos;, …(3) }, …(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     &quot;kind&quot;: &quot;query&quot;,
++     &quot;site&quot;: [
++       &quot;TracingDriver.site src/tests/card/render/deep-nesting-trip-attribution.test.ts:55&quot;,
++       &quot;TracingDriver.query src/tests/card/render/deep-nesting-trip-attribution.test.ts:69&quot;,
++       &quot;ReplayPlanRouter.query src/card/one-trip/replay-plan-router.ts:203&quot;,
++       &quot;retrieveFromDb src/card/fetch/retrieve.ts:298&quot;,
++     ],
++     &quot;sql&quot;: [
++       &quot;SELECT * FROM cards WHERE key = ? AND trash = 0 LIMIT 1&quot;,
++     ],
++     &quot;statements&quot;: 1,
++   },
++   {
++     &quot;kind&quot;: &quot;batch&quot;,
++     &quot;site&quot;: [
++       &quot;TracingDriver.site src/tests/card/render/deep-nesting-trip-attribution.test.ts:55&quot;,
++       &quot;TracingDriver.batch src/tests/card/render/deep-nesting-trip-attribution.test.ts:74&quot;,
++       &quot;ReplayPlanRouter.batch src/card/one-trip/replay-plan-router.ts:208&quot;,
++       &quot;readCompositionBatch src/card/render/wave-read-statements.ts:67&quot;,
++     ],
++     &quot;sql&quot;: [
++       &quot;WITH RECURSIVE composition_rows AS (SELECT * FROM cards WHERE codename = &apos;set&apos; AND trash = 0), identity_reach(root_id, id) AS ( SELECT id, id FROM composition_rows UNION SELECT reach.root_id, child.id FROM identity_reach reach JOIN cards parent ON parent.id = reach.id JOIN cards child ON child.id = parent.left_id OR child.id = parent.right_id ) SELECT source.*, evidence.id AS identity_node_id, evidence.name AS identity_node_name, evidence.\&quot;key\&quot; AS identity_node_key, evidence.left_id AS identity_node_left, evidence.right_id AS identity_node_right, evidence.trash AS identity_node_trash, (SELECT id FROM cards WHERE left_id = evidence.left_id AND right_id = evidence.right_id AND trash = 0 ORDER BY id LIMIT 1) AS identity_pair_id FROM composition_rows source JOIN identity_reach reach ON reach.root_id = source.id JOIN cards evidence ON evidence.id = reach.id&quot;,
++       &quot;WITH RECURSIVE composition_rows AS (SELECT * FROM cards WHERE id IN (?) AND trash = 0), identity_reach(root_id, id) AS ( SELECT id, id FROM composition_rows UNION SELECT reach.root_id, child.id FROM identity_reach reach JOIN cards parent ON parent.id = reach.id JOIN cards child ON child.id = parent.left_id OR child.id = parent.right_id ) SELECT source.*, evidence.id AS identity_node_id, evidence.name AS identity_node_name, evidence.\&quot;key\&quot; AS identity_node_key, evidence.left_id AS identity_node_left, evidence.right_id AS identity_node_right, evidence.trash AS identity_node_trash, (SELECT id FROM cards WHERE left_id = evidence.left_id AND right_id = evidence.right_id AND trash = 0 ORDER BY id LIMIT 1) AS identity_pair_id FROM composition_rows source JOIN identity_reach reach ON reach.root_id = source.id JOIN cards evidence ON evidence.id = reach.id&quot;,
++       &quot;WITH RECURSIVE composition_rows AS (SELECT * FROM cards WHERE \&quot;key\&quot; IN (?, ?, ?, ?, ?, ?, ?) AND trash = 0), identity_reach(root_id, id) AS ( SELECT id, id FROM composition_rows UNION SELECT reach.root_id, child.id FROM identity_reach reach JOIN cards parent ON parent.id = reach.id JOIN cards child ON child.id = parent.left_id OR child.id = parent.right_id ) SELECT source.*, evidence.id AS identity_node_id, evidence.name AS identity_node_name, evidence.\&quot;key\&quot; AS identity_node_key, evidence.left_id AS identity_node_left, evidence.right_id AS identity_node_right, evidence.trash AS identity_node_trash, (SELECT id FROM cards WHERE left_id = evidence.left_id AND right_id = evidence.right_id AND trash = 0 ORDER BY id LIMIT 1) AS identity_pair_id FROM composition_rows source JOIN identity_reach reach ON reach.root_id = source.id JOIN cards evidence ON evidence.id = reach.id&quot;,
++       &quot;WITH RECURSIVE composition_rows AS (SELECT DISTINCT j.* FROM cards j JOIN cards l ON l.id = j.left_id AND l.\&quot;key\&quot; IN (?, ?, ?, ?, ?, ?, ?) AND l.trash = 0 JOIN cards r ON r.id = j.right_id AND r.\&quot;key\&quot; IN (?, ?, ?, ?, ?, ?, ?) AND r.trash = 0 WHERE j.trash = 0), identity_reach(root_id, id) AS ( SELECT id, id FROM composition_rows UNION SELECT reach.root_id, child.id FROM identity_reach reach JOIN cards parent ON parent.id = reach.id JOIN cards child ON child.id = parent.left_id OR child.id = parent.right_id ) SELECT source.*, evidence.id AS identity_node_id, evidence.name AS identity_node_name, evidence.\&quot;key\&quot; AS identity_node_key, evidence.left_id AS identity_node_left, evidence.right_id AS identity_node_right, evidence.trash AS identity_node_trash, (SELECT id FROM cards WHERE left_id = evidence.left_id AND right_id = evidence.right_id AND trash = 0 ORDER BY id LIMIT 1) AS identity_pair_id FROM composition_rows source JOIN identity_reach reach ON reach.root_id = source.id JOIN cards evidence ON evidence.id = reach.id&quot;,
++       &quot;WITH RECURSIVE composition_rows AS (WITH requested_0(k0, k1, k2) AS (SELECT ?, ?, ? UNION SELECT ?, ?, ? UNION SELECT ?, ?, ? UNION SELECT ?, ?, ? UNION SELECT ?, ?, ?), requested_1(k0, k1, k2) AS (SELECT ?, ?, ? UNION SELECT ?, ?, ? UNION SELECT ?, ?, ? UNION SELECT ?, ?, ? UNION SELECT ?, ?, ?), requested_2(k0, k1, k2) AS (SELECT ?, ?, ? UNION SELECT ?, ?, ?), requested(k0, k1, k2) AS (SELECT k0, k1, k2 FROM requested_0 UNION SELECT k0, k1, k2 FROM requested_1 UNION SELECT k0, k1, k2 FROM requested_2) SELECT DISTINCT c3.* FROM requested CROSS JOIN cards p0 ON p0.\&quot;key\&quot; = requested.k0 AND p0.trash = 0 CROSS JOIN cards p1 ON p1.\&quot;key\&quot; = requested.k1 AND p1.trash = 0 CROSS JOIN cards c2 ON c2.left_id = p0.id AND c2.right_id = p1.id AND c2.trash = 0 CROSS JOIN cards p2 ON p2.\&quot;key\&quot; = requested.k2 AND p2.trash = 0 CROSS JOIN cards c3 ON c3.left_id = c2.id AND c3.right_id = p2.id AND c3.trash = 0 WHERE c2.id = (SELECT id FROM cards WHERE left_id = c2.left_id AND right_id = c2.right_id AND trash = 0 ORDER BY id LIMIT 1) AND c3.id = (SELECT id FROM cards WHERE left_id = c3.left_id AND right_id = c3.right_id AND trash = 0 ORDER BY id LIMIT 1)), identity_reach(root_id, id) AS ( SELECT id, id FROM composition_rows UNION SELECT reach.root_id, child.id FROM identity_reach reach JOIN cards parent ON parent.id = reach.id JOIN cards child ON child.id = parent.left_id OR child.id = parent.right_id ) SELECT source.*, evidence.id AS identity_node_id, evidence.name AS identity_node_name, evidence.\&quot;key\&quot; AS identity_node_key, evidence.left_id AS identity_node_left, evidence.right_id AS identity_node_right, evidence.trash AS identity_node_trash, (SELECT id FROM cards WHERE left_id = evidence.left_id AND right_id = evidence.right_id AND trash = 0 ORDER BY id LIMIT 1) AS identity_pair_id FROM composition_rows source JOIN identity_reach reach ON reach.root_id = source.id JOIN cards evidence ON evidence.id = reach.id&quot;,
++     ],
++     &quot;statements&quot;: 5,
++   },
++ ]
+
+ ❯ tests/card/render/deep-nesting-trip-attribution.test.ts:174:72
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/render/deep-nesting-trip-attribution.test.ts" name="deep-nesting round-trip attribution &gt; a warm render of the same card costs the freshness stamp alone" time="0.040797461">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" timestamp="2026-11-03T20:26:07.129Z" hostname="brandon-portal-vm" tests="6" failures="1" errors="0" skipped="0" time="0.01492603">
+        <testcase classname="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" name="the page&apos;s own main-view dispatch is rescue-scoped &gt; imports the quiet span helper and the posture switch" time="0.001909654">
+        </testcase>
+        <testcase classname="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" name="the page&apos;s own main-view dispatch is rescue-scoped &gt; the root view-lane catch is what made the raise unconditional" time="0.000605044">
+        </testcase>
+        <testcase classname="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" name="the page&apos;s own main-view dispatch is rescue-scoped &gt; the dispatch wraps the main render and falls back to the span" time="0.000558284">
+        </testcase>
+        <testcase classname="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" name="the page&apos;s own main-view dispatch is rescue-scoped &gt; the loud posture still wins, so direct renders keep raising" time="0.000560404">
+        </testcase>
+        <testcase classname="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" name="the page&apos;s own main-view dispatch is rescue-scoped &gt; the fix cites the measured 500 and Ruby&apos;s quiet page" time="0.00671269">
+            <failure message="expected &apos;import { str, type ViewResult, allRen…&apos; to match /bunny-edge-error-page\] render failed…/" type="AssertionError">
+AssertionError: expected &apos;import { str, type ViewResult, allRen…&apos; to match /bunny-edge-error-page\] render failed…/
+
+- Expected:
+/bunny-edge-error-page\] render failed for Harness date/
+
++ Received:
+&quot;import { str, type ViewResult, allRenderingErrorsRaise, quietRenderError, PERMS_NONE_VIEWS } from \&quot;./format.js\&quot;;
+import {applyMaterialIconsAssetConfiguration} from \&quot;./material-icons.js\&quot;;
+import { applyFontAwesomeAssetConfiguration, fontAwesomeHeadTag, STOCK_FONT_AWESOME_TAG } from \&quot;./font-awesome.js\&quot;;
+// The page renderer: TypeScript port of the html-format show path —
+// `card.format(:html).show(nil, {})` through show_with_page_layout — the
+// live-serving page assembly the bare view-function renderer does not do.
+//
+// Truth source (the pinned gems):
+// - card-mod-layout set/all/process_layout.rb#show_with_page_layout:
+//     main! -&gt; page_layout (per-card *layout rule via rule_card(:layout)
+//     -&gt; first_name; nil -&gt; the :default CODE layout) -&gt; Layout.main_nest_opts
+//     (the {{_main|view}} chunk of the layout card names the main view) -&gt;
+//     render! (main render, main: true + main_view: true + layout opts) -&gt;
+//     wrap_with_card_layout (the layout card&apos;s content processed through the
+//     page&apos;s own format, {{_main}} replaced by wrap_main { main.rendered }).
+// - card-mod-format set/all/html/show.rb: show wraps the layout output with
+//     the :html_page wrapper (`&lt;!DOCTYPE HTML&gt;` + &lt;head&gt; + interior).
+// - card-mod-format set/all/html/head.rb view :head: page_title_tag,
+//     meta_tags, favicon_tag, stylesheet_tags, universal_edit_button (\&quot;\&quot;),
+//     rss_links (nil), javascript_tags, script_variables, script_calls.
+// - card-mod-layout lib/card/layout/{card_layout,code_layout,unknown_layout}.rb:
+//     layout classification (card / built-in code / unknown). Unknown layouts
+//     raise Card::Error::UserError \&quot;unknown layout card: &lt;key&gt;\&quot; from
+//     wrapper.rb#raise_wrap_error (voo.layout.to_name.key) — AFTER the main
+//     render (the raise site is wrap_with_wrapper).
+// - card-1.110.0 lib/card/format/error.rb: production error semantics
+//     (raise_all_rendering_errors=false): nested view errors render the quiet
+//     `render-error alert alert-danger` span (UserError messages verbatim,
+//     else the lib_error_rendering locale line); focal (main) errors re-raise.
+//
+// Preparation reuse: the main render runs through RenderEngine.render() (the
+// exact prepare sequence + parse gates the bare view path exercises —
+// permission state, structure universe, search preparation, pointer/set
+// preloads), then the page assembles from the warm maps. One throwaway bare
+// render per cold page keeps the integration surface minimal (render.ts
+// gains only the renderPage entry point).
+//
+// Production-equivalent environment settings this module pins on the page
+// path: default_html_view = :content (page path only — the bare view path
+// keeps the development default :titled), deck_origin https://example.com,
+// and carrierwave cloud attachments resolving to the absolute bucket URL.
+//
+// The wrapper defs the port does not carry, named where the port stands on
+// them (the format row reg-treewalk-c2-format-rb-format-content-context-
+// names-render-regi grades the defs of this row&apos;s Ruby file set; the port&apos;s
+// wrapper surface is this page assembly plus the wrap configs the views
+// carry):
+//
+//   * the wrapper dispatch (wrapper.rb:31-33 render_with_wrapper)
+//     has no port counterpart: Ruby looks the wrapper up by name as
+//     \&quot;wrap_with_#{wrapper}\&quot;, and the port&apos;s wrappers are direct code paths
+//     (the modal wrapper in card-mod-edit.ts, the slot wrap in
+//     mod-view-helpers.ts, the page wrapper in this file), so there is no
+//     method to look up.
+//   * the wrapper send (wrapper.rb:49-55 send_wrapper_method)
+//     has no port counterpart: Ruby reaches the wrapper method through
+//     method_missing and checks its arity before the send, and the port
+//     calls the wrapper&apos;s own code directly, so there is no arity-checked
+//     send.
+//   * the wrap_with generator (wrapper.rb:74-82 define_wrap_with_method,
+//     the \&quot;wrap_with_#{name}\&quot; method Ruby defines per wrapper) has no port
+//     counterpart for the same reason: the port&apos;s wrap configs ride the
+//     view configs and the page assembly calls the wrap code directly.
+//   * the method NAME builders (lib/card/set/format.rb:160-163
+//     layout_method_name \&quot;_layout_&lt;key&gt;\&quot;, format.rb:166-169
+//     wrapper_method_name \&quot;_wrapper_&lt;name&gt;\&quot;) are not ported, named: they
+//     exist so Ruby&apos;s dispatch can find the generated method, and the
+//     port&apos;s layout resolution is this file&apos;s rule walk (page layout via
+//     rule_card(:layout)) with no generated methods to name.
+
+import type { CardRecord } from \&quot;../fetch/card-record.js\&quot;;
+import { DeckoName } from \&quot;../name.js\&quot;;
+import { findRule } from \&quot;../rules/lookup.js\&quot;;
+import { scanNests, referencedNames } from \&quot;./nest-syntax.js\&quot;;
+import type { WarmupMode, WarmupRef, WarmupScan } from \&quot;./prefetch.js\&quot;;
+import { RenderFormat } from \&quot;./format.js\&quot;;
+import { UnsupportedViewError } from \&quot;./format.js\&quot;;
+import type { RenderCard } from \&quot;./format.js\&quot;;
+import {
+  cloudAttachmentUrl,
+  faviconTagBytes,
+  META_TAGS,
+  pageTitleTagBytes,
+  applyDeploymentCssRevision,
+  stylesheetTagsBytes,
+  type HeadReadSet,
+} from \&quot;./head-views.js\&quot;;
+import { getDeploymentCloudAssetHost } from \&quot;./views.js\&quot;;
+import { deckoRootUrl } from \&quot;./deployment-follow-live-config.js\&quot;;
+import { scriptIntegrityFor } from \&quot;./deployment-follow-live-config.js\&quot;;
+import type { RenderEngine } from \&quot;../render.js\&quot;;
+import type { FetchEngine } from \&quot;../fetch.js\&quot;;
+import type { HistoryRenderParams } from \&quot;../history/render-seam.js\&quot;;
+import { h } from \&quot;./slot-html.js\&quot;;
+import { debugFlag } from \&quot;../debug-flags.js\&quot;;
+
+// The `decko.rootUrl` this head emits (scriptVariablesTag below) reads the
+// deployment&apos;s follow-live constant first, then the ENGINE&apos;s configured
+// origin (render/deck-origin.ts — the deck&apos;s own `Cardio.config.deck_origin`
+// through setDeckEnvironment); with neither, the
+// bare rooted form Ruby&apos;s requestless runner produces. The same value feeds
+// the `:url` view through the engine accessor (Ruby&apos;s `card_url` is
+// ABSOLUTE only when an origin is configured; email templates render the
+// configured shape).
+
+/** The production `Cardio.config.default_html_view`: :content (every
+ *  served page renders implicit child nests as content-views). This is
+ *  PROCESS CONFIG production sets around the page render — modeled by
+ *  engine.runWithPageConfig wrapping renderPageBytes, so
+ *  RenderFormat.defaultNestView reads \&quot;content\&quot; for every nest inside the
+ *  page and \&quot;titled\&quot; for bare renders (the railtie default). The
+ *  main-view fallback below reads the same config through the engine
+ *  accessor. */
+
+/** The carrierwave cloud attachment URL a fog storage config with an empty
+ *  bucket name produces: endpoint + files_web_path (\&quot;files\&quot;) + id/action.
+ *  Source contents look like \&quot;(my_bucket)/12/34.jpg\&quot; — the paren prefix
+ *  is the credential/bucket key, never emitted (set/abstract/attachment/
+ *  cloud.rb + file_card_uploader.rb:88-117). */
+const CLOUD_URL_PREFIX = \&quot;http://s3.amazonaws.com//files/\&quot;;
+
+/** The views stock Decko 0.20 declares with a modal or board wrapper, which a
+ *  page renders outside its layout (process_layout.rb
+ *  explicit_modal_wrapper?): card-mod-edit edit_content.rb :edit,
+ *  editing.rb :board, new.rb :new_in_modal; card-mod-layout modal.rb :modal;
+ *  card-mod-rules rule/editor.rb :rule_edit, rule/board_rules_editor.rb
+ *  :modal_rule, type/set filtered_rule_lists.rb :modal_nest_rules;
+ *  card-mod-format html/error.rb :debug_server_error. */
+const OUTSIDE_LAYOUT_VIEWS: ReadonlySet&lt;string&gt; = new Set([
+  \&quot;edit\&quot;,
+  \&quot;board\&quot;,
+  \&quot;new_in_modal\&quot;,
+  \&quot;modal\&quot;,
+  \&quot;rule_edit\&quot;,
+  \&quot;modal_rule\&quot;,
+  \&quot;modal_nest_rules\&quot;,
+  \&quot;debug_server_error\&quot;,
+]);
+
+/** Card::Error::UserError raised by wrapper.rb#raise_wrap_error for a layout
+ *  name that fetches to neither a card layout nor a built-in code layout.
+ *  The class name matters: the engine&apos;s error handlers map it to the Ruby
+ *  sentinel spelling \&quot;Card::Error::UserError\&quot;. */
+export class UnknownLayoutError extends Error {
+  readonly layoutName: string;
+  constructor(layoutName: string, key: string) {
+    super(`unknown layout card: ${key}`);
+    this.name = \&quot;UnknownLayoutError\&quot;;
+    this.layoutName = layoutName;
+  }
+}
+
+/** The result of show_with_page_layout&apos;s page_layout step. */
+interface PageLayout {
+  /** The resolved layout name (e.g. \&quot;Default Layout\&quot;) or
+   *  \&quot;:default\&quot; for the built-in code layout fallback. */
+  layoutName: string;
+  /** How the layout will render (CardLayout / CodeLayout / UnknownLayout). */
+  kind: \&quot;card\&quot; | \&quot;code-default\&quot; | \&quot;unknown\&quot;;
+  /** The layout CARD&apos;s content (card layouts only). */
+  layoutCardContent?: string;
+  /** The {{_main|view}} chunk&apos;s view (card layouts); undefined when the
+   *  layout names no view and the default_nest_view applies. */
+  mainViewRaw?: string;
+  /** The {{_main...}} chunk&apos;s full syntax (the main slot&apos;s nest_syntax). */
+  mainNestSyntax?: string;
+  /** The voo.layout wrapper key for the unknown-layout error
+   *  (wrapper.rb raise_wrap_error: \&quot;unknown layout card: #{wrapper}\&quot;). */
+  unknownKey?: string;
+}
+
+/**
+ * Render the live page for one card (the show path). Throws for the same
+ * inputs the pinned Ruby oracle raised for: unknown layout cards (the
+ * UserError sentinel), missing cards, and focal-view render errors (the
+ * production loud_error re-raise).
+ *
+ * `requestedView` is the ?view=/ ?v= query param (rest.rb view_from_params
+ * feeds format.page(controller, view) — the requested view IS the root
+ * show view, overriding the layout&apos;s {{_main|view}} chunk, which Ruby
+ * satisfies from the memoized main.rendered). Unsupported views raise the
+ * engine&apos;s UnsupportedViewError (Ruby: the unsupported-view UserError,
+ * format/render.rb:60-64).
+ *
+ * `historyParams` is THE PAGE-PATH SEAM for the history views: the
+ * Card::Env.params equivalents Ruby&apos;s history views read at render time
+ * (HistoryRenderParams — act_id/action_id/page/...), carried THROUGH the
+ * page-path routing. It threads into the prepare render below, whose
+ * RenderEngine.render seats the render-time history reader
+ * (render.ts prepareHistoryRender) the sync history ViewFns read; without
+ * it, a history view served through this entry renders the no-param
+ * fallback arms. Undefined for every other caller.
+ */
+export async function renderPageBytes(
+  engine: RenderEngine,
+  cardName: string,
+  requestedView?: string,
+  historyParams?: HistoryRenderParams,
+  bareMainOpts?: Record&lt;string, unknown&gt;,
+): Promise&lt;string&gt; {
+  // The page path wraps `fmt.show(nil, {})` in the production config
+  // (the production-equivalent settings listed at the top of this file).
+  // The engine models that with the pageConfigActive flag:
+  // every nest resolved inside this call (including the prepare render&apos;s)
+  // reads \&quot;content\&quot;; bare renders keep the railtie \&quot;titled\&quot;.
+  //
+  // The page is one request: no Temporary-cache reset may drop an entry this
+  // request seated before its synchronous readers use it
+  // (TemporaryCache#hold; the reset is deferred to the request&apos;s end).
+  // The request scope of the name memos (DeckoName.beginRequestScope):
+  // parse and mark memos live for this page and are dropped with it.
+  DeckoName.beginRequestScope();
+  try {
+    await resolveIdMarksInRequestedName(engine, cardName);
+    // (Test stubs carry a partial fetcher.)
+    const releaseCaches =
+      typeof engine.fetcher?.holdTemporaryCaches === \&quot;function\&quot; ? engine.fetcher.holdTemporaryCaches() : () =&gt; {};
+    const render = () =&gt;
+      engine.runWithPageConfig(() =&gt;
+        renderPageBytesWithPageConfig(engine, cardName, requestedView, historyParams, bareMainOpts),
+      );
+    try {
+      // (Test stub engines carry no unknown-card
+      // create-verdict pass; the real engine always does.)
+      const body =
+      typeof engine.renderWithUnknownCreateVerdicts === \&quot;function\&quot;
+        ? await engine.renderWithUnknownCreateVerdicts(render)
+        : await render();
+      return applyMaterialIconsAssetConfiguration(applyFontAwesomeAssetConfiguration(str(body), engine.fontAwesomeAssetMode),engine.materialIconsAssetMode);
+    } finally {
+      // The request boundary&apos;s fill fold (commitSessionRolesFill): a Ruby
+      // request whose roles nest rendered leaves the fill on the session&apos;s
+      // card object for the NEXT request; the passes inside THIS request
+      // never see each other&apos;s flips (the per-pass reset at render()
+      // entry). Runs on the error path too — the mutation precedes any
+      // late render failure. Optional-call per the merge-4 precedent: the
+      // edge request tests drive the handler with stub engines that have
+      // no such fold, and a real engine always does.
+      engine.commitSessionRolesFill?.();
+      releaseCaches();
+    }
+  } finally {
+    DeckoName.endRequestScope();
+  }
+}
+
+/** renderPageBytes plus the page&apos;s HTTP status: Ruby&apos;s `root.error_status`
+ *  when the render set one (403 for a read-denied main card,
+ *  RenderEngine#pageErrorStatus), else 200. Read before anything else runs
+ *  on the engine, so a caller holding the engine for one request gets its
+ *  own page&apos;s status. */
+export async function renderPageWithStatus(
+  engine: RenderEngine,
+  cardName: string,
+  requestedView?: string,
+  historyParams?: HistoryRenderParams,
+  bareMainOpts?: Record&lt;string, unknown&gt;,
+): Promise&lt;{ html: string; status: number }&gt; {
+  const html = await renderPageBytes(engine, cardName, requestedView, historyParams, bareMainOpts);
+  // The content override&apos;s per-request lifetime (the
+  // edit_draft arm, rest.rb:58-60): Ruby&apos;s card.content= lives for the
+  // REQUEST, never past it. The page&apos;s prepare and main passes both consume
+  // the transient root&apos;s store; the boundary resets the caches so the
+  // transient shape never outlives the request (the bare lane resets at its
+  // own render exit - render.ts&apos;s renderRaw, the pagePrepareDepth === 0
+  // arm). The reset is the assigned-type arm&apos;s own boundary tool.
+  if (historyParams?.contentOverride !== undefined) {
+    engine.resetCaches();
+  }
+  return { html, status: engine.pageErrorStatus ?? 200 };
+}
+
+/** A requested name may carry id marks (`/~10`, `/~10+*email`). Its parse
+ *  is synchronous, and the synchronous name environment only knows ids some
+ *  earlier async read proved. Ruby resolves a mark with a synchronous
+ *  database read (lexicon.rb:71-76); here each mark is read asynchronously
+ *  first (DbLexicon#name records the durable id/name entry the synchronous
+ *  parse consults), so the page never depends on whether a boot-time scan
+ *  or an earlier request happened to warm the id. No statement when the
+ *  name has no `~&lt;digits&gt;` mark. */
+async function resolveIdMarksInRequestedName(engine: RenderEngine, cardName: string): Promise&lt;void&gt; {
+  if (!cardName.includes(\&quot;~\&quot;)) return;
+  const lexicon = engine.fetcher?.lexicon;
+  if (lexicon === undefined || typeof lexicon.name !== \&quot;function\&quot;) return;
+  for (const m of cardName.matchAll(/~(\\d+)/g)) await lexicon.name(Number(m[1]));
+}
+
+function preparePageView(engine: RenderEngine, name: string, view: string, params?: HistoryRenderParams): Promise&lt;string&gt; {
+  // Partial test engines expose only render; real engines isolate the
+  // discarded pass&apos;s history summary memo from the served view.
+  return typeof engine.preparePageView === \&quot;function\&quot;
+    ? engine.preparePageView(name, view, params)
+    : engine.render(name, view, params);
+}
+
+/** Ruby `known?` for an UNSAVED card: `real?` is false, so the answer is
+ *  `virtual?` (states.rb:44-50, :60-62) — a set module in the card&apos;s chain
+ *  that declares `def virtual?; new?; end` makes the card KNOWN without a
+ *  row, so page_view_for_unknown never fires for it.
+ *
+ *  TWO PORTED PREDICATES, ONE QUESTION. `virtualSetCard` walks the card&apos;s
+ *  own set-module chain and asks the shortname registry
+ *  (set-modules/virtual-set-modules.ts); `knownVirtualCardName` asks the
+ *  set-path registry through the name predicate
+ *  (render/virtual-card-registry.ts). The card is KNOWN when EITHER says
+ *  so: both are ports of the same Ruby method, and the union errs toward
+ *  Ruby rendering the card rather than toward the create form for a card
+ *  Ruby calls virtual.
+ *
+ *  EVERY SEAT THAT ASKS THE QUESTION ASKS IT THIS WAY: the page&apos;s
+ *  view substitution (renderPageBytesWithPageConfigInner), the page&apos;s own
+ *  `:new` substitution and the create-permission 404 (renderOutsideOfLayout)
+ *  must not disagree about whether the card is known. */
+async function isKnownVirtualCard(engine: RenderEngine, record: CardRecord): Promise&lt;boolean&gt; {
+  if (await engine.virtualSetCard(record)) return true;
+  if (record.name === undefined) return false;
+  return (await engine.knownVirtualCardName?.(record.name)) === true;
+}
+
+async function renderPageBytesWithPageConfig(
+  engine: RenderEngine,
+  cardName: string,
+  requestedView?: string,
+  historyParams?: HistoryRenderParams,
+  bareMainOpts?: Record&lt;string, unknown&gt;,
+): Promise&lt;string&gt; {
+  // THE PAGE SURFACE&apos;S SWEEP-SURFACE scope (renderSeats&apos; doc): the layout
+  // warm-ups below seat AROUND the inner render() — one clear here puts the
+  // whole page&apos;s seats (main closure + layout closure) in this page render&apos;s
+  // sweep surface, and the next page&apos;s render starts from an empty one (the
+  // sweep-cascade cut: a page&apos;s chase seats must never become a later
+  // render&apos;s scan surface).
+  engine.beginPagePrepare();
+  try {
+    // A scalar ID identifies a persisted row, not a name which a virtual
+    // rule may recreate. Keep compound ID marks on the name-composition
+    // path, but reject a missing, deleted, or name-cache-aliased root ID
+    // before any layout or requested view can render the replacement.
+    const idMark = /^~(\\d+)$/.exec(cardName);
+    if (idMark !== null) {
+      const id = Number(idMark[1]);
+      // Refresh before the identity read and before attaching request
+      // errors; a later cache invalidation must not discard that bag.
+      await engine.ensureFreshness();
+      const identified = await engine.fetcher.fetchById(id, { skipVirtual: true });
+      if (identified === undefined || identified.id !== id || identified.trash || identified.isNew) {
+        // Card::Error.report cardifies a failed scalar lookup onto the
+        // empty rescue card and adds its exception label/message. Keep
+        // that request&apos;s error bag distinct from an ordinary unknown name.
+        const errors = engine.attachedErrorsByKey;
+        const previous = errors.get(\&quot;\&quot;);
+        const notFound = [{ attribute: \&quot;NotFound\&quot;, message: \&quot;Card::Error::NotFound\&quot; }];
+        errors.set(\&quot;\&quot;, notFound);
+        try {
+          const html = await renderPageBytesWithPageConfigInner(engine, \&quot;\&quot;, \&quot;not_found\&quot;, undefined, false, bareMainOpts);
+          // Explicit error views do not perform the unknown-card status
+          // substitution; this status belongs to the failed ID lookup.
+          engine.pageErrorStatus = 404;
+          return html;
+        } finally {
+          if (errors.get(\&quot;\&quot;) === notFound) {
+            if (previous === undefined) errors.delete(\&quot;\&quot;);
+            else errors.set(\&quot;\&quot;, previous);
+          }
+        }
+      }
+    }
+    if (requestedView !== undefined &amp;&amp; MODAL_WRAPPED_VIEWS.has(requestedView)) {
+      return await renderOutsideOfLayout(engine, cardName, requestedView, historyParams);
+    }
+    return await renderPageBytesWithPageConfigInner(
+      engine,
+      cardName,
+      requestedView,
+      historyParams,
+      false,
+      bareMainOpts,
+    );
+  } finally {
+    engine.endPagePrepare();
+  }
+}
+
+/** Views whose definition wraps them in a modal or board (card-mod-layout
+ *  set/all/process_layout.rb explicit_modal_wrapper?: `view_setting :wrap`
+ *  names :modal or :board): card-mod-edit editing.rb :board, edit_content.rb
+ *  :edit, new.rb :new_in_modal; card-mod-layout modal.rb :modal; card-mod-
+ *  rules board_rules_editor.rb :modal_rule, editor.rb :rule_edit,
+ *  filtered_rule_lists.rb :modal_nest_rules; card-mod-format html/error.rb
+ *  :debug_server_error. */
+const MODAL_WRAPPED_VIEWS: ReadonlySet&lt;string&gt; = new Set([
+  \&quot;board\&quot;,
+  \&quot;edit\&quot;,
+  \&quot;new_in_modal\&quot;,
+  \&quot;modal\&quot;,
+  \&quot;modal_rule\&quot;,
+  \&quot;rule_edit\&quot;,
+  \&quot;modal_nest_rules\&quot;,
+  \&quot;debug_server_error\&quot;,
+]);
+
+/** process_layout.rb render_outside_of_layout: a requested view that wraps
+ *  itself in a modal or board renders OUTSIDE the page layout — the page is
+ *  the layout with its own main view (`render_with_layout nil, ...`), and
+ *  the requested view, rendered on the main format with the main args
+ *  (main_render_args: main and main_view), goes in before `&lt;/body&gt;`
+ *  (body_with_modal). A denied view therefore renders the readable card&apos;s
+ *  page followed by the loud denial, and the page answers 403 (the denial is
+ *  focal and its voo the root). */
+async function renderOutsideOfLayout(
+  engine: RenderEngine,
+  cardName: string,
+  view: string,
+  historyParams?: HistoryRenderParams,
+): Promise&lt;string&gt; {
+  const found = await engine.fetcher.fetchByName(cardName);
+  // THE ENTRY OFFERS AN UNKNOWN MAIN CARD TO THE FORMAT (here and in
+  // renderPageBytesWithPageConfigInner BELOW): the controller&apos;s Card.fetch
+  // with the request&apos;s new-card arguments admits the phantom on EVERY
+  // posture, not only when RenderEngine#renderAbsentCards is seated - the
+  // format&apos;s main+root viewForUnknown arm (format/error.rb:18-25) is what
+  // answers for the card, :new at 200 for a viewer who may create
+  // (page_view_for_unknown&apos;s create form a browser lands on when a deleted
+  // card&apos;s address reloads), the not_found frame at 404 otherwise
+  // (page_status_for_unknown). results.rb:19-21 returns a KNOWN card ahead
+  // of the new-card arm: a structure-rule answer the fetch layer already
+  // resolved is not rebuilt here (see the seat gate in render.ts).
+  const foundStructureKnown = found !== undefined &amp;&amp; found.isNew === true
+    ? await engine.fetcher.isKnownByStructure(cardName)
+    : false;
+  const absentFetch = found === undefined || (found.isNew === true &amp;&amp; !foundStructureKnown);
+  let record = absentFetch
+    ? await engine.fetcher.fetchByName(cardName, { new: historyParams?.newCard ?? {} })
+    : found;
+  if (record !== undefined &amp;&amp; record.id === undefined &amp;&amp; cardName.includes(\&quot;_\&quot;)) {
+    record = (await engine.fetcher.fetchByName(cardName.replace(/_/g, \&quot; \&quot;))) ?? record;
+  }
+  if (record === undefined || record.name === undefined) {
+    // Nothing to offer the format: a fetcher that cannot build the phantom
+    // (a test stub) leaves this entry no card to render. The refusal stands
+    // for that alone; a built phantom always reaches the format.
+    throw new Error(`card not found: ${cardName}`);
+  }
+  // The admitted phantom&apos;s own bare renders below (the modal view&apos;s prepare)
+  // must admit it too, this render alone (HistoryRenderParams#absentCard;
+  // render-seam.ts) - the entry&apos;s offer must not die at the prepare pass.
+  const admittedAbsent = absentFetch &amp;&amp; record.isNew === true;
+  const body = await renderPageBytesWithPageConfigInner(
+    engine,
+    cardName,
+    // page_view_for_unknown: the unknown card&apos;s page view is :new (the
+    // create form); a known card keeps its layout&apos;s own main view. states.rb
+    // `known? : real? || virtual?` — an unsaved card whose set-module chain
+    // declares `def virtual?; new?; end` (card-mod-follow-0.20.0
+    // set/right/followers.rb:22-24, set/type_plus_right/user/follow.rb:8-10)
+    // is KNOWN, so page_view_for_unknown never fires for it and the page
+    // renders its own views. THE SUBSTITUTION IS THE ARM&apos;S, not the entry&apos;s:
+    // Ruby renders the body with the LAYOUT&apos;S OWN main view (render_with_layout
+    // nil, page_layout(view), {} - process_layout.rb:45) and the arm
+    // substitutes at dispatch (voo.raw_view keeps the requested view). The
+    // entry passing an explicit \&quot;new\&quot; here would bypass that: :new is a
+    // perms-:none view, so permission.rb skip_check? short-circuits the
+    // substitution and a not-creatable viewer would take the create-form
+    // denial (error.rb ok? maps :update to :create on a new card) where
+    // Ruby&apos;s arm answers :not_found at 404. With the layout&apos;s own view
+    // riding to render!, the main+root viewForUnknown arm answers both
+    // ways: :new (200) for a viewer who may create, the not_found frame
+    // (404) otherwise.
+    undefined,
+    historyParams,
+    true,
+  );
+  const status = engine.pageErrorStatus;
+  try {
+    await preparePageView(engine,
+      record.name.s,
+      view,
+      admittedAbsent ? { ...(historyParams ?? {}), absentCard: true } : historyParams,
+    );
+  } catch {
+    // the prepare render&apos;s own failure surfaces through the main render below
+  }
+  const rootCard = engine.fetchRenderCard(record.name.s);
+  if (rootCard === undefined) throw new Error(`render card not prepared: ${record.name.s}`);
+  // NO CREATE-PERMISSION GATE RAISE HERE. Ruby&apos;s render_outside_of_layout
+  // (process_layout.rb:44-48) raises nothing between the body and the modal:
+  // `render!` dispatches the requested view on the same main format, and for
+  // an unknown card every dispatch runs the main+root viewForUnknown arm -
+  // :new for a viewer who may create, the not_found frame otherwise
+  // (page_status_for_unknown&apos;s 404, which the body already answered). A
+  // `card not found` raise here would refuse the page; without it the
+  // not-creatable unknown card renders the deck&apos;s own not_found page
+  // (body + modal frame) at 404, exactly the format&apos;s answer.
+  engine.pageErrorStatus = status;
+  const modalFormat = new RenderFormat(rootCard, engine, { main: true, nestQuietErrors: true });
+  // render_outside_of_layout&apos;s `render!` runs on the SAME root format
+  // (process_layout.rb:44-48): the modal&apos;s editors continue the body&apos;s
+  // id_counter numbering (the layout&apos;s enabled-roles checkboxes consume
+  // 1-2 first; the pointer-input journeys&apos; oracle pins 3-12).
+  modalFormat.seedRootIdCounter(engine.pageRootIdCounter);
+  // The body&apos;s main view ran on the same Ruby format; a titled or labeled
+  // main view left @content_body set for the denial frame&apos;s body.
+  const layout = await resolvePageLayout(engine, record);
+  const bodyView = layout.mainViewRaw ?? engine.defaultHtmlViewConfig();
+  modalFormat.contentBody = bodyView === \&quot;titled\&quot; || bodyView === \&quot;labeled\&quot;;
+  const modal = modalFormat.renderView(view, { main: true, main_view: true }, null);
+  return body.includes(\&quot;&lt;/body&gt;\&quot;) ? body.replace(\&quot;&lt;/body&gt;\&quot;, `${modal}&lt;/body&gt;`) : body + modal;
+}
+
+async function renderPageBytesWithPageConfigInner(
+  engine: RenderEngine,
+  cardName: string,
+  requestedView?: string,
+  historyParams?: HistoryRenderParams,
+  // render_outside_of_layout renders the body with `render_with_layout nil,
+  // layout, {}`: no main_render_args, so the main slot carries no main_view
+  outsideOfLayout = false,
+  // THE AJAX SLOT-REFRESH OPTS (the bare main-view lane): when present, the
+  // main view renders with THESE opts and the layout wrap is skipped —
+  // show_without_page_layout&apos;s `render view, slot_params` (the decko.js
+  // post-save slot refresh GET /~&lt;id&gt;/&lt;view&gt;?slot[main]=true&amp;... whose
+  // recorded answer is the saved-slot shape: the main format + the main-nest
+  // data-slot JSON). The full page warm sequence below still runs: the sync
+  // main render&apos;s prepare needs every seat the layout lane seats (the
+  // late-seat structure sweep especially — a structured body&apos;s field rows).
+  bareMainOpts?: Record&lt;string, unknown&gt;,
+): Promise&lt;string&gt; {
+  // process_layout.rb: main! (the root format is the main format) then
+  // page_layout — the *layout rule walk happens BEFORE the main render.
+  const found = await engine.fetcher.fetchByName(cardName);
+  // THE ENTRY OFFERS AN UNKNOWN MAIN CARD TO THE FORMAT: the controller&apos;s
+  // Card.fetch with the
+  // request&apos;s new-card arguments (new: {} when it carries none) admits the
+  // phantom on EVERY posture, not only when RenderEngine#renderAbsentCards
+  // is seated. A new card an earlier request cached under this name is
+  // absent too: the request&apos;s own new-card arguments build it. A
+  // structure-rule answer the fetch layer already resolved is not rebuilt
+  // (results.rb:19-21 returns a KNOWN card ahead of the new-card arm; see
+  // the seat gate in render.ts).
+  //
+  // WHY THE OFFER IS MADE ON EVERY POSTURE: with the flag off, this offer
+  // answers the deck&apos;s FULL page, which changes what the host&apos;s
+  // missing-card pages, the wildcard class, the rss deep-path class, the
+  // new-card route&apos;s 404 and the card/edit route&apos;s no-route class render.
+  // The serving boot seats renderAbsentCards on every engine it builds
+  // (bunny-edge-deck-boot.ts bootDeck), so the SERVING paths already
+  // answer through the arm; only the engine-default posture (the flag
+  // off: the parity test&apos;s storage.engine, the deploy tests&apos; realDeck
+  // stubs-over-real-engines) would otherwise refuse the card. With the
+  // offer here, an unknown MAIN card reaches the format&apos;s main+root
+  // viewForUnknown arm on every posture, and the arm answers :new at 200
+  // for a viewer who may create and the not_found frame at 404 otherwise
+  // (card-mod-format set/all/html/error.rb:81-87, pinned in
+  // fixtures/captured/not-found-404-view-ruby-oracle.json: no exception
+  // anywhere, the card never read). Host assertions expect this answer.
+  const foundStructureKnown = found !== undefined &amp;&amp; found.isNew === true
+    ? await engine.fetcher.isKnownByStructure(cardName)
+    : false;
+  const absentFetch = found === undefined || (found.isNew === true &amp;&amp; !foundStructureKnown);
+  const record = absentFetch
+    ? await engine.fetcher.fetchByName(cardName, { new: historyParams?.newCard ?? {} })
+    : found;
+  if (record === undefined || record.name === undefined) {
+    // Nothing to offer the format: a fetcher that cannot build the phantom
+    // (a test stub) leaves this entry no card to render. The refusal stands
+    // for that alone; a built phantom always reaches the format.
+    throw new Error(`card not found: ${cardName}`);
+  }
+  // The admitted phantom&apos;s own bare renders below (the prepare pass at the
+  // main render, the outside-of-layout modal prepare) must admit it too,
+  // this render alone (HistoryRenderParams#absentCard; render-seam.ts) - the
+  // entry&apos;s offer must not die at the prepare pass.
+  const admittedAbsent = absentFetch &amp;&amp; record.isNew === true;
+  const layout = await resolvePageLayout(engine, record);
+
+  // process_layout.rb show_with_page_layout: a requested view with an
+  // explicit modal or board wrapper (explicit_modal_wrapper?) renders
+  // outside the layout — the page renders with its usual main view, and the
+  // requested view follows as a modal just before &lt;/body&gt;
+  // (render_outside_of_layout + body_with_modal).
+  if (
+    requestedView !== undefined &amp;&amp;
+    OUTSIDE_LAYOUT_VIEWS.has(requestedView) &amp;&amp;
+    layout.layoutName.toLowerCase() !== \&quot;modal\&quot;
+  ) {
+    const body = await renderPageBytesWithPageConfigInner(engine, cardName, undefined, historyParams);
+    // render!(view, args) with the main args: prepare the view&apos;s closure,
+    // then render it on a main format (focal: a denial is the loud one).
+    await preparePageView(engine,
+      record.name.s,
+      requestedView,
+      admittedAbsent ? { ...(historyParams ?? {}), absentCard: true } : historyParams,
+    );
+    const modalRoot = engine.fetchRenderCard(record.name.s);
+    let modal = \&quot;\&quot;;
+    if (modalRoot !== undefined) {
+      const modalFormat = new RenderFormat(modalRoot, engine, { main: true, nestQuietErrors: true });
+      // render_outside_of_layout&apos;s `render!` runs on the SAME root format
+      // (process_layout.rb:44-48): the modal continues the body&apos;s numbering.
+      modalFormat.seedRootIdCounter(engine.pageRootIdCounter);
+      modal = str(modalFormat.renderView(requestedView, { main: true, main_view: true }, null));
+    }
+    return body.includes(\&quot;&lt;/body&gt;\&quot;) ? body.replace(\&quot;&lt;/body&gt;\&quot;, () =&gt; `${modal}&lt;/body&gt;`) : body + modal;
+  }
+
+  // The requested ?view= wins over the layout chunk (rest.rb view_from_params
+  // -&gt; format.page -&gt; show(view)); otherwise the layout&apos;s {{_main|view}}
+  // chunk names the main view; render_with_layout falls back to
+  // default_page_view (= default_nest_view = Cardio.config.default_html_view,
+  // :content in production) when the layout carries no view. The page surface&apos;s
+  // config is active here, so the accessor answers \&quot;content\&quot;.
+  // An unknown MAIN card (a trashed or never-existing name) substitutes the
+  // requested view with :new — card-mod-format set/all/html/error.rb:81-86
+  // page_view_for_unknown (`ok?(:create) ? :new : super`): the create form
+  // is the page a deleted card&apos;s address reloads to (?view=edit). The
+  // substitution needs a REQUESTED view (an absent one keeps the layout&apos;s
+  // own main — the null the query parser hands down is normalized here);
+  // the create-permission gate rides the rendered card below
+  // (unknownCardCreatable: no permission — or a render too denied to seat
+  // the card — re-raises the not-found raise, page_status_for_unknown&apos;s
+  // 404).
+  const recordIsNew = record.isNew === true;
+  // states.rb:44-50 `known? : real? || virtual?` — an unsaved card whose
+  // set-module chain declares `def virtual?; new?; end` (card-mod-follow-0.20.0
+  // set/right/followers.rb:22-24, set/type_plus_right/user/follow.rb:8-10) is
+  // KNOWN, so page_view_for_unknown never fires and the REQUESTED view renders
+  // as itself. MEASURED against the stock Ruby oracle: `/&lt;user&gt;+*followers/
+  // core` answers the pointer `bar` view, not the create form.
+  //
+  // TWO PREDICATES, ONE QUESTION. `virtualSetCard` walks the card&apos;s own
+  // set-module chain and asks the shortname registry
+  // (set-modules/virtual-set-modules.ts); `knownVirtualCardName` asks the
+  // set-path registry through the name predicate
+  // (render/virtual-card-registry.ts). Both are ports of Ruby&apos;s
+  // `known? = real? || virtual?`; the card is KNOWN when EITHER says so
+  // (the union errs toward Ruby rendering the card, never toward the
+  // create form for a card Ruby calls virtual).
+  // THE SUBSTITUTION IS THE ARM&apos;S, NOT THE ENTRY&apos;S (renderOutsideOfLayout
+  // follows the same rule). Ruby&apos;s page main
+  // view rides to render! AS REQUESTED and the main+root viewForUnknown arm
+  // substitutes at dispatch (view/permission.rb:35-43 altered_view -&gt;
+  // format/error.rb:18-25): :new at 200 for a viewer who may create, the
+  // not_found frame at 404 otherwise, and a `perms: :none` requested view
+  // (permission.rb:60 skip_check?) renders AS ITSELF - the controller
+  // rescue&apos;s whole page class (card_controller/errors.rb:18-24 `show
+  // error.class.view`: the :errors, :denial and :not_found refusals of a
+  // failed save render on cards that do not exist without being hijacked).
+  // The entry&apos;s former explicit \&quot;new\&quot; here bypassed that: :new is itself a
+  // perms-:none view, so the not-creatable viewer took the create-form
+  // denial (error.rb ok? maps :update to :create on a new card) where Ruby&apos;s
+  // arm answers the not_found page, and the may-create slot JSON carried the
+  // substituted view&apos;s name where Ruby&apos;s voo keeps the REQUESTED view.
+  const mainView = requestedView ?? layout.mainViewRaw ?? engine.defaultHtmlViewConfig();
+
+  // The main render + the full prepare sequence (permission state, search
+  // parse gates, structure universe...) — the identical preparation and
+  // (card, view) render the bare path runs. Output discarded; the page pass
+  // re-renders through the main! format below from warm maps.
+  //
+  // The raise semantics differ between development and production:
+  // development runs raise_all_rendering_errors=true (every nested view
+  // error re-raises), production renders the quiet render-error span. A
+  // view-dispatch raise here (Date::Error, search BadQuery) must NOT fail
+  // the page: the assembly&apos;s main! render converts nested raises via
+  // nestQuietErrors. Focal gate raises (pointer/set-host options chains)
+  // only fire for open/content MAIN views — accepted collateral. A lost
+  // root (prepare died before enrichment) rethrows.
+  let prepareError: Error | undefined;
+  try {
+    // The HistoryRenderParams thread (the page-path seam — see the
+    // renderPageBytes doc): render() seats the render-time history reader
+    // when the view is one of the history views; the sync main render
+    // below reads it. undefined passes through render()&apos;s own `= {}`
+    // default, so non-history pages are untouched. The admitted phantom
+    // rides absentCard (this render alone; render-seam.ts) so the prepare
+    // pass admits what the entry offered.
+    await preparePageView(engine,
+      record.name.s,
+      mainView,
+      admittedAbsent ? { ...(historyParams ?? {}), absentCard: true } : historyParams,
+    );
+    // The warm pass is not a served render: its output is discarded and the
+    // page re-renders the view below from the warm maps. Ruby renders the
+    // main view once, before the layout around it
+    // (card/lib/card/format/wrapper.rb:15 `@rendered = yield`, then the
+    // layout wrapper at :20-28), so a roles nest in the main body is the
+    // request&apos;s first and the navbar&apos;s comes after it. Drop any
+    // ensure_roles consumption the warm pass recorded so the layout pass
+    // starts from the request&apos;s committed state.
+    engine.blankSessionRolesFill?.();
+  } catch (error) {
+    prepareError = error as Error;
+  }
+  if (engine.demandSeeds !== undefined &amp;&amp; engine.demandSeeds.length &gt; 0) {
+    // Collect mode: prepare what earlier passes of this request asked for,
+    // as existence + enrichment only (no reference chase), then judge them.
+    const seeded = await engine.warmupLayoutReferences(
+      engine.demandSeeds.map((name) =&gt; ({ name, context: name, mode: \&quot;leaf\&quot; as const })),
+      scanWarmDeps,
+      () =&gt; ensureCodenameMarksResolvable(engine),
+      true,
+    );
+    if (seeded.cards &gt; 0) await engine.refreshVerdicts();
+  }
+  const rootCard = engine.fetchRenderCard(record.name.s);
+  if (rootCard === undefined) {
+    throw prepareError ?? new Error(`render card not prepared: ${record.name.s}`);
+  }
+
+  // The chrome session&apos;s account-links data must exist before the sync
+  // layout render: the *account_link navbar view (and the :core view) read
+  // the prepared items synchronously. No-op for signed-out/actor-less
+  // sessions.
+  await engine.prepareSessionAccountLinks();
+  // The page body&apos;s [[link]] targets must be warm before the sync render:
+  // renderLinkChunk&apos;s known/wanted (links.rb add_known_or_wanted_class)
+  // reads the warm map, and Ruby&apos;s Card.known? is a LIVE fetch — so a cold
+  // render whose link targets are not yet prepared emits wanted-card for
+  // existing cards (the cold prefetch closure walks {{nest}} references
+  // only — nest-syntax.ts referencedNames — leaving the structured
+  // template&apos;s links unwarm). The main card seeds the SAME bounded BFS the
+  // layout warm-up uses (scanWarmDeps: nest refs spine, link targets
+  // leaf), so the whole rendered content closure resolves with its link
+  // targets.
+  const mainWarmup = await engine.warmupLayoutReferences(
+    [{ name: record.name.s, context: record.name.s }],
+    scanWarmDeps,
+    () =&gt; ensureCodenameMarksResolvable(engine),
+  );
+  // Enriched cards need verdicts before the sync render (unjudged cards
+  // render as placeholder content — the known late-enrichment trap). The
+  // card-layout path&apos;s warmUpLayoutNests refreshes below anyway; this
+  // covers the code-default-layout pages (no layout warm-up there) and is
+  // a map-size no-op when nothing landed.
+  if (mainWarmup.cards &gt; 0) {
+    await engine.refreshVerdicts();
+  }
+  // Search pre-execution pass 1 — BEFORE the main body render. The search
+  // cards this page&apos;s content nests (`&lt;page&gt;+*referred_to_by`,
+  // `&lt;page&gt;+*type+by name`) are now enriched but unexecuted: the prepare
+  // render&apos;s prepareSearches either never reached them (relative references
+  // are skipped at cardReferenceKeys&apos; ref.relative continue — the
+  // {{_self+*referred_to_by}} class)
+  // or saw them enriched only AFTER its walk (structure-content junction
+  // searches applyStructureContent joins late — the {{+*type+by name}}
+  // class). The mainBody render below
+  // dispatches these nests synchronously through the card_list view, which
+  // reads ONLY the pre-executed map (executeSearch →
+  // searchResults.get(key) ?? []) — so they rendered search-no-results with
+  // zero queries. Ruby executes these inside the view
+  // dispatch (card-mod-search set/abstract/0_search/views.rb view :card_list
+  // → search_with_params → query.run): the Ruby request has no sync/async
+  // split, so this pass IS that view-time execution, hoisted into the async
+  // phase the port completes before the sync render. The walk is the page&apos;s
+  // NEST closure only (content references + result items — never the
+  // type-record sides or pointer chases the enrichment also landed, whose
+  // whole-deck searches the page does not render). Then re-judge the search
+  // items&apos; verdicts (the late-enrichment trap; refreshVerdicts is
+  // skip-if-set for already-judged cards).
+  const mainBodySearches = await engine.prepareNestClosureSearches([
+    { name: record.name.s, context: record.name.s },
+  ]);
+  if (mainBodySearches &gt; 0) {
+    await engine.refreshVerdicts();
+  }
+  // Permission recovery: a prepare render
+  // that died before the folded batch landed (an oversized junction
+  // OR-tuple can push SQLite past its \&quot;Expression tree is too large\&quot;
+  // limit) leaves the read-permission
+  // state unresolved and every prepared card unjudged. The sync gate&apos;s
+  // unjudged-allowed contract would then render the read-denied MAIN body in
+  // full where Ruby emits the denial frame. Resolve the state
+  // from the standalone three-statement batch and judge the prepared map
+  // BEFORE any sync render. No-op when the prepare landed (memoized state +
+  // map-size guard). Deny-direction only: verdicts become Ruby&apos;s data-driven
+  // ones; readable cards are unaffected.
+  await engine.ensurePermissionVerdicts();
+  // The comment_box gate&apos;s update verdicts (views.ts commentBoxBaseView):
+  // the +discussion cores inside the page body render the comment form
+  // only on a POSITIVE update verdict, and the generic task warm
+  // (ensureTaskVerdicts) is view-gated - warm the discussion cards here.
+  await engine.ensureDiscussionUpdateVerdicts();
+
+  // THE ROLE CONFIGS ADMIN-RUNTIME WARM.
+  // card-mod-account set/type/role.rb view :configs (the Role dashboards&apos;
+  // `{{_L|configs}}` nests) reads the core mod&apos;s admin runtime state (mod
+  // cards + the *update-rule role walk) — state whose build is ASYNC while
+  // the view body is SYNC. A loader-bound boot builds it in the mod
+  // prepareEngine; this page surface binds NO loader, so when the prepared
+  // closure actually dispatches the view (any prepared card&apos;s content
+  // carries a `|configs` nest opt, or the main view IS configs), build it
+  // here, once per engine, before the sync render. Pages that never reach
+  // :configs pay zero queries.
+  if (mainView === \&quot;configs\&quot; || engine.renderClosureNeedsCoreAdminRuntime()) {
+    await engine.ensureCoreAdminRuntime();
+  }
+
+  // THE LATE-SEAT STRUCTURE SWEEP — main-body boundary:
+  // the prepare render&apos;s tail warms and the page surface&apos;s own seat paths after
+  // it (warmupLayoutReferences, prepareNestClosureSearches) seat cards the
+  // prepare render&apos;s two structure passes never saw. Process every seat of
+  // this page BEFORE the main body dispatch reads their content. See
+  // RenderEngine.applyLateSeatStructureContent&apos;s doc.
+  await engine.applyLateSeatStructureContent();
+  // The configure_button verdicts for cards seated since the prepare render
+  // (search result items, late structure nests): Ruby judges can_configure?
+  // on every card the view renders for, not only the page&apos;s main card. A
+  // no-op when no newly seated card nests the view.
+  await engine.ensureConfigureVerdict();
+
+  // The root format: main! context (h1 header, focal gates) + production
+  // quiet-error semantics for nested views. The default nest view needs no
+  // override — RenderFormat.defaultNestView reads the page-active engine
+  // config the main-view pick above used.
+  const rootFormat = new RenderFormat(rootCard, engine, {
+    main: true,
+    nestQuietErrors: true,
+    // show_layout? (card-mod-format set/all/html/show.rb:40-48): the bare
+    // lane is show_without_page_layout, so the LAYOUT IS NOT SHOWN there
+    // and the html focal rule (html_format.rb:16-18) reads depth.zero? in
+    // that posture. The layout lane is show_with_page_layout, so its
+    // layout IS shown and the rule reads main?.
+    showLayout: bareMainOpts === undefined,
+  });
+  // Seat the head bytes BEFORE the main-body render: the Self::Head core
+  // view (card-mod-layout set/self/head.rb:17 `nest root.card,
+  // view: :head`) fires INSIDE the main body when the page card&apos;s content
+  // is a `{{:head|core}}` reference (*all+*head / X+*self+*head rule
+  // pages) and reads the page&apos;s own head bytes back — on such pages the
+  // CodeRay &lt;pre&gt; content IS the page &lt;head&gt; content. headContent is a
+  // read-only walk over warmed state, so building it before the main
+  // render is order-safe; the same bytes go into the :html_page wrapper
+  // below.
+  const head = await headContent(engine, record.name, rootCard);
+  engine.seatPageHead(rootCard.key, head);
+
+  // render_with_layout: render! the main view with the main-nest opts
+  // (view, nest_name \&quot;_main\&quot;, nest_syntax, main,
+  // home_view, main_view, layout). Ruby memoizes this as main.rendered
+  // (wrapper.rb:15 `@rendered = yield`, then the wrapper pass at :23-27);
+  // the layout body&apos;s {{_main}} nest then wraps it with wrap_main
+  // (&lt;div id=\&quot;main\&quot;&gt;). The assignment is the port&apos;s with_wrapper seam, and
+  // it MUST come after the main render: mid-render, the root format&apos;s
+  // @rendered holds whatever the last view dispatch left there — the :raw
+  // view&apos;s raw source while a `{{_main}}` inside the MAIN card&apos;s own
+  // content is being chunked.
+  const skipSync = engine.skipSyncRender?.() === true;
+  let mainBody: string;
+  try {
+    mainBody = skipSync ? \&quot;\&quot; : str(rootFormat.renderView(
+      mainView,
+      bareMainOpts !== undefined
+        ? { ...bareMainOpts, view: mainView }
+        : {
+            nest_name: \&quot;_main\&quot;,
+            ...(layout.mainNestSyntax !== undefined ? { nest_syntax: layout.mainNestSyntax } : {}),
+            main: true,
+            home_view: mainView,
+            ...(outsideOfLayout ? {} : { main_view: true }),
+            layout: layout.layoutName,
+          },
+      // show_with_page_layout&apos;s render! carries NO optional render opt — the
+      // main slot gets no \&quot;show\&quot; viz (unlike the bare
+      // view surface where format.render pins show:[view]). null = no viz (a
+      // JS default parameter would revive \&quot;show\&quot; on undefined).
+      null,
+    ));
+  } catch (error) {
+    // THE PAGE&apos;S OWN MAIN-VIEW DISPATCH IS A RESCUE SCOPE, and it is the last
+    // one the serving posture does not already cover.
+    //
+    // Every OTHER raise on this page is quiet under Ruby&apos;s production posture
+    // (cardio/railtie.rb:38, set false at the edge boot in
+    // deploy/bunny-worker-src/bunny-edge-engine-entry.ts): nested renders
+    // through format.ts:2140 (renderNest) and delegated renders through
+    // format.ts:2218 (renderDelegated), both keyed on allRenderingErrorsRaise().
+    //
+    // This dispatch is NOT one of them. The root view-lane catch at
+    // format.ts:1430 is guarded by `!viewLaneRoot || allRenderingErrorsRaise()`,
+    // and viewLaneRoot is never true anywhere in the tree (format.ts:217
+    // defaults it false and no caller passes true), so that catch re-raises
+    // for the page root whatever the posture says. A raise here therefore
+    // escaped the page and the edge answered with the server_error page.
+    //
+    // MEASURED. With only the boot posture in place, a signed-in request for a
+    // Date card whose content cannot parse answered 500, beside the log line
+    // \&quot;[bunny-edge-error-page] render failed for &lt;card&gt;: invalid date\&quot;. Ruby raises Date::Error
+    // on exactly that content and its RENDERED PAGE still answers, carrying the
+    // quiet \&quot;(core view)\&quot; render-error span
+    // (tests/card/render/date-dashed-two-component-raise-pins.test.ts:9-12).
+    //
+    // So this is the same contract the file already states above (page.ts&apos;s
+    // prepare-phase note): a view-dispatch raise must NOT fail the page. The
+    // span is the value here, exactly as it is for every other rescue on this
+    // page, and the layout still renders around it.
+    //
+    // THE LOUD POSTURE STILL WINS. allRenderingErrorsRaise() is checked first,
+    // so a development build and every direct render call keep raising exactly
+    // as they do now; only the serving posture reaches the span.
+    if (allRenderingErrorsRaise()) throw error;
+    // Ruby responds 422 for an unsupported focal view. Preserve that error
+    // for the HTTP boundary while ordinary production view failures stay quiet.
+    if (error instanceof UnsupportedViewError) throw error;
+    mainBody = quietRenderError(error, rootCard, mainView, rootFormat);
+  }
+  rootFormat.rendered = str(mainBody);
+  // The bare main-view lane returns HERE: show_without_page_layout renders
+  // the view alone — no layout body, no layout nest warm-ups (the main
+  // closure above is complete).
+  if (bareMainOpts !== undefined) return str(mainBody);
+
+  // Unknown layouts raise AFTER the main render (wrap_with_wrapper -&gt;
+  // raise_wrap_error), never before — matching Ruby&apos;s order.
+  if (layout.kind === \&quot;unknown\&quot;) {
+    throw new UnknownLayoutError(layout.layoutName, layout.unknownKey ?? \&quot;\&quot;);
+  }
+
+  // wrapper.rb#render_with_card_layout (wrapper.rb:35-39): the layout
+  // card&apos;s content processed through the page&apos;s own format ({{_main}} -&gt;
+  // wrap_main { main.rendered }).
+  // Prefetch first: the layout&apos;s nest targets (header/footer/skin cards)
+  // are outside the main card&apos;s inclusion closure, and the sync nest path
+  // only reads prepared cards. One warm-up render per DISTINCT target
+  // (typically *header + *footer, shared across pages — later pages skip);
+  // warm-up failures are the target&apos;s own render errors and surface
+  // through the real nest as the quiet span.
+  let layoutNestSeeds: WarmupRef[] = [];
+  if (layout.kind === \&quot;card\&quot;) {
+    for (const piece of scanNests(layout.layoutCardContent ?? \&quot;\&quot;)) {
+      if (piece.kind === \&quot;nest\&quot; &amp;&amp; piece.nest !== undefined &amp;&amp; piece.nest.name !== \&quot;_main\&quot;) {
+        layoutNestSeeds.push({
+          name: piece.nest.name,
+          context: record.name.s,
+          mode: nestWarmMode(piece.nest.options.view),
+        });
+      }
+    }
+    await ensureCodenameMarksResolvable(engine);
+    await warmUpLayoutNests(engine, layoutNestSeeds);
+    await ensureCodenameMarksResolvable(engine);
+  }
+  // Search pre-execution pass 2 — the layout warm-up&apos;s completion, before
+  // the sync layout render. The layout warm-up above enriched the layout
+  // body&apos;s nest targets (header/footer/skin cards — a layout CAN nest
+  // search cards directly, unlike the Default Layout) without executing
+  // them; the same pre-execution the main body got above must cover these
+  // before processLayoutContent dispatches the nests. The walk seeds from
+  // the layout&apos;s own nests (the cards the layout body dispatches), so a
+  // search nested in the *header/*footer content executes here and nothing
+  // else. Idempotent: the already-seated skip inside
+  // prepareNestClosureSearches makes this a no-op re-walk when pass 1
+  // executed everything.
+  if (layoutNestSeeds.length &gt; 0) {
+    const layoutSearches = await engine.prepareNestClosureSearches(layoutNestSeeds);
+    if (layoutSearches &gt; 0) {
+      await engine.refreshVerdicts();
+    }
+  }
+  // THE LATE-SEAT STRUCTURE SWEEP — layout boundary: the
+  // layout warm-up above (warmUpLayoutNests) and its search pass seat cards
+  // between the main-body render and the layout content render; process
+  // them before the layout dispatch reads their content. See
+  // RenderEngine.applyLateSeatStructureContent&apos;s doc.
+  await engine.applyLateSeatStructureContent();
+  // The configure_button verdicts for cards seated since the prepare render
+  // (search result items, late structure nests): Ruby judges can_configure?
+  // on every card the view renders for, not only the page&apos;s main card. A
+  // no-op when no newly seated card nests the view.
+  await engine.ensureConfigureVerdict();
+  // Layout-authored grouped lists are outside the main card&apos;s stored
+  // content. Prepare their generated items before synchronous layout nests.
+  await engine.prepareCardtypeGroupItems?.(undefined, undefined, layout.layoutCardContent);
+  const interior = engine.skipSyncRender?.() === true
+    ? \&quot;\&quot;
+    : layout.kind === \&quot;card\&quot;
+      ? rootFormat.processLayoutContent(layout.layoutCardContent ?? \&quot;\&quot;)
+      : codeDefaultLayoutInterior(rootFormat);
+  // The body render&apos;s id_counter state (the layout&apos;s unique_id consumers —
+  // the enabled-roles checkboxes included) is what the modal render
+  // continues: Ruby&apos;s render_outside_of_layout `render!` runs on the SAME
+  // root format (process_layout.rb:44-48). The page lane hands the value
+  // to its modal sites through the engine&apos;s request-scope state.
+  engine.pageRootIdCounter = rootFormat.exportRootIdCounter();
+
+  // show.rb: the :html_page wrapper (head + interior). Byte shape per the
+  // show.rb wrapper heredoc: the 6/8/10-space indentation is
+  // part of the served bytes, and the heredoc&apos;s
+  // closing line ends with a newline, so the wrapper&apos;s trailing newline is
+  // part of the served bytes.
+  return (
+    `      &lt;!DOCTYPE HTML&gt;\\n` +
+    `      &lt;html class=\&quot;h-100\&quot;&gt;\\n` +
+    `        &lt;head&gt;\\n` +
+    `          ${head}\\n` +
+    `        &lt;/head&gt;\\n` +
+    `        ${resolveCloudUrls(interior)}\\n` +
+    `      &lt;/html&gt;\\n`
+  );
+}
+
+// ---------------------------------------------------------------------------
+// page_layout (process_layout.rb:36-38 + layout_name_from_rule)
+// ---------------------------------------------------------------------------
+
+/** Prepare every card the layout body can dispatch on: the layout&apos;s nest
+ *  targets, their content references, [[link]] targets, and pointer/list
+ *  items (plain-text item lists the closure walk never chases — a navbar
+ *  dropdown&apos;s items). Enrichment lands in the prepared-card
+ *  map, then one verdict refresh so the warm subtree denies exactly like
+ *  Ruby. Names resolve exactly like the format does: DeckoName
+ *  marks (:codename) through the name environment, RELATIVE names against
+ *  the REFERENCING card (format.ts resolveNestName&apos;s context is the card
+ *  whose content nests the reference: layout-level nests resolve against
+ *  the page card, a warmed card&apos;s own content refs against that card).
+ *  Resolving every hop against the page name warmed spurious names
+ *  (\&quot;*credit\&quot;&apos;s +image warmed as \&quot;&lt;page&gt;+image\&quot;), the real sync
+ *  nest fetch missed the prepared-card map, and the cold page&apos;s footer
+ *  rendered the nest empty - the junction row (*credit+*image) stores a
+ *  NULL key column, so its name resolves only through the prepared/
+ *  temp-cache path the reference-context walk actually primes.
+ *
+ *  BOUNDED + BATCHED (the cold-render burst fix — this chase used to walk
+ *  nest refs, link targets, AND pointer items transitively to a fixpoint
+ *  through one point-query ladder per name, preparing the whole
+ *  navbar-connected site at thousands of driver round trips per cold
+ *  render): the reference CLASSES are unchanged — every class still
+ *  expands to the same fixpoint the baseline reached, because what renders
+ *  is not decidable from content syntax ([[target|label]] is an
+ *  existence-only anchor in ordinary content but a real nest through the
+ *  navbar chunk walk; a pointer item renders as a full bar) — the burst is
+ *  killed by BATCHING instead: prefetch.ts resolves the closure in
+ *  reference-BFS rounds, ONE driver.batch per round (round trips scale
+ *  with reference DEPTH, not card count), 90-param chunking under the
+ *  driver&apos;s statement ceiling, and the per-name ladder fallback only for
+ *  names with no fetched row (placeholder/virtual semantics preserved
+ *  byte-exact). Completeness is unchanged: every card the sync render
+ *  reads from the prepared map is prepared before the render starts. */
+async function warmUpLayoutNests(
+  engine: RenderEngine,
+  seeds: WarmupRef[],
+): Promise&lt;void&gt; {
+  await engine.warmupLayoutReferences(seeds, scanWarmDeps, () =&gt;
+    ensureCodenameMarksResolvable(engine),
+  );
+  await engine.refreshVerdicts();
+}
+
+/** The reference classes one warmed card contributes (prefetch.ts
+ *  WarmupScan): nest refs and pointer/list items are SPINE (they render
+ *  inside the page, so their own refs are read at sync-render time),
+ *  [[link]] targets are LEAF (renderLinkChunk&apos;s known/wanted class reads
+ *  only their existence off the prepared map; a link target never renders
+ *  in this page). Every pushed name keeps the REFERENCING card as its
+ *  resolution context. */
+function scanWarmDeps(
+  card: {
+    name: DeckoName;
+    dbContent: string;
+    typeCode: string | undefined;
+  },
+  mode: WarmupMode,
+): WarmupScan {
+  // Request-scoped memo (DeckoName.requestMemo), shared by every pass of a
+  // live render: the scan is a function of the card&apos;s name, type code and
+  // content and the mode. Memoized scans are frozen (callers only read them).
+  // Keyed by the content string first (its hash is computed once per string,
+  // and a row&apos;s content string is shared by every pass), then by the rest.
+  const byContent = DeckoName.requestMemo&lt;Map&lt;string, WarmupScan&gt;&gt;(SCAN_WARM_DEPS_MEMO);
+  if (byContent === undefined) return scanWarmDepsUncached(card, mode);
+  let memo = byContent.get(card.dbContent);
+  if (memo === undefined) {
+    memo = new Map();
+    byContent.set(card.dbContent, memo);
+  }
+  const memoKey = `${mode}\\n${card.typeCode ?? \&quot;\&quot;}\\n${card.name.s}`;
+  const hit = memo.get(memoKey);
+  if (hit !== undefined) return hit;
+  const found = scanWarmDepsUncached(card, mode);
+  for (const r of found.refs) Object.freeze(r);
+  for (const r of found.leaves ?? []) Object.freeze(r);
+  Object.freeze(found.refs);
+  if (found.leaves !== undefined) Object.freeze(found.leaves);
+  memo.set(memoKey, Object.freeze(found));
+  return found;
+}
+
+const SCAN_WARM_DEPS_MEMO = {};
+
+function scanWarmDepsUncached(
+  card: {
+    name: DeckoName;
+    dbContent: string;
+    typeCode: string | undefined;
+  },
+  mode: WarmupMode,
+): WarmupScan {
+  const refs: WarmupRef[] = [];
+  const leaves: WarmupRef[] = [];
+  const context = card.name.s;
+  const isItems = card.typeCode === \&quot;pointer\&quot; || card.typeCode === \&quot;list\&quot;;
+  const items = (): string[] =&gt;
+    (card.dbContent ?? \&quot;\&quot;)
+      .split(/\\n+/)
+      .map((s) =&gt; s.replace(/\\[\\[|\\]\\]/g, \&quot;\&quot;).trim())
+      .filter((s) =&gt; s !== \&quot;\&quot;);
+  if (!LINKS_ARE_LEAVES) mode = \&quot;full\&quot;;
+
+  if (mode === \&quot;nav-item\&quot;) {
+    // view :nav_item (navbar-views.ts): a plain card renders as a link; a
+    // Pointer/List renders a dropdown whose items are links
+    // (nav_link_in_dropdown): existence + title only.
+    if (isItems) for (const item of items()) leaves.push({ name: item, context });
+    // A Link list is a dropdown too (Abstract::Items), whose items come from
+    // its [[target|label]] chunks; explicit URL targets need no card.
+    if (card.typeCode === \&quot;link_list\&quot;) {
+      for (const m of (card.dbContent ?? \&quot;\&quot;).matchAll(/\\[\\[([^\\][\\n]+?)\\]\\]/g)) {
+        const target = (m[1] ?? \&quot;\&quot;).split(\&quot;|\&quot;)[0]?.trim() ?? \&quot;\&quot;;
+        if (target !== \&quot;\&quot; &amp;&amp; !/^(\\/|https?:|mailto:)/.test(target)) leaves.push({ name: target, context });
+      }
+    }
+    return { refs, leaves };
+  }
+
+  for (const piece of scanNests(card.dbContent ?? \&quot;\&quot;)) {
+    const nest = piece.nest;
+    if (nest === undefined || nest.comment !== undefined) continue;
+    refs.push({ name: nest.name, context, mode: nestWarmMode(nest.options.view) });
+  }
+  // A card rendered through :navbar_links nests each [[link]] target with
+  // view :nav_item; anywhere else a [[link]] is an existence-only anchor
+  // (renderLinkChunk&apos;s known/wanted class), so its target is a leaf.
+  for (const m of (card.dbContent ?? \&quot;\&quot;).matchAll(/\\[\\[([^\\][\\n]+?)\\]\\]/g)) {
+    const target = (m[1] ?? \&quot;\&quot;).split(\&quot;|\&quot;)[0]?.trim() ?? \&quot;\&quot;;
+    if (target === \&quot;\&quot;) continue;
+    if (!LINKS_ARE_LEAVES) refs.push({ name: target, context });
+    else if (mode === \&quot;navbar\&quot;) refs.push({ name: target, context, mode: \&quot;nav-item\&quot; });
+    else leaves.push({ name: target, context });
+  }
+  if (isItems) {
+    for (const item of items()) {
+      refs.push({ name: item, context, ...(mode === \&quot;navbar\&quot; ? { mode: \&quot;nav-item\&quot; as const } : {}) });
+    }
+  }
+  return { refs, leaves };
+}
+
+/** The warm-up class a nest&apos;s view implies (prefetch.ts WarmupMode). */
+function nestWarmMode(view: string | undefined): WarmupMode {
+  if (!LINKS_ARE_LEAVES) return \&quot;full\&quot;;
+  if (view === \&quot;navbar_links\&quot;) return \&quot;navbar\&quot;;
+  if (view === \&quot;nav_item\&quot;) return \&quot;nav-item\&quot;;
+  return \&quot;full\&quot;;
+}
+
+/** [[link]] targets are existence-only (LEAF): prepared, never scanned for
+ *  their own references, unless a nest, pointer item or navbar reaches them.
+ *  DECKO_WARMUP_LINKS_SPINE=1 restores the old transitive chase. */
+const LINKS_ARE_LEAVES = !debugFlag(\&quot;DECKO_WARMUP_LINKS_SPINE\&quot;);
+
+/** Re-prime the lexicon entries the layout body&apos;s `:codename` marks resolve
+ *  through. The temporary cache&apos;s max_keys reset (cache.ts TemporaryCache —
+ *  Ruby temporary.rb within_key_counts) wipes primed entries as renders
+ *  write; a wiped entry turns DeckoName.parse(\&quot;:x\&quot;) into a spurious
+ *  CodenameNotFoundError inside nest(). The sync name-environment adapters
+ *  cannot load from the driver, so the marks must peek warm. Probe every
+ *  codehash codename (in-memory parses, sub-millisecond); re-prime the
+ *  lexicon entries of the failures. */
+async function ensureCodenameMarksResolvable(engine: RenderEngine): Promise&lt;void&gt; {
+  const entries = engine.fetcher.codenames.peekEntries();
+  if (entries.length === 0) return;
+  const failedIds: number[] = [];
+  for (const [codename, id] of entries) {
+    try {
+      DeckoName.parse(`:${codename}`);
+    } catch {
+      failedIds.push(id);
+    }
+  }
+  if (failedIds.length &gt; 0) {
+    await engine.fetcher.warmLexicon(failedIds);
+  }
+}
+
+async function resolvePageLayout(
+  engine: RenderEngine,
+  record: CardRecord,
+): Promise&lt;PageLayout&gt; {
+  // card.rule_card(:layout) (rule/all.rb:19-21): the rule CACHE walk —
+  // rule_card_id -&gt; rule_id_lookup over the card&apos;s rule lookup keys, keyed
+  // by the anchor&apos;s CARD id (pattern/base.rb:75-80). The first lookup key
+  // the cache answers wins; its content may still be empty -&gt; first_name
+  // nil -&gt; the :default code layout (the walk does not continue).
+  const rule = await engine.ruleCardForSetting(
+    {
+      name: record.name,
+      id: record.id,
+      typeId: record.typeId,
+      typeName:
+        record.typeId !== undefined
+          ? await engine.fetcher.codenames.nameForId(record.typeId)
+          : undefined,
+      ...(record.isNew === true ? { isNew: true } : {}),
+    },
+    \&quot;layout\&quot;,
+  );
+  const layoutName =
+    rule === undefined ? undefined : firstItemOfRuleContent(rule.dbContent);
+  if (layoutName === undefined || layoutName === \&quot;\&quot;) {
+    return { layoutName: \&quot;:default\&quot;, kind: \&quot;code-default\&quot; };
+  }
+
+  // Layout.card_layout? — the layout name must fetch to a Layout/Html/Basic
+  // typed card. Fetch misses (including trashed cards) fall through.
+  const layoutCard = await engine.fetcher.fetchByName(layoutName);
+  const typeCode =
+    layoutCard?.typeId === undefined
+      ? undefined
+      : await engine.fetcher.codenames.nameForId(layoutCard.typeId);
+  if (
+    layoutCard !== undefined &amp;&amp;
+    layoutCard.name !== undefined &amp;&amp;
+    (typeCode === \&quot;layout_type\&quot; || typeCode === \&quot;html\&quot; || typeCode === \&quot;basic\&quot;)
+  ) {
+    const layoutCardContent = layoutCard.dbContent ?? \&quot;\&quot;;
+    const mainChunk = findMainNestChunk(layoutCardContent);
+    if (mainChunk === undefined) {
+      // CardLayout#fetch_main_nest_opts raise (Layout.main_nest_opts phase,
+      // before the main render).
+      throw new Error(`no main nest found in layout \&quot;${layoutName}\&quot;`);
+    }
+    return {
+      layoutName,
+      kind: \&quot;card\&quot;,
+      layoutCardContent,
+      mainViewRaw: mainChunk.options.view,
+      mainNestSyntax: mainChunk.syntax,
+    };
+  }
+
+  // Layout.code_layout? — the built-in registry. This port classifies only
+  // the :default fallback (the empty-rule case); the other built-ins
+  // (simple/pre/no_side/modal) fall through to the unknown branch.
+  if (layoutName === \&quot;default\&quot;) {
+    return { layoutName: \&quot;:default\&quot;, kind: \&quot;code-default\&quot; };
+  }
+
+  // UnknownLayout — wrapper.rb#raise_wrap_error with voo.layout.to_name.key.
+  return { layoutName, kind: \&quot;unknown\&quot;, unknownKey: DeckoName.parse(layoutName).key };
+}
+
+/** set/all/item.rb raw_item_strings: content.split(/\\n+/).map(strip_item);
+ *  first_name = item_names.first. List/Pointer-typed rule cards store JSON
+ *  arrays — parsed before the split (Abstract::List#raw_item_strings). */
+function firstItemOfRuleContent(content: string | null | undefined): string | undefined {
+  if (content === null || content === undefined) return undefined;
+  const trimmed = content.trim();
+  if (trimmed === \&quot;\&quot;) return undefined;
+  if (trimmed.startsWith(\&quot;[\&quot;)) {
+    try {
+      const parsed: unknown = JSON.parse(trimmed);
+      if (Array.isArray(parsed) &amp;&amp; parsed.length &gt; 0) {
+        const first = parsed[0];
+        const s = typeof first === \&quot;string\&quot; ? first : String(first ?? \&quot;\&quot;);
+        return s.trim() === \&quot;\&quot; ? undefined : s.trim();
+      }
+    } catch {
+      // not JSON: fall through to the plain-text split
+    }
+  }
+  const firstLine = trimmed.split(/\\n+/)[0]?.trim() ?? \&quot;\&quot;;
+  return firstLine === \&quot;\&quot; ? undefined : firstLine;
+}
+
+/** The {{_main|view}} chunk of a layout card&apos;s content
+ *  (CardLayout#find_main_nest_chunk, direct-chunk case). The name match is
+ *  case-sensitive exactly like Ruby&apos;s main_nest? (\&quot;_MAIN\&quot; nests as a plain
+ *  child — only the lowercase \&quot;_main\&quot; spelling fires the main path). */
+function findMainNestChunk(
+  content: string,
+): { options: { view?: string; extra: Record&lt;string, string&gt; }; syntax: string } | undefined {
+  for (const piece of scanNests(content)) {
+    if (piece.kind === \&quot;nest\&quot; &amp;&amp; piece.nest !== undefined &amp;&amp; piece.nest.name === \&quot;_main\&quot;) {
+      return {
+        options: { view: piece.nest.options.view, extra: piece.nest.options.extra },
+        syntax: piece.nest.syntax,
+      };
+    }
+  }
+  return undefined;
+}
+
+/** layouts.rb layout :default (the built-in code layout; body_tag wraps):
+ *  header / article(main) / aside(sidebar) / footer, each a codename nest.
+ *  Rendered unstripped per the show.rb wrapper precedent. */
+function codeDefaultLayoutInterior(fmt: RenderFormat): string {
+  const nest = (name: string, view: string): string =&gt;
+    fmt.nest({
+      name,
+      syntax: `${name}|${view}`,
+      options: { view, extra: {} },
+      comment: undefined,
+    });
+  return (
+    `&lt;body class=\&quot;\&quot;&gt;\\n` +
+    `  &lt;header&gt;${nest(\&quot;:header\&quot;, \&quot;core\&quot;)}&lt;/header&gt;\\n` +
+    `  &lt;article&gt;${fmt.mainNest({ nest: {
+      name: \&quot;_main\&quot;,
+      syntax: \&quot;_main\&quot;,
+      options: { extra: {} },
+      comment: undefined,
+    } })}&lt;/article&gt;\\n` +
+    `  &lt;aside&gt;${nest(\&quot;:sidebar\&quot;, \&quot;core\&quot;)}&lt;/aside&gt;\\n` +
+    `  &lt;footer&gt;${nest(\&quot;:footer\&quot;, \&quot;content\&quot;)}&lt;/footer&gt;\\n` +
+    `&lt;/body&gt;`
+  );
+}
+
+// ---------------------------------------------------------------------------
+// head content (html/show.rb head_content -&gt; the page card&apos;s :head view;
+// html/head.rb basket[:head_views] joined \&quot;\\n\&quot;)
+// ---------------------------------------------------------------------------
+
+export async function headContent(
+  engine: RenderEngine,
+  name: DeckoName,
+  rootCard: RenderCard,
+): Promise&lt;string&gt; {
+  // head_views order (card-mod-format set/all/html/head.rb:1-4 basket:
+  // page_title_tag, meta_tags, favicon_tag, stylesheet_tags,
+  // universal_edit_button, rss_links — then the script mod&apos;s views) with the
+  // empty-string contributions the basket produces: the blank between
+  // meta_tags and favicon_tag, and
+  // universal_edit_button itself, which renders \&quot;\&quot; on a perms :update
+  // denial and the
+  // x-wiki link when update is allowed. rss_links
+  // renders NIL here and Ruby&apos;s join drops nils
+  // (head.rb:32 `.compact.join \&quot;\\n\&quot;`) — no line at all.
+  //
+  // The page_title/favicon/stylesheet byte builders come from
+  // render/head-views.ts, the ONE module the card-mod-format head VIEWS
+  // also call (through the prepare-phase prefetch,
+  // RenderEngine#preloadHeadViewReads). They used to be private functions
+  // in this file; extracting them is what makes the mod views
+  // byte-identical by construction instead of by review.
+  const read = await headReadSet(engine, \&quot;style\&quot;);
+  return [
+    pageTitleTagBytes(read, name.s),
+    (await noindex(engine, rootCard)) ? `${META_TAGS}\\n&lt;meta content=&apos;noindex&apos; name=&apos;robots&apos;&gt;` : META_TAGS,
+    \&quot;\&quot;, // a mod basket head view renders \&quot;\&quot; here
+    faviconTagBytes(read),
+    stylesheetTagsBytes(read),
+    await universalEditButtonTag(engine, rootCard),
+    await javascriptTags(engine),
+    await scriptVariablesTag(engine),
+    await scriptCallsTag(engine),
+  ].join(\&quot;\\n\&quot;);
+}
+
+/** card-mod-format set/all/html/head.rb:16-18 `noindex?`: `unknown? ||
+ *  :noindex.card.include_item?(name)` — the :meta_tags template adds the
+ *  robots noindex meta for an absent card and for any card the *noindex
+ *  list names. */
+async function noindex(engine: RenderEngine, rootCard: RenderCard): Promise&lt;boolean&gt; {
+  if (rootCard.unknown === true) return true;
+  const list = await globalSettingContent(engine, \&quot;noindex\&quot;);
+  if (list === undefined || list.trim() === \&quot;\&quot;) return false;
+  const key = rootCard.name.key;
+  return list
+    .split(/\\n+/)
+    .map((item) =&gt; item.replace(/^\\s*\\[\\[|\\]\\]\\s*$/g, \&quot;\&quot;).trim())
+    .some((item) =&gt; {
+      try {
+        return item !== \&quot;\&quot; &amp;&amp; DeckoName.parse(item).key === key;
+      } catch {
+        return false;
+      }
+    });
+}
+
+/** card-mod-format set/all/html/head.rb:46-51 view :universal_edit_button
+ *  (unknown: :blank, denial: :blank, perms: :update): the update-permission
+ *  gate is the VIEW&apos;s perms check (ok? :update via Auth.as_id — format.rb
+ *  error.rb:27-29 ok?), denial renders :blank (the empty head entry); the
+ *  allowed branch renders
+ *  `tag \&quot;link\&quot;, rel: \&quot;alternate\&quot;, type: \&quot;application/x-wiki\&quot;, title:
+ *  \&quot;Edit this page!\&quot;, href: path(view: :edit)` — Rails&apos; tag builder emits
+ *  the self-closing form and `path(view: :edit)` is the \&quot;/&lt;url_key&gt;/edit\&quot;
+ *  path form (`&lt;link rel=\&quot;alternate\&quot;
+ *  type=\&quot;application/x-wiki\&quot; title=\&quot;Edit this page!\&quot; href=\&quot;/Home/edit\&quot; /&gt;`).
+ *  `return if card.new?` (head.rb:47): an id-less page root renders \&quot;\&quot;. */
+export async function universalEditButtonTag(
+  engine: RenderEngine,
+  rootCard: RenderCard,
+): Promise&lt;string&gt; {
+  if (rootCard.id === undefined) return \&quot;\&quot;; // head.rb:47 return if card.new?
+  const updateOk = await engine.updateVerdictForCard?.(rootCard);
+  if (updateOk === false) return \&quot;\&quot;; // perms :update denial -&gt; :blank
+  // path(view: :edit): Card::Path marks a known card by its url_key
+  // (lib/card/path.rb interpret_mark), so punctuation the key drops is
+  // dropped from the href too (\&quot;Organizer(s)\&quot; -&gt; \&quot;Organizer_s\&quot;).
+  return (
+    `&lt;link rel=\&quot;alternate\&quot; type=\&quot;application/x-wiki\&quot; title=\&quot;Edit this page!\&quot; ` +
+    `href=\&quot;/${h(rootCard.name.urlKey)}/edit\&quot; /&gt;`
+  );
+}
+
+/** The read set the head builders consume, fetched ASYNC on the page
+ *  path (the mod&apos;s ViewFn views read the same cards SYNC out of the
+ *  prepared map instead — head-views.ts#HeadReadSet is the shared
+ *  contract between the two). `styleSetting` selects which
+ *  *all+*&lt;setting&gt;+*asset output chain fills styleAssetOutput; the page
+ *  path passes \&quot;style\&quot; for the head and the javascript/script_variables
+ *  builders reuse assetOutputUrl directly for the script chain. */
+async function headReadSet(engine: RenderEngine, styleSetting: string): Promise&lt;HeadReadSet&gt; {
+  return {
+    titleSetting: await globalSettingContent(engine, \&quot;title\&quot;),
+    faviconSource: await globalSettingContent(engine, \&quot;favicon\&quot;),
+    styleAssetOutput: await assetOutputContent(engine, styleSetting),
+  };
+}
+
+/** The *all+*&lt;setting&gt;+*asset output card&apos;s db_content — the compiled
+ *  asset&apos;s attachment SOURCE (asset_outputter.rb asset_output_url
+ *  resolves this source to the cloud URL). undefined when the universe
+ *  default rule for the setting does not exist, which is the
+ *  no-asset-pipeline branch every caller renders as \&quot;\&quot;. */
+async function assetOutputContent(
+  engine: RenderEngine,
+  settingCodename: string,
+): Promise&lt;string | undefined&gt; {
+  const rule = await engine.fetcher.fetchByName(`*all+*${settingCodename}`);
+  if (rule?.name === undefined) return undefined;
+  const output = await engine.fetcher.fetchByName(`${rule.name.s}+*asset output`);
+  return output?.dbContent;
+}
+
+/** Card::Rule.global_setting(name): the codename card&apos;s db_content
+ *  (rule.rb:5-9 — `Card[name]` with the codename mark).
+ *
+ *  Codename-less decks: Ruby&apos;s head assembly
+ *  cannot 500 a page on an unmapped codename. `Codename.id` (codename.rb:
+ *  35-41) returns nil for an unmapped codename, and the raise-capable fetch
+ *  forms are caught per-view in the page assembly (nest fetches rescue
+ *  Card::Error::CodenameNotFound and render the not-found card, format/nest/
+ *  fetch.rb:22-34; every nested view&apos;s raise is rescued by wrap_and_render
+ *  -&gt; rescue_view -&gt; quiet_error, format/render.rb:56-59 + format/error.rb:
+ *  69-84). This port reads the registry FIRST (Codename.id — the
+ *  nil-returning fetch) and answers undefined for an unmapped codename, so
+ *  each head entry renders its no-setting branch; a mapped codename takes
+ *  the plain fetch path (byte-identical, memo read only — the page
+ *  path folds the codehash in the prepare render before the head assembles). */
+async function globalSettingContent(
+  engine: { fetcher: FetchEngine },
+  codename: string,
+): Promise&lt;string | undefined&gt; {
+  if ((await engine.fetcher.codenames.id(codename)) === undefined) {
+    return undefined; // Ruby Codename.id nil: the setting card cannot exist
+  }
+  const card = await engine.fetcher.fetchByName(`:${codename}`);
+  const content = card?.dbContent;
+  return content === undefined || content === null ? undefined : content;
+}
+
+/** mark.rb:42-44 home_mark — `Card::Rule.global_setting(:home) || \&quot;Home\&quot;`,
+ *  where global_setting (card-1.110.0 lib/card/rule.rb:5-9) is
+ *  `Auth.as_bot { (card = Card[name]) &amp;&amp; !card.db_content.strip.empty? &amp;&amp;
+ *  card.db_content }`: the *home card&apos;s content when it exists and is not
+ *  blank (whitespace-only falls back), \&quot;Home\&quot; otherwise. The home page arms
+ *  the type/:type arm (engine_routes.rb:23), and the MARKLESS write routes
+ *  (engine_routes.rb:29-31 — put|patch|delete \&quot;/\&quot; run implicit_mark, which
+ *  lands on home_mark for a past-setup deck) read the rule per request
+ *  through this resolver, so an edited *home rule moves the home page
+ *  exactly as Ruby&apos;s does. Takes any fetcher-bearing engine (a RenderEngine
+ *  or the write dispatch&apos;s request context). */
+export async function homeMarkContent(engine: { fetcher: FetchEngine }): Promise&lt;string&gt; {
+  const content = await globalSettingContent(engine, \&quot;home\&quot;);
+  return content !== undefined &amp;&amp; content.trim() !== \&quot;\&quot; ? content : \&quot;Home\&quot;;
+}
+
+/** javascript_tags: [nest(*script, :remote_script_tags), MAIN DECKO
+ *  JAVASCRIPT comment, main_javascript_tag]. The remote tags are the mods&apos;
+ *  manifest \&quot;remote\&quot; groups. */
+async function javascriptTags(engine: RenderEngine): Promise&lt;string&gt; {
+  const scriptUrl = await assetOutputUrl(engine, \&quot;script\&quot;);
+  return [
+    applyScriptIntegrity(REMOTE_SCRIPT_TAGS.replace(STOCK_FONT_AWESOME_TAG, fontAwesomeHeadTag(engine.fontAwesomeAssetMode))),
+    `&lt;!-- MAIN DECKO JAVASCRIPT --&gt;`,
+    `&lt;script src=\&quot;${scriptUrl}\&quot;&gt;&lt;/script&gt;`,
+  ].join(\&quot;\\n\&quot;);
+}
+
+/** The *all+*&lt;setting&gt;+*asset output card&apos;s content, resolved to the fog
+ *  cloud URL (asset_outputter.rb asset_output_url). */
+async function assetOutputUrl(engine: RenderEngine, settingCodename: string): Promise&lt;string&gt; {
+  return cloudAttachmentUrl(await assetOutputContent(engine, settingCodename)) ?? \&quot;\&quot;;
+}
+
+/** head_javascript.rb view :script_variables (javascript_tag + the CDATA
+ *  wrapper); decko_script_variables order: rootUrl, doubleClick,
+ *  cssPath, signed_in. */
+async function scriptVariablesTag(engine: RenderEngine): Promise&lt;string&gt; {
+  const cssPath = applyDeploymentCssRevision(await assetOutputUrl(engine, \&quot;style\&quot;));
+  // decko_script_variables order: rootUrl, doubleClick, cssPath,
+  // signed_in. signed_in is the SESSION (Auth.signed_in? — Auth.current_id
+  // != AnonymousID, auth/current.rb), not the read-verdict actor: the page
+  // chrome session (engine.pageSession) carries it; undefined = signed out
+  // (signed_in: false).
+  const signedIn = engine.pageSession?.signedIn === true;
+  // decko.rootUrl is card_url(\&quot;\&quot;) (mod/script/set/all/head_javascript.rb:35)
+  // = Env.origin + card_path(\&quot;\&quot;) (card/lib/card/env/location.rb:19-21 + :6-16,
+  // card_path \&quot;\&quot; -&gt; relative_url_root + \&quot;/\&quot;). Env.origin is PER RENDER
+  // (card/lib/card/env/serializable.rb:20-22: Cardio.config.deck_origin ||
+  // \&quot;#{protocol}#{request&amp;.host_with_port}\&quot;), and this builder is reached on
+  // BOTH surfaces (render.ts seats this same headContent for an unseated
+  // root whose content nests the head card&apos;s :core). The page surface runs
+  // it under runWithPageConfig (renderPageBytes) with the production
+  // deck_origin = \&quot;https://example.com\&quot;; the VIEW surface runs it with the
+  // railtie default (card/lib/cardio/railtie.rb:28 config.deck_origin = nil)
+  // and no controller (card/lib/card/env.rb:17), so origin is \&quot;\&quot; and
+  // card_url(\&quot;\&quot;) is the bare \&quot;/\&quot;. engine.envOriginConfig() is that
+  // per-surface value (render/deck-origin.ts) — reading it here is what
+  // the constant could not do.
+  const rootUrl = deckoRootUrl() ?? `${engine.envOriginConfig()}/`;
+  return (
+    `&lt;script&gt;\\n//&lt;![CDATA[\\n` +
+    `decko.rootUrl=&apos;${rootUrl}&apos;;\\n` +
+    `decko.doubleClick=&apos;signed_in&apos;;\\n` +
+    `decko.cssPath=&apos;${cssPath}&apos;;\\n` +
+    `decko.signed_in=${signedIn};\\n` +
+    `\\n//]]&gt;\\n&lt;/script&gt;`
+  );
+}
+
+/** head_javascript.rb view :script_calls: the mod script_calls basket
+ *  (ace editor -&gt; setAceConfig over global_setting(:ace); tinymce_editor -&gt;
+ *  setTinyMCEConfig over global_setting(:tiny_mce)) + trigger_slot_ready,
+ *  joined \&quot;\\n\\n\&quot; inside the CDATA script. Config JSONs are
+ *  escape_javascript&apos;d (newlines -&gt; \\n literals). */
+async function scriptCallsTag(engine: RenderEngine): Promise&lt;string&gt; {
+  const ace = (await globalSettingContent(engine, \&quot;ace\&quot;)) ?? \&quot;\&quot;;
+  const tinymce = (await globalSettingContent(engine, \&quot;tiny_mce\&quot;)) ?? \&quot;\&quot;;
+  const configs = [
+    `decko.setAceConfig(&apos;${escapeJavascript(ace)}&apos;)`,
+    `decko.setTinyMCEConfig(&apos;${escapeJavascript(tinymce)}&apos;)`,
+    `$(&apos;document&apos;).ready(function() { $(&apos;.card-slot&apos;).trigger(&apos;decko.slot.ready&apos;); })`,
+  ].join(\&quot;\\n\\n\&quot;);
+  return `&lt;script&gt;\\n//&lt;![CDATA[\\n${configs}\\n//]]&gt;\\n&lt;/script&gt;`;
+}
+
+/** Rails escape_javascript (action_view/helpers/javascript_helper.rb
+ *  JAVASCRIPT_ESCAPE_MAP order): \\\\ -&gt; \\\\\\\\, &lt;/ -&gt; &lt;\\\\/ (Rails inserts the
+ *  backslash after the backslash pass), newlines -&gt; \\\\n, \&quot; -&gt; \\\\\&quot;, &apos; -&gt; \\\\&apos;,
+ *  ` -&gt; \\\\`, $ -&gt; \\\\$. */
+function escapeJavascript(js: string): string {
+  return js
+    .replace(/\\\\/g, \&quot;\\\\\\\\\&quot;)
+    .replace(/&lt;\\//g, \&quot;&lt;\\\\/\&quot;)
+    .replace(/\\r\\n/g, \&quot;\\\\n\&quot;)
+    .replace(/\\r/g, \&quot;\\\\n\&quot;)
+    .replace(/\\n/g, \&quot;\\\\n\&quot;)
+    .replace(/\&quot;/g, &apos;\\\\\&quot;&apos;)
+    .replace(/&apos;/g, \&quot;\\\\&apos;\&quot;)
+    .replace(/`/g, \&quot;\\\\`\&quot;)
+    .replace(/\\$/g, \&quot;\\\\$\&quot;);
+}
+
+/** card-mod-script set/all/head_javascript.rb:17 javascript_tags&apos;
+ *  remote_script_tags nest — the installed mods&apos; manifest \&quot;remote\&quot; groups in
+ *  the deck&apos;s *all+*script item order (format, ace editor, bootstrap).
+ *  Constant for a deck with a fixed mod set (the CDN urls live in the gems&apos;
+ *  manifest.yml files, not in card content). */
+const REMOTE_SCRIPT_TAGS = [
+  `&lt;!-- mod: format (remote) --&gt;`,
+  `&lt;script src=\&quot;https://code.jquery.com/jquery-3.5.1.min.js\&quot; crossorigin=\&quot;anonymous\&quot;&gt;&lt;/script&gt;`,
+  `&lt;script src=\&quot;https://cdnjs.cloudflare.com/ajax/libs/jquery-ujs/1.2.3/rails.min.js\&quot; crossorigin=\&quot;anonymous\&quot; referrerpolicy=\&quot;no-referrer\&quot;&gt;&lt;/script&gt;`,
+  `&lt;!-- mod: ace editor (remote) --&gt;`,
+  `&lt;script src=\&quot;https://cdnjs.cloudflare.com/ajax/libs/ace/1.18.0/ace.min.js\&quot; crossorigin=\&quot;anonymous\&quot;&gt;&lt;/script&gt;`,
+  `&lt;!-- mod: bootstrap (remote) --&gt;`,
+  `&lt;script src=\&quot;https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.1/js/select2.full.min.js\&quot; crossorigin=\&quot;anonymous\&quot; referrerpolicy=\&quot;no-referrer\&quot;&gt;&lt;/script&gt;`,
+  `&lt;script src=\&quot;https://kit.fontawesome.com/1366963381.js\&quot; crossorigin=\&quot;anonymous\&quot;&gt;&lt;/script&gt;`,
+].join(\&quot;\\n\&quot;);
+
+/** The deployment&apos;s SRI integrity attributes
+ *  (deployment-follow-live-config.ts scriptIntegrityBySrc): the deployment
+ *  head&apos;s remote CDN script tags carry integrity=\&quot;...\&quot; after crossorigin and
+ *  before an optional referrerpolicy. UNSET = identity (the gem-era tags
+ *  without integrity). Exported for the deployment-config test. */
+export function applyScriptIntegrity(tags: string): string {
+  return tags.replace(
+    /&lt;script src=\&quot;([^\&quot;]+)\&quot;([^&gt;]*)&gt;&lt;\\/script&gt;/g,
+    (tag: string, src: string, attrs: string) =&gt; {
+      const integrity = scriptIntegrityFor(src);
+      if (integrity === undefined) return tag;
+      const referrer = attrs.indexOf(\&quot; referrerpolicy=\&quot;);
+      const at = referrer === -1 ? attrs.length : referrer;
+      return `&lt;script src=\&quot;${src}\&quot;${attrs.slice(0, at)} integrity=\&quot;${integrity}\&quot;${attrs.slice(at)}&gt;&lt;/script&gt;`;
+    },
+  );
+}
+
+/** The page-path cloud attachment resolution: attachment URLs inside the
+ *  assembled interior (header logo, image cores) must resolve to the
+ *  absolute fog URL exactly like the head pieces; the bare view surface keeps
+ *  the raw \&quot;(bucket)/...\&quot; bytes (the view-surface contract). Runs LAST so
+ *  nested view output is covered wholesale.
+ *  The prefix reads the process-wide deployment asset host when set
+ *  (mirroring Ruby&apos;s process-wide storage config); unset = the fog
+ *  CLOUD_URL_PREFIX. Note the two constants&apos; slash shapes: the fog
+ *  host carries a trailing slash (empty bucket -&gt; the double slash), the
+ *  deployment host does not (a REAL bucket -&gt; single slash), and each is
+ *  joined to \&quot;/files/\&quot; to reproduce exactly its own URL form. */
+function resolveCloudUrls(html: string): string {
+  const deployment = getDeploymentCloudAssetHost();
+  const prefix = deployment !== undefined
+    ? `${deployment}/files/`
+    : CLOUD_URL_PREFIX;
+  return html.replace(
+    /\\([^()\\s]+\\)\\/(\\d+\\/[^\\s\&quot;&apos;&lt;&gt;)]+\\.[A-Za-z0-9]+)/g,
+    `${prefix}$1`,
+  );
+}
+&quot;
+
+ ❯ tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts:80:18
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/render/page-main-view-dispatch-rescue-scope-pins.test.ts" name="the posture switch still governs the scope &gt; true re-raises and false reaches the span, by construction of the guard" time="0.000594404">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/card/rules/adversarial-original-rule-storage.test.ts" timestamp="2026-11-03T20:26:07.135Z" hostname="brandon-portal-vm" tests="10" failures="10" errors="0" skipped="0" time="2.623054475">
+        <testcase classname="tests/card/rules/adversarial-original-rule-storage.test.ts" name="original new Book type rule returns authorize" time="0.435864136">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ native tests/card/rules/adversarial-original-rule-storage.test.ts:32:22
+ ❯ tests/card/rules/adversarial-original-rule-storage.test.ts:43:17
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-original-rule-storage.test.ts" name="original banana self rule returns pebbles" time="0.249061918">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ native tests/card/rules/adversarial-original-rule-storage.test.ts:32:22
+ ❯ tests/card/rules/adversarial-original-rule-storage.test.ts:49:17
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-original-rule-storage.test.ts" name="original user preference value: own" time="0.213892538">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ native tests/card/rules/adversarial-original-rule-storage.test.ts:32:22
+ ❯ tests/card/rules/adversarial-original-rule-storage.test.ts:55:17
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-original-rule-storage.test.ts" name="original user preference value: all" time="0.199006589">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ native tests/card/rules/adversarial-original-rule-storage.test.ts:32:22
+ ❯ tests/card/rules/adversarial-original-rule-storage.test.ts:55:17
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-original-rule-storage.test.ts" name="original user preference value: override" time="0.280795232">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ native tests/card/rules/adversarial-original-rule-storage.test.ts:32:22
+ ❯ tests/card/rules/adversarial-original-rule-storage.test.ts:55:17
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-original-rule-storage.test.ts" name="original user-id cache finds both explicit users on the Book set" time="0.376173776">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ native tests/card/rules/adversarial-original-rule-storage.test.ts:32:22
+ ❯ tests/card/rules/adversarial-original-rule-storage.test.ts:61:17
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-original-rule-storage.test.ts" name="rule lookup preserves original cache qualification: trunk-type" time="0.220440027">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ native tests/card/rules/adversarial-original-rule-storage.test.ts:32:22
+ ❯ tests/card/rules/adversarial-original-rule-storage.test.ts:73:25
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-original-rule-storage.test.ts" name="rule lookup preserves original cache qualification: setting-type" time="0.2006142">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ native tests/card/rules/adversarial-original-rule-storage.test.ts:32:22
+ ❯ tests/card/rules/adversarial-original-rule-storage.test.ts:73:25
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-original-rule-storage.test.ts" name="rule lookup preserves original cache qualification: setting-code" time="0.196002126">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ native tests/card/rules/adversarial-original-rule-storage.test.ts:32:22
+ ❯ tests/card/rules/adversarial-original-rule-storage.test.ts:73:25
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-original-rule-storage.test.ts" name="rule lookup preserves original cache qualification: empty-follow" time="0.247340345">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ native tests/card/rules/adversarial-original-rule-storage.test.ts:32:22
+ ❯ tests/card/rules/adversarial-original-rule-storage.test.ts:73:25
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/card/rules/adversarial-rule-cache-key.test.ts" timestamp="2026-11-03T20:26:07.142Z" hostname="brandon-portal-vm" tests="4" failures="4" errors="0" skipped="0" time="0.683947527">
+        <testcase classname="tests/card/rules/adversarial-rule-cache-key.test.ts" name="matches the original requested cache key: setting-code-changed, fallback=false" time="0.254567598">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ tests/card/rules/adversarial-rule-cache-key.test.ts:35:22
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-rule-cache-key.test.ts" name="matches the original requested cache key: setting-code-changed, fallback=true" time="0.16122211">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ tests/card/rules/adversarial-rule-cache-key.test.ts:35:22
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-rule-cache-key.test.ts" name="matches the original requested cache key: pattern-code-changed, fallback=false" time="0.124078475">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ tests/card/rules/adversarial-rule-cache-key.test.ts:35:22
+            </failure>
+        </testcase>
+        <testcase classname="tests/card/rules/adversarial-rule-cache-key.test.ts" name="matches the original requested cache key: pattern-code-changed, fallback=true" time="0.141133282">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ tests/card/rules/adversarial-rule-cache-key.test.ts:35:22
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/cql/search-count-mysql.test.ts" timestamp="2026-11-03T20:26:07.145Z" hostname="brandon-portal-vm" tests="5" failures="1" errors="0" skipped="4" time="0.022589647">
+        <testcase classname="tests/cql/search-count-mysql.test.ts" name="search count on the MySQL rung (stock Ruby Decko&apos;s recorded queries) &gt; runs on the recorded rung: a real MySQL server, the capture&apos;s collation" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/cql/search-count-mysql.test.ts" name="search count on the MySQL rung (stock Ruby Decko&apos;s recorded queries) &gt; the server&apos;s own refusal is the mechanism the word-boundary translation answers" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/cql/search-count-mysql.test.ts" name="search count on the MySQL rung (stock Ruby Decko&apos;s recorded queries) &gt; a paging search counts every match, not the page (the count quirk)" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/cql/search-count-mysql.test.ts" name="search count on the MySQL rung (stock Ruby Decko&apos;s recorded queries) &gt; answers every recorded query with the original&apos;s names and the original&apos;s whole count" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/cql/search-count-mysql.test.ts" name="tests/cql/search-count-mysql.test.ts" time="0.022589647">
+            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+" type="Error">
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ tests/cql/search-count-mysql.test.ts:109:12
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/deploy/uncompressed-wasm-build.test.ts" timestamp="2026-11-03T20:26:07.147Z" hostname="brandon-portal-vm" tests="7" failures="3" errors="0" skipped="0" time="3.923123668">
+        <testcase classname="tests/deploy/uncompressed-wasm-build.test.ts" name="refuses implicit or unsafe asset hosts" time="0.004464353">
+        </testcase>
+        <testcase classname="tests/deploy/uncompressed-wasm-build.test.ts" name="reads replaced canonical provider bytes during a same-process rebuild and refuses a different provider" time="0.091824277">
+        </testcase>
+        <testcase classname="tests/deploy/uncompressed-wasm-build.test.ts" name="rejects malformed CLI arguments and an existing metafile before creating package output" time="0.116510699">
+            <failure message="expected &apos;node:internal/errors:983\n  const err…&apos; to match /requires a value|Unknown build option…/" type="AssertionError">
+AssertionError: expected &apos;node:internal/errors:983\n  const err…&apos; to match /requires a value|Unknown build option…/
+
+- Expected:
+/requires a value|Unknown build option|Duplicate build option/
+
++ Received:
+&quot;node:internal/errors:983
+  const err = new Error(message);
+              ^
+
+Error: Command failed: git -C /home/ubuntu/decko-full-suite-20261103/src rev-parse --show-toplevel
+fatal: not a git repository (or any of the parent directories): .git
+
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:916:11)
+    at execFileSync (node:child_process:952:15)
+    at git (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
+    at readBuildStamp (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
+    at file:///home/ubuntu/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+  status: 128,
+  signal: null,
+  output: [
+    null,
+    &apos;&apos;,
+    &apos;fatal: not a git repository (or any of the parent directories): .git\\n&apos;
+  ],
+  pid: 3532768,
+  stdout: &apos;&apos;,
+  stderr: &apos;fatal: not a git repository (or any of the parent directories): .git\\n&apos;
+}
+
+Node.js v22.23.3
+&quot;
+
+ ❯ tests/deploy/uncompressed-wasm-build.test.ts:71:29
+            </failure>
+        </testcase>
+        <testcase classname="tests/deploy/uncompressed-wasm-build.test.ts" name="admits all raw writer entries before output, including names, bytes, licenses and existing destinations" time="0.005084477">
+        </testcase>
+        <testcase classname="tests/deploy/uncompressed-wasm-build.test.ts" name="preflights a dangling later license link and metadata link without writing earlier outputs" time="0.140058193">
+            <failure message="expected &apos;node:internal/errors:983\n  const err…&apos; to contain &apos;Existing reviewed metafile must not b…&apos;" type="AssertionError">
+AssertionError: expected &apos;node:internal/errors:983\n  const err…&apos; to contain &apos;Existing reviewed metafile must not b…&apos;
+
+- Expected
++ Received
+
+- Existing reviewed metafile must not be overwritten
++ node:internal/errors:983
++   const err = new Error(message);
++               ^
++
++ Error: Command failed: git -C /home/ubuntu/decko-full-suite-20261103/src rev-parse --show-toplevel
++ fatal: not a git repository (or any of the parent directories): .git
++
++     at genericNodeError (node:internal/errors:983:15)
++     at wrappedFn (node:internal/errors:537:14)
++     at checkExecSyncError (node:child_process:916:11)
++     at execFileSync (node:child_process:952:15)
++     at git (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
++     at readBuildStamp (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
++     at file:///home/ubuntu/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
++     at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
++     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
++     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
++   status: 128,
++   signal: null,
++   output: [
++     null,
++     &apos;&apos;,
++     &apos;fatal: not a git repository (or any of the parent directories): .git\n&apos;
++   ],
++   pid: 3532779,
++   stdout: &apos;&apos;,
++   stderr: &apos;fatal: not a git repository (or any of the parent directories): .git\n&apos;
++ }
++
++ Node.js v22.23.3
++
+
+ ❯ tests/deploy/uncompressed-wasm-build.test.ts:144:27
+            </failure>
+        </testcase>
+        <testcase classname="tests/deploy/uncompressed-wasm-build.test.ts" name="builds the actual complete package and refuses to overwrite it" time="0.103483163">
+            <failure message="node:internal/errors:983
+  const err = new Error(message);
+              ^
+
+Error: Command failed: git -C /home/ubuntu/decko-full-suite-20261103/src rev-parse --show-toplevel
+fatal: not a git repository (or any of the parent directories): .git
+
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:916:11)
+    at execFileSync (node:child_process:952:15)
+    at git (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
+    at readBuildStamp (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
+    at file:///home/ubuntu/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+  status: 128,
+  signal: null,
+  output: [
+    null,
+    &apos;&apos;,
+    &apos;fatal: not a git repository (or any of the parent directories): .git\n&apos;
+  ],
+  pid: 3532790,
+  stdout: &apos;&apos;,
+  stderr: &apos;fatal: not a git repository (or any of the parent directories): .git\n&apos;
+}
+
+Node.js v22.23.3
+: expected 1 to be +0 // Object.is equality" type="AssertionError">
+AssertionError: node:internal/errors:983
+  const err = new Error(message);
+              ^
+
+Error: Command failed: git -C /home/ubuntu/decko-full-suite-20261103/src rev-parse --show-toplevel
+fatal: not a git repository (or any of the parent directories): .git
+
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:916:11)
+    at execFileSync (node:child_process:952:15)
+    at git (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:33:5)
+    at readBuildStamp (file:///home/ubuntu/decko-full-suite-20261103/src/tools/hosted-build-guard/build-stamp.mjs:41:15)
+    at file:///home/ubuntu/decko-full-suite-20261103/src/tools/bundle-bunny-edge-engine.mjs:44:40
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+  status: 128,
+  signal: null,
+  output: [
+    null,
+    &apos;&apos;,
+    &apos;fatal: not a git repository (or any of the parent directories): .git\n&apos;
+  ],
+  pid: 3532790,
+  stdout: &apos;&apos;,
+  stderr: &apos;fatal: not a git repository (or any of the parent directories): .git\n&apos;
+}
+
+Node.js v22.23.3
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ git tools/hosted-build-guard/build-stamp.mjs:33:5
+ ❯ readBuildStamp tools/hosted-build-guard/build-stamp.mjs:41:15
+ ❯ tools/bundle-bunny-edge-engine.mjs:44:40
+ ❯ tests/deploy/uncompressed-wasm-build.test.ts:165:42
+            </failure>
+        </testcase>
+        <testcase classname="tests/deploy/uncompressed-wasm-build.test.ts" name="builds real binary providers without boot fetches and recovers later compiler/image operations" time="3.458377919">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/exercise/parity-1.test.ts" timestamp="2026-11-03T20:26:07.150Z" hostname="brandon-portal-vm" tests="5" failures="1" errors="0" skipped="4" time="0.018348615">
+        <testcase classname="tests/exercise/parity-1.test.ts" name="byte-for-byte parity with Ruby Decko on the synthetic-v1 deck &gt; the finite synthetic-v1 operations match recorded Ruby under the declared normalizations; dirty source remains diagnostic" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/exercise/parity-1.test.ts" name="byte-for-byte parity with Ruby Decko on the synthetic-v1 deck &gt; rendering 1,754 of 1,754 — the grade&apos;s rendering tally is 1,754 graded and 1,754 passing, which is the fixture&apos;s 1,752 render operations plus the 2 render steps that run after a write" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/exercise/parity-1.test.ts" name="byte-for-byte parity with Ruby Decko on the synthetic-v1 deck &gt; semantics 2,389 of 2,389 — the grade&apos;s semantics tally is 2,389 graded and 2,389 passing; the 2,388 that docs/coverage-inventory.md publishes at :20 and :49/:53/:95 is the ops file, and the one ask step that follows a write is the whole difference" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/exercise/parity-1.test.ts" name="byte-for-byte parity with Ruby Decko on the synthetic-v1 deck &gt; persistence 16 of 16 — each of the 16 write steps in ops/scenarios.json leaves the same raw card-table row delta as Ruby, and the deltas it is graded on cover five of the six card tables" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/exercise/parity-1.test.ts" name="byte-for-byte parity with Ruby Decko on the synthetic-v1 deck" time="0.016555522">
+            <failure message="ParitySourceIdentityUnavailable: fatal: not a git repository (or any of the parent directories): .git
+" type="Error">
+Error: ParitySourceIdentityUnavailable: fatal: not a git repository (or any of the parent directories): .git
+
+ ❯ git tests/support/parity-grade-source.mjs:11:52
+ ❯ pinParityTestSource tests/support/parity-grade-source.mjs:14:18
+ ❯ tests/exercise/parity-1.test.ts:194:29
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/exercise/parity-2.test.ts" timestamp="2026-11-03T20:26:07.152Z" hostname="brandon-portal-vm" tests="5" failures="1" errors="0" skipped="2" time="0.183074911">
+        <testcase classname="tests/exercise/parity-2.test.ts" name="the side-effect and read-write tallies of the synthetic-deck grade &gt; &quot;side effects 19 of 19&quot; — the grade run asserts all 16 write answers (saved or refused, the error messages, the mail sent) and all 3 sign-in answers equal the Ruby oracle answers committed beside the fixture, and the 19 is recounted from ops/scenarios.json" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/exercise/parity-2.test.ts" name="the side-effect and read-write tallies of the synthetic-deck grade &gt; &quot;read-writes 8 of 8&quot; — each of the 8 read-write steps returns the same card and leaves the same rows as Ruby&apos;s: the two whole-session reads wrote nothing, and all 6 read steps inside the scenarios (3 sign-ins, 2 renders, 1 ask) left the same raw row delta" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/exercise/parity-2.test.ts" name="json, csv and rss byte identity on the captured test cards &gt; &quot;JSON, CSV and RSS are byte-identical on the test cards (4 of 4 format steps)&quot; — all four captured format steps (csv, rss disabled, rss enabled, json) answer exactly as the Ruby oracle recorded them: every capture the engine&apos;s format-show surface can be asked for matches byte for byte, the capture Ruby raised on raises the same error, and the two named exclusions are stated rather than counted as matches" time="0.003812868">
+        </testcase>
+        <testcase classname="tests/exercise/parity-2.test.ts" name="the committed write-battery recording behind the published write counts &gt; holds one committed synthetic deck with the public 67-step Ruby probe recording and an 87-step Ruby scenario trace on it, integrity-gated by its manifest, with the 2 public probe differences declared" time="0.026837558">
+        </testcase>
+        <testcase classname="tests/exercise/parity-2.test.ts" name="the side-effect and read-write tallies of the synthetic-deck grade" time="0.028960174">
+            <failure message="ParitySourceIdentityUnavailable: fatal: not a git repository (or any of the parent directories): .git
+" type="Error">
+Error: ParitySourceIdentityUnavailable: fatal: not a git repository (or any of the parent directories): .git
+
+ ❯ git tests/support/parity-grade-source.mjs:11:52
+ ❯ pinParityTestSource tests/support/parity-grade-source.mjs:14:18
+ ❯ tests/exercise/parity-2.test.ts:228:29
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/server/api-key-read-arm-seam-parity.test.ts" timestamp="2026-11-03T20:26:07.153Z" hostname="brandon-portal-vm" tests="14" failures="1" errors="0" skipped="0" time="0.0595156">
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the PINNED api_key gem&apos;s own answers (C17) &gt; the capture ran the pinned gem&apos;s own authenticators and sign-in" time="0.001925735">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the PINNED api_key gem&apos;s own answers (C17) &gt; the header wins over the param, and neither is a token" time="0.000680365">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the PINNED api_key gem&apos;s own answers (C17) &gt; the ORDER is token, then api_key, then session" time="0.000790006">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the PINNED api_key gem&apos;s own answers (C17) &gt; a key with no account is a REFUSAL with the gem&apos;s own message" time="0.000475004">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the PINNED api_key gem&apos;s own answers (C17) &gt; a matching key signs in with the account&apos;s own id" time="0.000497084">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the port&apos;s own seam (C17) &gt; the shared module says the api_key half belongs to this row&apos;s work" time="0.010576638">
+            <failure message="src/server/request-authenticators.ts:72: expected &apos;//   The api_key half of the authenti…&apos; to be &apos;// ----------------------------------…&apos; // Object.is equality" type="AssertionError">
+AssertionError: src/server/request-authenticators.ts:72: expected &apos;//   The api_key half of the authenti…&apos; to be &apos;// ----------------------------------…&apos; // Object.is equality
+
+Expected: &quot;// ---------------------------------------------------------------------------&quot;
+Received: &quot;//   The api_key half of the authenticators (the X-API-Key header) is the&quot;
+
+ ❯ expectQuotedLines tests/server/api-key-read-arm-seam-parity.test.ts:91:61
+ ❯ tests/server/api-key-read-arm-seam-parity.test.ts:134:7
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the port&apos;s own seam (C17) &gt; the port&apos;s own api_key mod header records WHY the gem&apos;s lib/ surface is not ported" time="0.002141136">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the port&apos;s own seam (C17) &gt; THE READER IS WRITTEN, and the pin changed on purpose" time="0.002479538">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the port&apos;s own seam (C17) &gt; THE CARD-SIDE LOOKUP IS WRITTEN, and it finds the account by CONTENT" time="0.001809773">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the port&apos;s api_key arm, measured (C17) &gt; a key that names an account signs in as the ACCOUNT&apos;s left_id" time="0.001148608">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the port&apos;s api_key arm, measured (C17) &gt; a key that names no account is the REFUSAL, with the gem&apos;s own message" time="0.000675205">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the port&apos;s api_key arm, measured (C17) &gt; THE STRIP/CHECK SPLIT HOLDS: a padded key FINDS the account and then FAILS the check" time="0.000616804">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the port&apos;s api_key arm, measured (C17) &gt; the ORDER is token, then api_key, then session" time="0.000881006">
+        </testcase>
+        <testcase classname="tests/server/api-key-read-arm-seam-parity.test.ts" name="the pinned deck&apos;s own answer at the read path (C17) &gt; the read reaches the card read arm in the pinned deck" time="0.000235282">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/server/autoname-serving-qualification.test.ts" timestamp="2026-11-03T20:26:07.156Z" hostname="brandon-portal-vm" tests="4" failures="3" errors="0" skipped="0" time="1.973699244">
+        <testcase classname="tests/server/autoname-serving-qualification.test.ts" name="observes the original serving fixture default type and absent Setting registration" time="0.043932764">
+        </testcase>
+        <testcase classname="tests/server/autoname-serving-qualification.test.ts" name="matches actual root and native cache qualification: valid" time="0.636736018">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ tests/server/autoname-serving-qualification.test.ts:35:22
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/autoname-serving-qualification.test.ts" name="matches actual root and native cache qualification: wrong-setting" time="0.658995822">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ tests/server/autoname-serving-qualification.test.ts:35:22
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/autoname-serving-qualification.test.ts" name="matches actual root and native cache qualification: wrong-set" time="0.62887336">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyDatabaseProbeOnVm tests/support/ruby-source-probe-vm.ts:51:20
+ ❯ runRubyRuleProbeOnVm tests/support/ruby-source-probe-vm.ts:73:10
+ ❯ tests/server/autoname-serving-qualification.test.ts:35:22
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/server/card-class-declarations-parity.test.ts" timestamp="2026-11-03T20:26:07.158Z" hostname="brandon-portal-vm" tests="9" failures="1" errors="0" skipped="0" time="0.069902155">
+        <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; the fixture graded every declaration the pinned class body carries" time="0.002492378">
+        </testcase>
+        <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; the pinned class body is the body the fixture says it is" time="0.006353606">
+            <failure message="ENOENT: no such file or directory, open &apos;C:/localProjects/decko-ruby-oracle-gems/ruby/3.4.0/gems/card-1.110.0/lib/card.rb&apos;" type="Error">
+Error: ENOENT: no such file or directory, open &apos;C:/localProjects/decko-ruby-oracle-gems/ruby/3.4.0/gems/card-1.110.0/lib/card.rb&apos;
+ ❯ tests/server/card-class-declarations-parity.test.ts:94:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -2, code: &apos;ENOENT&apos;, syscall: &apos;open&apos;, path: &apos;C:/localProjects/decko-ruby-oracle-gems/ruby/3.4.0/gems/card-1.110.0/lib/card.rb&apos; }
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; every PORTED declaration retains one exact source anchor in its recorded file" time="0.029630458">
+        </testcase>
+        <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; the mixin roster the port carries names every module the deck&apos;s roster names" time="0.015553114">
+        </testcase>
+        <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; the action_specific_attributes list is the deck&apos;s list, in the deck&apos;s order" time="0.002457338">
+        </testcase>
+        <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; the port reads the same reference rows the deck&apos;s associations give Card" time="0.000803966">
+        </testcase>
+        <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; the port&apos;s act and action tables are the deck&apos;s, with the deck&apos;s draft filter" time="0.006037605">
+        </testcase>
+        <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; the port carries the three Rails callback chains the deck defines" time="0.001057608">
+        </testcase>
+        <testcase classname="tests/server/card-class-declarations-parity.test.ts" name="the Card class body (reg-treewalk-c1) &gt; the one named skip is still a skip, and its reason is still true" time="0.002510378">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/server/drivers/mysql-driver.test.ts" timestamp="2026-11-03T20:26:07.162Z" hostname="brandon-portal-vm" tests="32" failures="8" errors="0" skipped="12" time="0.044219846">
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="conformance: MysqlDriver (MySQL 8.4 server) &gt; creates a table, inserts with params, and maps rows/rowsAffected/lastInsertRowId" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="conformance: MysqlDriver (MySQL 8.4 server) &gt; runs a batch of two statements and returns results in order" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="conformance: MysqlDriver (MySQL 8.4 server) &gt; round-trips null, integer, float and text values" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="conformance: MysqlDriver (MySQL 8.4 server) &gt; throws on bad SQL instead of swallowing the error" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="conformance: MysqlDriver (MySQL 8.4 server) &gt; leaves the schema usable after failed statements" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="transactions: MysqlDriver (MySQL 8.4 server, native) &gt; declares its guarantee, and it is atomic on failure" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="transactions: MysqlDriver (MySQL 8.4 server, native) &gt; persists every write of a unit of work that succeeds" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="transactions: MysqlDriver (MySQL 8.4 server, native) &gt; reads its own writes inside the unit of work" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="transactions: MysqlDriver (MySQL 8.4 server, native) &gt; undoes inserts, updates, deletes and batches when the work throws, and rethrows the same error" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="transactions: MysqlDriver (MySQL 8.4 server, native) &gt; undoes the work when a statement inside it fails" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="transactions: MysqlDriver (MySQL 8.4 server, native) &gt; lets the next transaction run after one fails" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="transactions: MysqlDriver (MySQL 8.4 server, native) &gt; never interleaves two transactions on one driver object (no lost update)" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="atomic sign-in counter dialect &gt; translates only the throttle&apos;s supported primary-key UPSERT" time="0.00399395">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="atomic sign-in counter dialect &gt; preserves conflict-clause words inside quoted values while translating the real clause" time="0.000562764">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="MysqlDriver session settings &gt; runs every connection in strict mode with the engine&apos;s string and identifier rules" time="0.000466604">
+            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+" type="Error">
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
+ ❯ tests/server/drivers/conformance.ts:26:16
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="MysqlDriver session settings &gt; rejects an over-long value rather than truncating it (strict session)" time="0.000764486">
+            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+" type="Error">
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
+ ❯ tests/server/drivers/conformance.ts:26:16
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="MysqlDriver session settings &gt; gives a SQLite-style rowid counter for AUTOINCREMENT ids and reports the last insert id" time="0.000446163">
+            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+" type="Error">
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
+ ❯ tests/server/drivers/conformance.ts:26:16
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="MysqlDriver recursive CTE (the prefetch reach shape) &gt; walks nest and side edges over a cyclic graph, once per card, and drops trashed cards" time="0.000513563">
+            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+" type="Error">
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
+ ❯ tests/server/drivers/conformance.ts:26:16
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="MySQL version gate for the functional index &gt; accepts MySQL 8.0.13 and later and rejects older MySQL and MariaDB" time="0.000942047">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; leaves ? placeholders and string literals alone" time="0.000221241">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; turns INSERT OR IGNORE and INSERT OR REPLACE into MySQL&apos;s forms" time="0.00124949">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; drops NOCASE (the utf8mb3_unicode_ci collation already compares case-insensitively)" time="0.000456804">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; quotes the bare column name key, and not the qualified or KEY-clause forms" time="0.00140521">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; maps SQLite&apos;s LIMIT -1, CAST targets, MATERIALIZED and AUTOINCREMENT" time="0.000483404">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; gives an untyped column TEXT in CREATE TABLE, and leaves constraints and quoted text alone" time="0.000308682">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; maps SQLite&apos;s scalar MAX/MIN (two or more arguments) to GREATEST/LEAST and leaves aggregates alone" time="0.000246122">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; reads sqlite_sequence as the last allocation before the next AUTO_INCREMENT value" time="0.000181002">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; keeps the native sequence high-water mark after rollback and deletion" time="0.000259002">
+            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+" type="Error">
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
+ ❯ tests/server/drivers/conformance.ts:26:16
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; answers last_insert_rowid() with the id the connection&apos;s last insert took" time="0.000226361">
+            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+" type="Error">
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
+ ❯ tests/server/drivers/conformance.ts:26:16
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="sqliteToMysql dialect translation &gt; passes unknown forms through unchanged so MySQL reports them" time="0.000153122">
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="conformance: MysqlDriver (MySQL 8.4 server)" time="0.027017399">
+            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+" type="Error">
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
+ ❯ tests/server/drivers/conformance.ts:26:16
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-driver.test.ts" name="transactions: MysqlDriver (MySQL 8.4 server, native)" time="0.000481684">
+            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+" type="Error">
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ freshDatabase tests/server/drivers/mysql-driver.test.ts:29:13
+ ❯ tests/server/drivers/conformance.ts:26:16
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/server/drivers/mysql-lifetime.test.ts" timestamp="2026-11-03T20:26:07.170Z" hostname="brandon-portal-vm" tests="2" failures="2" errors="0" skipped="0" time="0.255374524">
+        <testcase classname="tests/server/drivers/mysql-lifetime.test.ts" name="mysqld lifetime &gt; ends the server when the process that started it is force-killed" time="0.238899523">
+            <failure message="helper did not start a server: code=1 signal=none
+stdout:
+
+stderr:
+file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142
+    if (init.code !== 0) throw new Error(`mysqld --initialize-insecure failed (${init.code}): ${init.output}`);
+                               ^
+
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+    at startMysqlServer (file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142:32)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-lifetime-parent.ts:12:16
+
+Node.js v22.23.3
+" type="Error">
+Error: helper did not start a server: code=1 signal=none
+stdout:
+
+stderr:
+file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142
+    if (init.code !== 0) throw new Error(`mysqld --initialize-insecure failed (${init.code}): ${init.output}`);
+                               ^
+
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+    at startMysqlServer (file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-server.ts:142:32)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async file:///home/ubuntu/decko-full-suite-20261103/src/tests/server/drivers/mysql-lifetime-parent.ts:12:16
+
+Node.js v22.23.3
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ tests/server/drivers/mysql-lifetime-parent.ts:12:16
+ ❯ failure tests/server/drivers/mysql-parent-readiness.ts:23:34
+ ❯ ChildProcess.onClose tests/server/drivers/mysql-parent-readiness.ts:47:72
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-lifetime.test.ts" name="mysqld lifetime &gt; normal shutdown ends the actual server and removes its data directory" time="0.013421939">
+            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+" type="Error">
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ tests/server/drivers/mysql-lifetime.test.ts:90:20
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/server/drivers/mysql-ruby-schema.test.ts" timestamp="2026-11-03T20:26:07.172Z" hostname="brandon-portal-vm" tests="5" failures="1" errors="0" skipped="4" time="0.033415286">
+        <testcase classname="tests/server/drivers/mysql-ruby-schema.test.ts" name="Ruby Decko&apos;s MySQL schema, served by the port &gt; opens the Ruby schema with openSameDatabase and reports only the port&apos;s additive objects" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-ruby-schema.test.ts" name="Ruby Decko&apos;s MySQL schema, served by the port &gt; leaves every Ruby column and every Ruby index exactly as Ruby created them" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-ruby-schema.test.ts" name="Ruby Decko&apos;s MySQL schema, served by the port &gt; opens the same database again and creates nothing" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-ruby-schema.test.ts" name="Ruby Decko&apos;s MySQL schema, served by the port &gt; keeps the freshness stamp at 1 row and bumps it on Ruby&apos;s own writes" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/drivers/mysql-ruby-schema.test.ts" name="tests/server/drivers/mysql-ruby-schema.test.ts" time="0.033415286">
+            <failure message="mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+" type="Error">
+Error: mysqld --initialize-insecure failed (127): /home/ubuntu/decko-full-suite-20261103/mysql-8.4.11/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+
+ ❯ startMysqlServer tests/server/drivers/mysql-server.ts:142:32
+ ❯ tests/server/drivers/mysql-ruby-schema.test.ts:35:12
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/server/edit-session-replay.test.ts" timestamp="2026-11-03T20:26:07.173Z" hostname="brandon-portal-vm" tests="1" failures="1" errors="0" skipped="0" time="0">
+        <testcase classname="tests/server/edit-session-replay.test.ts" name="tests/server/edit-session-replay.test.ts" time="0">
+            <failure message="RubyOracleVmUnavailable: Warning: Identity file /home/ubuntu/.ssh/oci-agents not accessible: No such file or directory.
+ssh: Could not resolve hostname juc-vm: Temporary failure in name resolution
+Connection closed by UNKNOWN port 65535
+" type="Error">
+Error: RubyOracleVmUnavailable: Warning: Identity file /home/ubuntu/.ssh/oci-agents not accessible: No such file or directory.
+ssh: Could not resolve hostname juc-vm: Temporary failure in name resolution
+Connection closed by UNKNOWN port 65535
+
+ ❯ runRubyOracleOnVm tools/platform/ruby-oracle-vm.mjs:41:50
+ ❯ buildEditSessionCapture tests/support/edit-session-capture.mjs:26:18
+ ❯ tests/server/edit-session-replay.test.ts:45:5
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/server/jasmine-engine-mount-template-parity.test.ts" timestamp="2026-11-03T20:26:07.174Z" hostname="brandon-portal-vm" tests="9" failures="1" errors="0" skipped="0" time="0.017742811">
+        <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the pinned deck app template&apos;s Jasmine mount (A23) &gt; the capture read the PINNED card gem&apos;s own generator template" time="0.001826133">
+        </testcase>
+        <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the pinned deck app template&apos;s Jasmine mount (A23) &gt; the mount is behind the constant, and the whole gemset names it three times" time="0.001046448">
+        </testcase>
+        <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the pinned deck app template&apos;s Jasmine mount (A23) &gt; no gem in the pinned gemset is a jasmine gem, so the constant is never defined" time="0.000875326">
+        </testcase>
+        <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the pinned deck app template&apos;s Jasmine mount (A23) &gt; the template&apos;s own mount line is the one the card gem&apos;s test environment guards" time="0.000308042">
+        </testcase>
+        <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the pinned deck&apos;s own answer at the mount&apos;s paths (A23) &gt; the mount&apos;s path is a CARD READ in the pinned deck" time="0.000513004">
+        </testcase>
+        <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the pinned deck&apos;s own answer at the mount&apos;s paths (A23) &gt; the /jasmine prefix is the deck&apos;s own DEPRECATED asset arm" time="0.000255402">
+        </testcase>
+        <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the pinned deck&apos;s own answer at the mount&apos;s paths (A23) &gt; the EXECUTED PINNED matcher agrees: /jasmine/... is the deprecated asset arm, not a mounted engine" time="0.001117368">
+        </testcase>
+        <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the port&apos;s own surface (A23) &gt; the port answers the same deprecated asset prefixes, jasmine included" time="0.006682249">
+            <failure message="src/server/worker-shared-surface.ts:417: expected &apos;&apos; to be &apos;export const DEPRECATED_ASSET_ROUTE_P…&apos; // Object.is equality" type="AssertionError">
+AssertionError: src/server/worker-shared-surface.ts:417: expected &apos;&apos; to be &apos;export const DEPRECATED_ASSET_ROUTE_P…&apos; // Object.is equality
+
+- Expected
++ Received
+
+- export const DEPRECATED_ASSET_ROUTE_PREFIXES = [&quot;assets&quot;, &quot;javascripts&quot;, &quot;jasmine&quot;] as const;
+
+ ❯ expectQuotedLines tests/server/jasmine-engine-mount-template-parity.test.ts:89:61
+ ❯ tests/server/jasmine-engine-mount-template-parity.test.ts:181:7
+            </failure>
+        </testcase>
+        <testcase classname="tests/server/jasmine-engine-mount-template-parity.test.ts" name="the port&apos;s own surface (A23) &gt; the port&apos;s own source names no spec-runner engine" time="0.001640092">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" timestamp="2026-11-03T20:26:07.176Z" hostname="brandon-portal-vm" tests="10" failures="1" errors="0" skipped="9" time="0.182437546">
+        <testcase classname="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" name="armed route pins: UPDATE through the production recaptcha seat (no module mock) &gt; (1) armed + failed verify: the update is refused whole — 422 recaptcha shape, the token rode to siteverify once, zero rows" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" name="armed route pins: UPDATE through the production recaptcha seat (no module mock) &gt; (2) armed + human verdict: the update lands — 200 cud_success, content saved, updater_id = the Anonymous card" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" name="armed route pins: UPDATE through the production recaptcha seat (no module mock) &gt; (3) the SAME deck + rule, context UNARMED: the update lands — the walk alone never blocks" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" name="armed route pins: DELETE through the production recaptcha seat (no module mock) &gt; (4) armed + failed verify: the delete is refused whole — 422 recaptcha shape, the token rode to siteverify once, zero rows" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" name="armed route pins: DELETE through the production recaptcha seat (no module mock) &gt; (5) armed + human verdict: the delete lands — 303, trash flip, updater_id = the Anonymous card, the verdict rode to siteverify once (action &quot;delete&quot;)" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" name="armed route pins: DELETE through the production recaptcha seat (no module mock) &gt; (6) the SAME deck + rule, context UNARMED: the delete lands — the walk alone never blocks" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" name="armed route pins: DELETE where the RULE denies the actor (permission outranks the guard on the delete verb) &gt; (7) armed + rule-DENIED delete + token present: 403 permission-denied from the walk — zero siteverify calls, trash unchanged, zero act rows" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" name="armed route pins: UPDATE where the RULE denies the actor (permission outranks the guard on the update verb) &gt; (8) armed + rule-DENIED update + token present: 403 permission-denied from the walk — zero siteverify calls, content unchanged, zero act rows" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" name="captcha success preserves independent content validation &gt; does not allow malformed Set content even after successful verification" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" name="tests/server/write-routes-recaptcha-armed-update-delete.test.ts" time="0.182437546">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyValidationFixtureBatchOnVm tests/support/ruby-source-probe-vm.ts:85:20
+ ❯ inspectLocalValidationFixture tests/support/local-validation-rule-fixture.ts:72:24
+ ❯ seedArmedUpdateDeleteDeck tests/server/write-routes-recaptcha-armed-update-delete.test.ts:169:3
+ ❯ tests/server/write-routes-recaptcha-armed-update-delete.test.ts:328:3
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/server/write-routes-recaptcha-seat.test.ts" timestamp="2026-11-03T20:26:07.179Z" hostname="brandon-portal-vm" tests="5" failures="1" errors="0" skipped="4" time="0.161479071">
+        <testcase classname="tests/server/write-routes-recaptcha-seat.test.ts" name="the production recaptcha seat over the HTTP write routes (no module mock) &gt; (1) armed seat + the deck&apos;s real *captcha rule: failed verify -&gt; 422 recaptcha shape, token rode to siteverify, zero rows" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-seat.test.ts" name="the production recaptcha seat over the HTTP write routes (no module mock) &gt; (2) armed seat + a human verdict: the guarded anonymous create completes (303, act under the Anonymous card)" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-seat.test.ts" name="the production recaptcha seat over the HTTP write routes (no module mock) &gt; (3) the SAME deck + rule, context UNARMED: 303 — the walk alone never blocks, the pre-seat shape is byte-identical" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-seat.test.ts" name="the production recaptcha seat over the HTTP write routes (no module mock) &gt; (4) armed seat, deck without a *captcha rule card: recaptcha_on? false -&gt; 303 and siteverify never called" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/server/write-routes-recaptcha-seat.test.ts" name="tests/server/write-routes-recaptcha-seat.test.ts" time="0.161479071">
+            <failure message="RubySourceProbePinnedGemSourcesUnavailable" type="Error">
+Error: RubySourceProbePinnedGemSourcesUnavailable
+ ❯ runRubyValidationFixtureBatchOnVm tests/support/ruby-source-probe-vm.ts:85:20
+ ❯ inspectLocalValidationFixture tests/support/local-validation-rule-fixture.ts:72:24
+ ❯ seedRecaptchaSeatDeck tests/server/write-routes-recaptcha-seat.test.ts:117:3
+ ❯ tests/server/write-routes-recaptcha-seat.test.ts:174:3
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/support/ruby-source-probe-vm.test.ts" timestamp="2026-11-03T20:26:07.180Z" hostname="brandon-portal-vm" tests="3" failures="1" errors="0" skipped="0" time="0.052430226">
+        <testcase classname="tests/support/ruby-source-probe-vm.test.ts" name="rejects the retired host environment helper before any interpreter starts" time="0.004495233">
+        </testcase>
+        <testcase classname="tests/support/ruby-source-probe-vm.test.ts" name="delivers exact stdin bytes to real VM Ruby, including Unicode, NUL and CRLF" time="0.033116605">
+            <failure message="RubyOracleVmUnavailable: Warning: Identity file /home/ubuntu/.ssh/oci-agents not accessible: No such file or directory.
+ssh: Could not resolve hostname juc-vm: Temporary failure in name resolution
+Connection closed by UNKNOWN port 65535
+" type="Error">
+Error: RubyOracleVmUnavailable: Warning: Identity file /home/ubuntu/.ssh/oci-agents not accessible: No such file or directory.
+ssh: Could not resolve hostname juc-vm: Temporary failure in name resolution
+Connection closed by UNKNOWN port 65535
+
+ ❯ runRubyOracleOnVm tools/platform/ruby-oracle-vm.mjs:41:50
+ ❯ tests/support/ruby-source-probe-vm.test.ts:16:18
+            </failure>
+        </testcase>
+        <testcase classname="tests/support/ruby-source-probe-vm.test.ts" name="binds the stored tag fixture to its VM recapture, source probe and DEC102 runtime" time="0.009769832">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/tools/mod-porting-harness/format-census-view-set.test.ts" timestamp="2026-11-03T20:26:07.181Z" hostname="brandon-portal-vm" tests="5" failures="0" errors="0" skipped="5" time="0">
+        <testcase classname="tests/tools/mod-porting-harness/format-census-view-set.test.ts" name="card-mod-format view census == Ruby&apos;s view set &gt; the Ruby oracle walks every set file and resolves every view call" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/tools/mod-porting-harness/format-census-view-set.test.ts" name="card-mod-format view census == Ruby&apos;s view set &gt; mines no view Ruby does not declare" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/tools/mod-porting-harness/format-census-view-set.test.ts" name="card-mod-format view census == Ruby&apos;s view set &gt; misses no view Ruby declares" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/tools/mod-porting-harness/format-census-view-set.test.ts" name="card-mod-format view census == Ruby&apos;s view set &gt; names no view that is not a real `view` call in the gem source" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/tools/mod-porting-harness/format-census-view-set.test.ts" name="card-mod-format view census == Ruby&apos;s view set &gt; counts the same number of set files the harness walks" time="0">
+            <skipped/>
+        </testcase>
+    </testsuite>
+</testsuites>

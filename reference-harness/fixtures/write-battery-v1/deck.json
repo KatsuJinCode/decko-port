@@ -1,0 +1,112 @@
+{
+  "format": "decko-reference-deck/1",
+  "name": "write-battery-v1",
+  "generator": {
+    "script": "reference-harness/corpus/generate-write-battery-deck.mjs",
+    "version": 1
+  },
+  "base": {
+    "seed": "decko setup",
+    "decko": "0.20.0",
+    "card": "1.110.0"
+  },
+  "clock": "2026-10-10T12:00:00Z",
+  "environment": {
+    "origin": "http://deck.example",
+    "default_html_view": "titled"
+  },
+  "actors": {
+    "anonymous": {
+      "card": "Anonymous"
+    },
+    "member": {
+      "card": "Parity Probe",
+      "email": "parity.probe@example.com",
+      "password": "Correct horse battery 1!"
+    },
+    "admin": {
+      "card": "Parity Admin",
+      "email": "admin.probe@example.com",
+      "password": "Admin horse battery 5%"
+    }
+  },
+  "cards": [
+    {
+      "name": "Number+description",
+      "content": "<p>Lantern harbor sums the orchard. (write battery fixture)</p>"
+    },
+    {
+      "type": "User",
+      "name": "Parity Probe",
+      "fields": {
+        "+*account": {
+          "fields": {
+            "+*email": "parity.probe@example.com",
+            "+*password": "Correct horse battery 1!",
+            "+*status": "active"
+          }
+        }
+      }
+    },
+    {
+      "type": "User",
+      "name": "Parity Follower",
+      "fields": {
+        "+*account": {
+          "fields": {
+            "+*email": "follower.probe@example.com",
+            "+*password": "Follower horse battery 3#",
+            "+*status": "active"
+          }
+        }
+      }
+    },
+    {
+      "type": "User",
+      "name": "Parity Admin",
+      "fields": {
+        "+*account": {
+          "fields": {
+            "+*email": "admin.probe@example.com",
+            "+*password": "Admin horse battery 5%",
+            "+*status": "active"
+          }
+        }
+      }
+    },
+    {
+      "type": "User",
+      "name": "Parity Leaver",
+      "fields": {
+        "+*account": {
+          "fields": {
+            "+*email": "leaver.probe@example.com",
+            "+*password": "Leaver horse battery 8(",
+            "+*status": "active"
+          }
+        }
+      }
+    },
+    {
+      "name": "*all+Parity Follower+*follow",
+      "content": "*always"
+    },
+    {
+      "name": "Administrator+*members",
+      "content": "[[Parity Admin]]"
+    },
+    {
+      "type": "Sign up",
+      "name": "Parity Pending",
+      "fields": {
+        "+*account": {
+          "fields": {
+            "+*email": "pending.probe@example.com",
+            "+*password": "Pending horse battery 7*",
+            "+*status": "pending"
+          }
+        }
+      }
+    }
+  ]
+}

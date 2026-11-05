@@ -1,0 +1,62 @@
+Third-party license for the files in this directory
+====================================================
+
+Components
+----------
+
+    jQuery File Upload Plugin
+
+    Upstream: https://github.com/blueimp/jQuery-File-Upload
+    Files:    ./js/jquery.fileupload.js
+              ./js/jquery.iframe-transport.js
+
+Copyright
+---------
+
+The banner at the head of jquery.fileupload.js states, verbatim:
+
+    jQuery File Upload Plugin
+    https://github.com/blueimp/jQuery-File-Upload
+
+    Copyright 2010, Sebastian Tschan
+    https://blueimp.net
+
+    Licensed under the MIT license:
+    https://opensource.org/licenses/MIT
+
+jquery.iframe-transport.js carries no banner of its own; it ships with the
+same plugin and under the same terms.
+
+License: the MIT License, reproduced in full below. Upstream's own copy is
+at https://opensource.org/licenses/MIT and
+https://github.com/blueimp/jQuery-File-Upload/blob/master/LICENSE.
+
+The MIT License (MIT)
+
+Copyright (c) 2010 Sebastian Tschan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+Scope of the MIT grant inside this project
+------------------------------------------
+
+MIT is permissive and GPL-compatible, so vendoring these bytes does not
+disturb this project's GPL-3.0-or-later scope (see NOTICE at the repository
+root). The MIT terms require only that the notice above travel with the
+software, which this file and the plugin's own banner both do.

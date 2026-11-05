@@ -1,0 +1,24 @@
+{
+  "release": "bafc33eb305d549d4ac6efd1bcd1c06fe86c40a7",
+  "bundleSha256": "39fe0f4d98b4fcc16d6d7ad3dbf594e0e10fd369113f6360217718e54c75ec02",
+  "tests": 5,
+  "passed": 3,
+  "failed": 2,
+  "pending": 0,
+  "elapsedMs": 115361,
+  "automaticRetries": 0,
+  "resultCache": false,
+  "modelInTestPath": false,
+  "failures": [
+    {
+      "name": "matrix: hosted libsql concurrent writes: two saves on two handles both commit, each with its own history",
+      "classification": "real hosted runtime failure; persisted in complete full-window run",
+      "firstError": "SaveOutcomeUnknownError: Database rollback outcome is unknown after a transport reset or unconfirmed acknowledgement; reconcile persisted state before retrying: Database rollback outcome is unknown after a transport reset or unconfirmed acknowledgement; reconcile persisted state before retrying: libsql pipeline statement 0 failed: Transaction timed out (code TRANSACTION_TIMEOUT)"
+    },
+    {
+      "name": "matrix: hosted libsql concurrent reads: a reader is never served a save's uncommitted rows",
+      "classification": "real hosted runtime failure; persisted in complete full-window run",
+      "firstError": "SaveOutcomeUnknownError: Database rollback outcome is unknown after a transport reset or unconfirmed acknowledgement; reconcile persisted state before retrying: Database rollback outcome is unknown after a transport reset or unconfirmed acknowledgement; reconcile persisted state before retrying: libsql pipeline statement 0 failed: Transaction timed out (code TRANSACTION_TIMEOUT)"
+    }
+  ]
+}

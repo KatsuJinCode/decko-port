@@ -1,0 +1,115 @@
+{
+  "tables": {
+    "ar_internal_metadata": {
+      "probeRows": 0,
+      "changed": {},
+      "added": [],
+      "removed": []
+    },
+    "card_actions": {
+      "probeRows": 87,
+      "changed": {},
+      "added": [
+        "{\"action_type\":1,\"card_act_id\":105368,\"card_id\":36,\"comment\":null,\"draft\":0,\"super_action_id\":null}"
+      ],
+      "removed": []
+    },
+    "card_acts": {
+      "probeRows": 62,
+      "changed": {},
+      "added": [
+        "{\"acted_at\":\"T\",\"actor_id\":1,\"card_id\":36,\"ip_address\":null}"
+      ],
+      "removed": []
+    },
+    "card_changes": {
+      "probeRows": 142,
+      "changed": {},
+      "added": [
+        "{\"card_action_id\":738,\"field\":2,\"value\":\"drafted text\"}",
+        "{\"card_action_id\":755,\"field\":2,\"value\":\"<p>Number cards hold numbers. (persistence probe)</p>\"}",
+        "{\"card_action_id\":811,\"field\":2,\"value\":\"main2\"}",
+        "{\"card_action_id\":811,\"field\":3,\"value\":\"f\"}",
+        "{\"card_action_id\":812,\"field\":0,\"value\":\"PersistProbe Other\"}",
+        "{\"card_action_id\":812,\"field\":3,\"value\":\"f\"}"
+      ],
+      "removed": []
+    },
+    "card_references": {
+      "probeRows": 30,
+      "changed": {},
+      "added": [
+        "{\"is_present\":null,\"ref_type\":\"L\",\"referee_id\":149,\"referee_key\":\"*input_type\",\"referer_id\":483}",
+        "{\"is_present\":null,\"ref_type\":\"L\",\"referee_id\":28,\"referee_key\":\"*structure\",\"referer_id\":483}",
+        "{\"is_present\":null,\"ref_type\":\"L\",\"referee_id\":302,\"referee_key\":\"*script\",\"referer_id\":483}",
+        "{\"is_present\":null,\"ref_type\":\"L\",\"referee_id\":455,\"referee_key\":\"*follow\",\"referer_id\":483}",
+        "{\"is_present\":null,\"ref_type\":\"L\",\"referee_id\":494,\"referee_key\":\"*layout\",\"referer_id\":483}",
+        "{\"is_present\":null,\"ref_type\":\"L\",\"referee_id\":514,\"referee_key\":\"*captcha\",\"referer_id\":483}",
+        "{\"is_present\":null,\"ref_type\":\"L\",\"referee_id\":66,\"referee_key\":\"*create\",\"referer_id\":483}",
+        "{\"is_present\":null,\"ref_type\":\"L\",\"referee_id\":9,\"referee_key\":\"*read\",\"referer_id\":483}"
+      ],
+      "removed": [
+        "567",
+        "568",
+        "569",
+        "570",
+        "571",
+        "572",
+        "573",
+        "574"
+      ]
+    },
+    "card_revisions": {
+      "probeRows": 0,
+      "changed": {},
+      "added": [],
+      "removed": []
+    },
+    "card_virtuals": {
+      "probeRows": 0,
+      "changed": {},
+      "added": [],
+      "removed": []
+    },
+    "cards": {
+      "probeRows": 50,
+      "changed": {
+        "35": "{\"codename\":\"number\",\"created_at\":\"T\",\"creator_id\":1,\"current_revision_id\":null,\"db_content\":\"{{+:description|content}}\\n{{_|add_button}}{{_|configure_button}}\\n{{+:type+:by_name|content}}\\n\",\"id\":35,\"key\":\"number\",\"left_id\":null,\"name\":\"Number\",\"read_rule_class\":\"*all\",\"read_rule_id\":10,\"references_expired\":null,\"right_id\":null,\"trash\":0,\"type_id\":3,\"updated_at\":\"T\",\"updater_id\":1}",
+        "36": "{\"codename\":null,\"created_at\":\"T\",\"creator_id\":1,\"current_revision_id\":null,\"db_content\":\"<p>Number cards hold numbers. (persistence probe)</p>\",\"id\":36,\"key\":null,\"left_id\":35,\"name\":null,\"read_rule_class\":\"*all plus\",\"read_rule_id\":10,\"references_expired\":null,\"right_id\":12,\"trash\":0,\"type_id\":2,\"updated_at\":\"T\",\"updater_id\":1}",
+        "483": "{\"codename\":\"recent_settings\",\"created_at\":\"T\",\"creator_id\":1,\"current_revision_id\":null,\"db_content\":\"*read\\n*create\\n*follow\\n*script\\n*structure\\n*layout\\n*captcha\\n*input type\",\"id\":483,\"key\":\"*recent_setting\",\"left_id\":null,\"name\":\"*recent settings\",\"read_rule_class\":\"*self\",\"read_rule_id\":486,\"references_expired\":null,\"right_id\":null,\"trash\":0,\"type_id\":2,\"updated_at\":\"T\",\"updater_id\":1}"
+      },
+      "added": [],
+      "removed": []
+    },
+    "delayed_jobs": {
+      "probeRows": 0,
+      "changed": {},
+      "added": [],
+      "removed": []
+    },
+    "schema_migrations": {
+      "probeRows": 0,
+      "changed": {},
+      "added": [],
+      "removed": []
+    },
+    "sessions": {
+      "probeRows": 0,
+      "changed": {},
+      "added": [],
+      "removed": []
+    },
+    "transform_migrations": {
+      "probeRows": 0,
+      "changed": {},
+      "added": [],
+      "removed": []
+    },
+    "users": {
+      "probeRows": 0,
+      "changed": {},
+      "added": [],
+      "removed": []
+    }
+  }
+}

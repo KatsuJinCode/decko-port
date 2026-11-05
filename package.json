@@ -1,0 +1,48 @@
+{
+  "name": "decko-ts",
+  "version": "0.1.0",
+  "private": true,
+  "license": "GPL-3.0-or-later",
+  "description": "TypeScript derivative of Decko card 1.110.0 / decko 0.20.0. See VERIFICATION.md and docs/SCOPE.md for verification and scope.",
+  "type": "module",
+  "allowScripts": {
+    "better-sqlite3@13.0.3": false,
+    "esbuild@0.28.2": true,
+    "workerd@1.20261006.1": true,
+    "@parcel/watcher@2.6.0": true
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "build:engine": "node tools/dist/build-engine.mjs",
+    "test": "node tools/handover/smoke.mjs"
+  },
+  "devDependencies": {
+    "@libsql/client": "^0.18.0",
+    "@types/node": "^26.6.2",
+    "esbuild": "^0.28.2",
+    "miniflare": "^5.20261006.1-alpha",
+    "playwright-core": "^1.63.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.1",
+    "rolldown": "1.2.9"
+  },
+  "dependencies": {
+    "@cf-wasm/photon": "0.4.0",
+    "@electric-sql/pglite": "^0.5.10",
+    "better-sqlite3": "^13.0.3",
+    "coffeescript": "^1.12.2",
+    "htmlparser2": "10.0.0",
+    "mysql2": "^3.24.6",
+    "pg": "^8.23.1",
+    "sass": "1.105.0"
+  },
+  "optionalDependencies": {
+    "@ruby/3.4-wasm-wasi": "2.10.1",
+    "@ruby/wasm-wasi": "2.10.1"
+  },
+  "overrides": {
+    "entities": "6.0.0"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "name": "decko-ts",
+  "description": "The TypeScript port of Decko, loaded from this checkout.",
+  "command": ["node", "adapter.mjs"]
+}

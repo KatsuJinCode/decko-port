@@ -1,0 +1,9 @@
+{
+  "source": "https://rubygems.org/gems/htmlentities/versions/4.4.2",
+  "package": "htmlentities",
+  "version": "4.4.2",
+  "license": "MIT",
+  "input": "lib/htmlentities/mappings/xhtml1.rb",
+  "inputSha256": "d9b04cd33eba5597ddb72328f727cbb08ed56a5e4e6678492483af3e12b198e1",
+  "entries": 253
+}

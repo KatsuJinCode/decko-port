@@ -1,0 +1,57 @@
+Third-party license for script_tinymce.js
+========================================
+
+Component
+---------
+
+    TinyMCE, the self-hosted editor build the tinymce_editor mod loads.
+
+    Version:  5.10.7 (2022-12-06)
+    Upstream: https://github.com/tinymce/tinymce  (commercial licensing: https://www.tiny.cloud/)
+    File:     ./script_tinymce.js  (a verbatim copy of the upstream tinymce.min.js)
+
+Copyright
+---------
+
+The banner at the head of script_tinymce.js states, verbatim:
+
+    Copyright (c) Tiny Technologies, Inc. All rights reserved.
+    Licensed under the LGPL or a commercial license.
+    For LGPL see License.txt in the project root for license information.
+    For commercial licenses see https://www.tiny.cloud/
+    Version: 5.10.7 (2022-12-06)
+
+License
+-------
+
+Dual-licensed: the GNU Lesser General Public License version 2.1, **or** a
+Tiny commercial license. This copy is redistributed under the LGPL-2.1 arm.
+
+The original banner names "License.txt in the project root". In this package
+the full license body is retained as `./License-lgpl-2.1.txt`, distinct from
+this explanatory notice. `License-lgpl-2.1.txt` is the standard GNU LGPL
+version 2.1 text (504 lines: preamble, TERMS AND CONDITIONS, END OF TERMS
+AND CONDITIONS, and the "How to apply these terms to your new libraries"
+appendix), copied verbatim out of a locally vendored TinyMCE distribution
+rather than fetched from upstream while this file was written.
+
+What LGPL-2.1 obliges a recipient to do
+---------------------------------------
+
+  - Keep this notice and the license text with any redistribution.
+  - Keep the accompanying editable library source and its provenance. The
+    complete official 5.10.7 source tree is retained under
+    `third-party-source/tinymce-5.10.7/upstream/` from the package root.
+    Its adjacent PROVENANCE.md and SOURCE-MANIFEST.json record the official
+    tag commit, original Git tree, source file hashes and bundled binary hash.
+  - The surrounding project's GPL declaration alone is not a verification
+    of the library's source-supply obligations. Independent review of the
+    actual source, notices and delivery package remains required.
+
+The commercial alternative
+--------------------------
+
+The same component is available from Tiny under a commercial license at
+https://www.tiny.cloud/. Choosing that arm is a licensing decision for
+whoever redistributes this package, not a code change: the vendored bytes
+are identical either way.

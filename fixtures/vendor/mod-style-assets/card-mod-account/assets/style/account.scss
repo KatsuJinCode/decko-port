@@ -1,0 +1,64 @@
+/*----------- (Account Request)--------------*/
+
+.SELF-Xsignin {
+  > .d0-card-body {
+    display: flex;
+    justify-content: center;
+    > .card-form {
+      width: 400px;
+      max-width: 400px;
+    }
+    .signin-buttons > div {
+      margin-bottom: 1em;
+      button {
+        width: 100%
+      }
+    }
+    .signup-button {
+      text-align: center;
+    }
+  }
+}
+
+.invite-links {
+  padding: 10px;
+  margin-top: 10px;
+  text-align: center;
+  a {
+    font-weight: bold;
+    margin: 0 20px;
+  }
+}
+
+/*-- sign in page --*/
+
+#sign-in input#login_field,
+#sign-in input#password,
+#forgot-password input#email {
+  width: 50%;
+}
+
+#forgot-password {
+  margin-top: 40px;
+}
+
+.new-account-link {
+  text-align: center;
+}
+
+.form-group .signup-link {
+  display: inline;
+}
+
+._toggle-pw-visibility {
+  float: right;
+  margin-right: 0.6rem;
+  margin-top: -1.95rem;
+  position: relative;
+  z-index: 2;
+}
+
+// FIXME - decko should handle better
+//#my-card-link {
+//  padding-right: 0.6em;
+//}

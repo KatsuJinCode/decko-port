@@ -1,0 +1,13 @@
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {resolve,join,isAbsolute} from 'node:path';
+import {createHash} from 'node:crypto';
+if (!process.argv[2] || !isAbsolute(process.argv[2])) throw Error('absolute htmlentities4.4.2 gem directory required');
+const gem=resolve(process.argv[2]);
+const input=readFileSync(join(gem,'lib/htmlentities/mappings/xhtml1.rb'));const text=input.toString('utf8');
+const entries=[...text.matchAll(/'([^']+)'\s*=>\s*(\d+)/g)].map(([,name,value])=>[name,Number(value)]);
+if(entries.length!==253)throw Error('unexpected XHTML1 table size');
+const out=resolve('vendor/htmlentities-4.4.2');mkdirSync(out,{recursive:true});
+writeFileSync(join(out,'xhtml1.js'),'// Generated from public htmlentities4.4.2 XHTML1 table; see LICENSE.txt and provenance.json.\nexport const XHTML1_ENTITIES = Object.freeze('+JSON.stringify(Object.fromEntries(entries),null,2)+');\n');
+writeFileSync(join(out,'xhtml1.d.ts'),'export declare const XHTML1_ENTITIES: Readonly<Record<string, number>>;\n');
+writeFileSync(join(out,'LICENSE.txt'),readFileSync(join(gem,'COPYING.txt')));
+writeFileSync(join(out,'provenance.json'),JSON.stringify({source:'https://rubygems.org/gems/htmlentities/versions/4.4.2',package:'htmlentities',version:'4.4.2',license:'MIT',input:'lib/htmlentities/mappings/xhtml1.rb',inputSha256:createHash('sha256').update(input).digest('hex'),entries:entries.length},null,2)+'\n');

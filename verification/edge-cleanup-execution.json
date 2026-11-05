@@ -1,0 +1,437 @@
+{
+  "source": "e7497295b708fd97bcdbcaf25b34b5083dc52acb",
+  "artifactSha256": "94857c1a02fa030256407ae3e5b1ce375e30e2417c70482559c467c1f5c4c608",
+  "scope": {
+    "scriptId": 100871,
+    "pullzoneId": 6925086,
+    "databaseId": "[database id redacted]",
+    "storageId": 2036212,
+    "storageName": "decko-o6-b-iso-files"
+  },
+  "runId": "476b207b1ced89dcf1b0d794",
+  "events": [
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/compute/script/100871",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/pullzone/6925086",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/compute/script/100871/releases/active",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/database/v1/databases",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/storagezone/2036212",
+      "status": 200
+    },
+    {
+      "service": "database",
+      "operation": "snapshot original auth and mail",
+      "status": 200
+    },
+    {
+      "service": "storage",
+      "method": "GET",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/",
+      "status": 200,
+      "responseBytes": 2
+    },
+    {
+      "service": "storage",
+      "method": "PUT",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/older.txt",
+      "status": 201,
+      "responseBytes": 43
+    },
+    {
+      "service": "storage",
+      "method": "GET",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/",
+      "status": 200,
+      "responseBytes": 521
+    },
+    {
+      "service": "database",
+      "operation": "create durable qualification marker table",
+      "status": 200
+    },
+    {
+      "service": "storage",
+      "method": "PUT",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/newer.txt",
+      "status": 201,
+      "responseBytes": 43
+    },
+    {
+      "service": "storage",
+      "method": "GET",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/",
+      "status": 200,
+      "responseBytes": 1042
+    },
+    {
+      "service": "storage",
+      "method": "GET",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/older.txt",
+      "status": 200,
+      "responseBytes": 43
+    },
+    {
+      "service": "storage",
+      "method": "GET",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/newer.txt",
+      "status": 200,
+      "responseBytes": 43
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/compute/script/100871",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "POST",
+      "path": "/compute/script/100871/code",
+      "status": 204
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/compute/script/100871/code",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "POST",
+      "path": "/compute/script/100871/publish",
+      "status": 204
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/compute/script/100871/releases/active",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/pullzone/6925086",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "POST",
+      "path": "/pullzone/6925086/purgeCache",
+      "status": 204
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/compute/script/100871/releases/active",
+      "status": 200
+    },
+    {
+      "service": "storage",
+      "method": "GET",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/older.txt",
+      "status": 404,
+      "responseBytes": 45
+    },
+    {
+      "service": "storage",
+      "method": "GET",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/newer.txt",
+      "status": 200,
+      "responseBytes": 43
+    },
+    {
+      "service": "database",
+      "operation": "inspect rows before auth restoration",
+      "status": 200
+    },
+    {
+      "service": "database",
+      "operation": "verify original auth and mail",
+      "status": 200
+    },
+    {
+      "service": "storage",
+      "method": "GET",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/newer.txt",
+      "status": 200,
+      "responseBytes": 43
+    },
+    {
+      "service": "storage",
+      "method": "GET",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/older.txt",
+      "status": 404,
+      "responseBytes": 45
+    },
+    {
+      "service": "storage",
+      "method": "DELETE",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/newer.txt",
+      "status": 200,
+      "responseBytes": 55
+    },
+    {
+      "service": "storage",
+      "method": "GET",
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/",
+      "status": 200,
+      "responseBytes": 2
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/compute/script/100871",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "POST",
+      "path": "/compute/script/100871/code",
+      "status": 204
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/compute/script/100871/code",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "POST",
+      "path": "/compute/script/100871/publish",
+      "status": 204
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/compute/script/100871/releases/active",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/pullzone/6925086",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "POST",
+      "path": "/pullzone/6925086/purgeCache",
+      "status": 204
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/compute/script/100871/releases/active",
+      "status": 200
+    },
+    {
+      "service": "database",
+      "operation": "final original mail/auth equality",
+      "status": 200
+    },
+    {
+      "service": "management",
+      "method": "GET",
+      "path": "/compute/script/100871",
+      "status": 200
+    }
+  ],
+  "stages": {
+    "prepare": "complete",
+    "publish": "complete",
+    "confirm": "complete",
+    "execute": "complete",
+    "restore-data": "complete",
+    "restore-sink": "complete",
+    "confirm-restored": "complete"
+  },
+  "cost": {
+    "approvedBudgetUsd": 1,
+    "estimatedIncrementalUsdLessThan": 0.25,
+    "measuredAttributableUsd": null
+  },
+  "originalRelease": 1279208,
+  "storage": {
+    "id": 2036212,
+    "name": "decko-o6-b-iso-files",
+    "region": "DE",
+    "host": "storage.bunnycdn.com"
+  },
+  "initialGuardObservations": [
+    {
+      "status": 200,
+      "cache": "MISS",
+      "body": "{\"service\":\"owned-mail-test-sink\",\"build\":{\"commit\":\"ebb7c6aefb2596e38e6d9b377f652aef83a73e19\",\"tree_dirty\":false}}"
+    }
+  ],
+  "initialGuard": {
+    "commit": "ebb7c6aefb2596e38e6d9b377f652aef83a73e19",
+    "statusUrl": "https://decko-o6-parity-51f-edge.bunny.run/_status"
+  },
+  "before": {
+    "authRows": 0,
+    "mailRows": 4,
+    "authSha256": "87b3ce1d5fdad0a8a4141ef761a7d9bdd56a749f82049ec6fdd8087f7405adc1",
+    "mailSha256": "9704cb95bdd908001a5c2a5f93b78adca8885940f5d58c975cf5877ed084a1a2"
+  },
+  "olderListing": [
+    {
+      "ObjectName": "older.txt",
+      "LastChanged": "2026-11-04T11:25:52.428",
+      "Length": 43,
+      "StorageZoneId": 2036212
+    }
+  ],
+  "providerListing": [
+    {
+      "ObjectName": "newer.txt",
+      "LastChanged": "2026-11-04T11:25:55.083",
+      "Length": 43,
+      "StorageZoneId": 2036212
+    },
+    {
+      "ObjectName": "older.txt",
+      "LastChanged": "2026-11-04T11:25:52.428",
+      "Length": 43,
+      "StorageZoneId": 2036212
+    }
+  ],
+  "probes": {
+    "olderKey": "tmp/qualification-476b207b1ced89dcf1b0d794/older.txt",
+    "newerKey": "tmp/qualification-476b207b1ced89dcf1b0d794/newer.txt",
+    "olderBytes": 43,
+    "newerBytes": 43,
+    "newerSha256": "4fb8be473195e0c05b20a6521b3c4990ab4552c2e55b13adbd6b0f7ee99b9219"
+  },
+  "companionPublication": {
+    "intent": "upload once, publish once",
+    "sha256": "94857c1a02fa030256407ae3e5b1ce375e30e2417c70482559c467c1f5c4c608",
+    "active": {
+      "id": 1279375,
+      "status": 1,
+      "sha256": "94857c1a02fa030256407ae3e5b1ce375e30e2417c70482559c467c1f5c4c608"
+    }
+  },
+  "companionGuardObservations": [
+    {
+      "status": 200,
+      "cache": "MISS",
+      "body": "{\"service\":\"owned-mail-test-sink\",\"build\":{\"commit\":\"e7497295b708fd97bcdbcaf25b34b5083dc52acb\",\"tree_dirty\":false}}"
+    }
+  ],
+  "companionGuard": {
+    "commit": "e7497295b708fd97bcdbcaf25b34b5083dc52acb",
+    "statusUrl": "https://decko-o6-parity-51f-edge.bunny.run/_status"
+  },
+  "executionGuardObservations": [
+    {
+      "status": 200,
+      "cache": "MISS",
+      "body": "{\"service\":\"owned-mail-test-sink\",\"build\":{\"commit\":\"e7497295b708fd97bcdbcaf25b34b5083dc52acb\",\"tree_dirty\":false}}"
+    }
+  ],
+  "executionGuard": {
+    "commit": "e7497295b708fd97bcdbcaf25b34b5083dc52acb",
+    "statusUrl": "https://decko-o6-parity-51f-edge.bunny.run/_status"
+  },
+  "execution": {
+    "status": 200,
+    "responseSha256": "2381ea1fa253a070fb9eb06d11f0416921537914c83519fdb93be17d91d73178"
+  },
+  "result": {
+    "runId": "476b207b1ced89dcf1b0d794",
+    "passed": true,
+    "outcome": {
+      "sessionsDeleted": 0,
+      "draftsDeleted": 1
+    },
+    "clock": "Only the test sweep message advances; provider metadata and wall clock are unchanged. This does not claim 24 wall-clock hours elapsed.",
+    "messageAt": "2026-11-05T11:25:53.755Z",
+    "cutoff": "2026-11-04T11:25:53.755Z",
+    "before": [
+      {
+        "key": "tmp/qualification-476b207b1ced89dcf1b0d794/newer.txt",
+        "size": 43,
+        "lastModified": "2026-11-04T11:25:55.083Z"
+      },
+      {
+        "key": "tmp/qualification-476b207b1ced89dcf1b0d794/older.txt",
+        "size": 43,
+        "lastModified": "2026-11-04T11:25:52.428Z"
+      }
+    ],
+    "olderDeleted": true,
+    "newerPreserved": {
+      "key": "tmp/qualification-476b207b1ced89dcf1b0d794/newer.txt",
+      "bytes": 43,
+      "sha256": "4fb8be473195e0c05b20a6521b3c4990ab4552c2e55b13adbd6b0f7ee99b9219"
+    }
+  },
+  "independentStorageCheck": {
+    "olderHttpStatus": 404,
+    "newerHttpStatus": 200,
+    "newerBytes": 43,
+    "newerSha256": "4fb8be473195e0c05b20a6521b3c4990ab4552c2e55b13adbd6b0f7ee99b9219"
+  },
+  "rowRestoration": {
+    "authRows": 0,
+    "mailRows": 4,
+    "authRowsRestored": 0,
+    "authSha256": "87b3ce1d5fdad0a8a4141ef761a7d9bdd56a749f82049ec6fdd8087f7405adc1",
+    "mailSha256": "9704cb95bdd908001a5c2a5f93b78adca8885940f5d58c975cf5877ed084a1a2",
+    "originalRowsUnchanged": true
+  },
+  "storageCleanup": {
+    "probeFilesRemaining": 0,
+    "bytesAdded": 86,
+    "bytesRemoved": 86,
+    "unownedObjectsDeleted": 0
+  },
+  "sinkRestoration": {
+    "intent": "upload once, publish once",
+    "sha256": "3236321d5684fd24bd4e4977a26a79e74823b0ec41c77fed9d149cf2de1c6804",
+    "active": {
+      "id": 1279382,
+      "status": 1,
+      "sha256": "3236321d5684fd24bd4e4977a26a79e74823b0ec41c77fed9d149cf2de1c6804"
+    }
+  },
+  "restoredGuardObservations": [
+    {
+      "status": 200,
+      "cache": "MISS",
+      "body": "{\"service\":\"owned-mail-test-sink\",\"build\":{\"commit\":\"ebb7c6aefb2596e38e6d9b377f652aef83a73e19\",\"tree_dirty\":false}}"
+    }
+  ],
+  "restoredGuard": {
+    "commit": "ebb7c6aefb2596e38e6d9b377f652aef83a73e19",
+    "statusUrl": "https://decko-o6-parity-51f-edge.bunny.run/_status"
+  },
+  "routeDisabled": true,
+  "settingsUnchanged": true,
+  "custodyReleased": true,
+  "passed": true
+}

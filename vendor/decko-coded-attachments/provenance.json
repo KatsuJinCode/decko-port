@@ -1,0 +1,42 @@
+{
+  "gem": "card-mod-carrierwave",
+  "version": "0.20.0",
+  "license": "GPL-3.0-or-later",
+  "files": [
+    {
+      "path": "data/files/logo/image-original.svg",
+      "bytes": 4206,
+      "sha256": "312389d4825c90b0b9fe27969b333b83169e4328504115d21f2db7f04172f230"
+    },
+    {
+      "path": "data/files/decko_logo/image-original.svg",
+      "bytes": 4206,
+      "sha256": "312389d4825c90b0b9fe27969b333b83169e4328504115d21f2db7f04172f230"
+    },
+    {
+      "path": "data/files/favicon/image-original.png",
+      "bytes": 16666,
+      "sha256": "4291588c5a34c7640444bf6b2fb9697f104942b1533083ed88ce64ad494e71dc"
+    },
+    {
+      "path": "data/files/favicon/image-icon.png",
+      "bytes": 1322,
+      "sha256": "bb0302a2273d5b7f867d1bfdc1314244a73a3152421dc9fe160d9bd3eccb87a8"
+    },
+    {
+      "path": "data/files/favicon/image-small.png",
+      "bytes": 5914,
+      "sha256": "cb2cd4c1b77989c7ab5c86e80296f6c7ae34a6b7414af87d38a9d26e81280b04"
+    },
+    {
+      "path": "data/files/favicon/image-medium.png",
+      "bytes": 16679,
+      "sha256": "a5b46204cf9dd20ac772b2cd3225b4f459db7145ec1b4851d688e41f3e188354"
+    },
+    {
+      "path": "data/files/favicon/image-large.png",
+      "bytes": 16679,
+      "sha256": "c2e1235ca92faacb91f8695af75b0eb1cdb0a7e2e885d0e979b2ad6a76ab4bfb"
+    }
+  ]
+}

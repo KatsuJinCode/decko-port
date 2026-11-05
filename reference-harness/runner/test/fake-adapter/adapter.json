@@ -1,0 +1,5 @@
+{
+  "name": "fake",
+  "description": "A stand-in engine for the runner and grader tests.",
+  "command": ["node", "adapter.mjs"]
+}

@@ -1,0 +1,71 @@
+Third-party license for the Sass sources in this directory
+==========================================================
+
+Component
+---------
+
+    Bootstrap — the Sass source only. The matching compiled JavaScript is a
+    separate vendored copy at
+    `../mod-script-assets/card-mod-bootstrap/vendor/bootstrap/`, and carries
+    its own license file beside its own bytes.
+
+    Upstream: https://getbootstrap.com/   (source: https://github.com/twbs/bootstrap)
+    Files:    ./_*.scss and the subdirectories forms/, helpers/, mixins/,
+              utilities/, vendor/
+
+Copyright
+---------
+
+**None of the vendored Sass files states a copyright line.** They open with
+Sass comments describing the partial (`_variables.scss` begins
+`// Variables`, followed by a comment about the
+`$component-state-property-size` formula and `// Color system`). The upstream
+project is named here from the files' own embedded metadata — the Bootstrap
+SCSS variable names and section comments throughout, and this directory's
+position as the deck's Bootstrap Sass source tree. No copyright line is
+stated, so none is asserted here.
+
+License: the MIT License, reproduced in full below. Upstream publishes its
+copy at https://github.com/twbs/bootstrap/blob/main/LICENSE.
+
+Version
+-------
+
+Not stated in the vendored Sass files, and not claimed here. The compiled
+JavaScript vendored beside it states `Bootstrap v5.1.3` in its own banner,
+which is the version this Sass tree belongs to; that banner is the citation
+for the version, not a claim made by these files.
+
+The MIT License (MIT)
+
+Copyright (c) 2011-2021 The Bootstrap Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+Scope of the MIT grant inside this project
+------------------------------------------
+
+MIT is permissive and GPL-compatible, so vendoring these bytes does not
+disturb this project's GPL-3.0-or-later scope (see NOTICE at the repository
+root). The MIT terms require only that the notice above travel with the
+software, which this file does; the vendored partials themselves carry no
+banner, so this file is the only place the notice travels with them. Note
+that the compiled CSS these partials produce is shipped concatenated inside
+`scripts/deploy/one-click-deck/demo-static-assets/assets/all-style.css`;
+that bundle's `PROVENANCE.md` restates this notice for the concatenation.

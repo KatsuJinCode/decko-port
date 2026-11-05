@@ -1,0 +1,373 @@
+{
+  "step": 8,
+  "label": "revive parent (route path: create same name)",
+  "detail": {
+    "ok": false,
+    "kind": "create",
+    "error": "ActiveRecord::RecordInvalid: Validation failed: Name must be unique; 'PersistProbe Renamed' already exists."
+  },
+  "state": {
+    "probe_card_ids": [
+      637,
+      638,
+      639,
+      640
+    ],
+    "cards": [
+      {
+        "id": 637,
+        "name": "PersistProbe Renamed",
+        "key": "persist_probe_renamed",
+        "codename": null,
+        "left_id": null,
+        "right_id": null,
+        "trash": 0,
+        "type_id": 2,
+        "db_content": "",
+        "creator_id": 1,
+        "updater_id": 1,
+        "read_rule_class": "*all",
+        "read_rule_id": 10,
+        "current_revision_id": null,
+        "references_expired": null,
+        "created_at": "2026-10-14 03:07:25.356292",
+        "updated_at": "2026-10-14 03:10:40.278894"
+      },
+      {
+        "id": 638,
+        "name": "PersistProbe B",
+        "key": "persist_probe_b",
+        "codename": null,
+        "left_id": null,
+        "right_id": null,
+        "trash": 0,
+        "type_id": 2,
+        "db_content": "",
+        "creator_id": 1,
+        "updater_id": 1,
+        "read_rule_class": "*all",
+        "read_rule_id": 10,
+        "current_revision_id": null,
+        "references_expired": null,
+        "created_at": "2026-10-14 03:07:41.583891",
+        "updated_at": "2026-10-14 03:07:41.583891"
+      },
+      {
+        "id": 639,
+        "name": null,
+        "key": null,
+        "codename": null,
+        "left_id": 637,
+        "right_id": 638,
+        "trash": 1,
+        "type_id": 2,
+        "db_content": "beta",
+        "creator_id": 1,
+        "updater_id": 1,
+        "read_rule_class": "*all plus",
+        "read_rule_id": 10,
+        "current_revision_id": null,
+        "references_expired": null,
+        "created_at": "2026-10-14 03:07:41.638133",
+        "updated_at": "2026-10-14 03:10:05.824656"
+      },
+      {
+        "id": 640,
+        "name": null,
+        "key": null,
+        "codename": null,
+        "left_id": 637,
+        "right_id": 638,
+        "trash": 0,
+        "type_id": 2,
+        "db_content": "beta",
+        "creator_id": 1,
+        "updater_id": 1,
+        "read_rule_class": "*all plus",
+        "read_rule_id": 10,
+        "current_revision_id": null,
+        "references_expired": null,
+        "created_at": "2026-10-14 03:10:40.291957",
+        "updated_at": "2026-10-14 03:10:40.291957"
+      }
+    ],
+    "card_acts": [
+      {
+        "id": 105342,
+        "card_id": 637,
+        "actor_id": 1,
+        "ip_address": null,
+        "acted_at": "2026-10-14 03:07:25.570847"
+      },
+      {
+        "id": 105343,
+        "card_id": 639,
+        "actor_id": 1,
+        "ip_address": null,
+        "acted_at": "2026-10-14 03:07:41.707531"
+      },
+      {
+        "id": 105344,
+        "card_id": 637,
+        "actor_id": 1,
+        "ip_address": null,
+        "acted_at": "2026-10-14 03:08:44.756483"
+      },
+      {
+        "id": 105345,
+        "card_id": 637,
+        "actor_id": 1,
+        "ip_address": null,
+        "acted_at": "2026-10-14 03:09:29.445559"
+      },
+      {
+        "id": 105346,
+        "card_id": 637,
+        "actor_id": 1,
+        "ip_address": null,
+        "acted_at": "2026-10-14 03:09:49.284115"
+      },
+      {
+        "id": 105347,
+        "card_id": 637,
+        "actor_id": 1,
+        "ip_address": null,
+        "acted_at": "2026-10-14 03:10:05.884495"
+      },
+      {
+        "id": 105348,
+        "card_id": 640,
+        "actor_id": 1,
+        "ip_address": null,
+        "acted_at": "2026-10-14 03:10:40.476807"
+      }
+    ],
+    "card_actions": [
+      {
+        "id": 725,
+        "card_id": 637,
+        "card_act_id": 105342,
+        "super_action_id": null,
+        "action_type": 0,
+        "draft": 0,
+        "comment": null
+      },
+      {
+        "id": 726,
+        "card_id": 639,
+        "card_act_id": 105343,
+        "super_action_id": null,
+        "action_type": 0,
+        "draft": 0,
+        "comment": null
+      },
+      {
+        "id": 727,
+        "card_id": 638,
+        "card_act_id": 105343,
+        "super_action_id": 726,
+        "action_type": 0,
+        "draft": 0,
+        "comment": null
+      },
+      {
+        "id": 728,
+        "card_id": 637,
+        "card_act_id": 105344,
+        "super_action_id": null,
+        "action_type": 1,
+        "draft": 0,
+        "comment": null
+      },
+      {
+        "id": 729,
+        "card_id": 637,
+        "card_act_id": 105345,
+        "super_action_id": null,
+        "action_type": 1,
+        "draft": 0,
+        "comment": null
+      },
+      {
+        "id": 730,
+        "card_id": 637,
+        "card_act_id": 105346,
+        "super_action_id": null,
+        "action_type": 1,
+        "draft": 0,
+        "comment": null
+      },
+      {
+        "id": 731,
+        "card_id": 637,
+        "card_act_id": 105347,
+        "super_action_id": null,
+        "action_type": 2,
+        "draft": 0,
+        "comment": null
+      },
+      {
+        "id": 732,
+        "card_id": 639,
+        "card_act_id": 105347,
+        "super_action_id": 731,
+        "action_type": 2,
+        "draft": 0,
+        "comment": null
+      },
+      {
+        "id": 733,
+        "card_id": 640,
+        "card_act_id": 105348,
+        "super_action_id": null,
+        "action_type": 0,
+        "draft": 0,
+        "comment": null
+      },
+      {
+        "id": 734,
+        "card_id": 637,
+        "card_act_id": 105348,
+        "super_action_id": 733,
+        "action_type": 0,
+        "draft": 0,
+        "comment": null
+      }
+    ],
+    "card_changes": [
+      {
+        "id": 52,
+        "card_action_id": 725,
+        "field": 0,
+        "value": "PersistProbe A"
+      },
+      {
+        "id": 53,
+        "card_action_id": 725,
+        "field": 1,
+        "value": "2"
+      },
+      {
+        "id": 54,
+        "card_action_id": 725,
+        "field": 2,
+        "value": "alpha"
+      },
+      {
+        "id": 55,
+        "card_action_id": 725,
+        "field": 3,
+        "value": "f"
+      },
+      {
+        "id": 56,
+        "card_action_id": 725,
+        "field": 4,
+        "value": null
+      },
+      {
+        "id": 57,
+        "card_action_id": 725,
+        "field": 5,
+        "value": null
+      },
+      {
+        "id": 58,
+        "card_action_id": 728,
+        "field": 2,
+        "value": "alpha beta"
+      },
+      {
+        "id": 59,
+        "card_action_id": 729,
+        "field": 2,
+        "value": "alpha beta [[PersistProbe B]]"
+      },
+      {
+        "id": 60,
+        "card_action_id": 730,
+        "field": 0,
+        "value": "PersistProbe Renamed"
+      },
+      {
+        "id": 61,
+        "card_action_id": 731,
+        "field": 3,
+        "value": "t"
+      },
+      {
+        "id": 62,
+        "card_action_id": 726,
+        "field": 0,
+        "value": null
+      },
+      {
+        "id": 63,
+        "card_action_id": 726,
+        "field": 1,
+        "value": "2"
+      },
+      {
+        "id": 64,
+        "card_action_id": 726,
+        "field": 2,
+        "value": "beta"
+      },
+      {
+        "id": 65,
+        "card_action_id": 726,
+        "field": 3,
+        "value": "f"
+      },
+      {
+        "id": 66,
+        "card_action_id": 726,
+        "field": 4,
+        "value": "637"
+      },
+      {
+        "id": 67,
+        "card_action_id": 726,
+        "field": 5,
+        "value": "638"
+      },
+      {
+        "id": 68,
+        "card_action_id": 732,
+        "field": 3,
+        "value": "t"
+      },
+      {
+        "id": 69,
+        "card_action_id": 734,
+        "field": 0,
+        "value": "PersistProbe Renamed"
+      },
+      {
+        "id": 70,
+        "card_action_id": 734,
+        "field": 1,
+        "value": "2"
+      },
+      {
+        "id": 71,
+        "card_action_id": 734,
+        "field": 2,
+        "value": ""
+      },
+      {
+        "id": 72,
+        "card_action_id": 734,
+        "field": 3,
+        "value": "f"
+      }
+    ],
+    "card_references": [],
+    "card_virtuals": [],
+    "files": []
+  },
+  "codename_ids": {
+    "salt": 221,
+    "password": 216
+  }
+}

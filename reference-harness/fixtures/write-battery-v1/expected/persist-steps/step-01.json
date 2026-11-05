@@ -1,0 +1,63 @@
+{
+  "step": 1,
+  "label": "create simple",
+  "detail": {
+    "ok": true,
+    "kind": "create",
+    "value": 637
+  },
+  "state": {
+    "probe_card_ids": [
+      637
+    ],
+    "cards": [
+      {
+        "id": 637,
+        "name": "PersistProbe A",
+        "key": "persist_probe_a",
+        "codename": null,
+        "left_id": null,
+        "right_id": null,
+        "trash": 0,
+        "type_id": 2,
+        "db_content": "alpha",
+        "creator_id": 1,
+        "updater_id": 1,
+        "read_rule_class": "*all",
+        "read_rule_id": 10,
+        "current_revision_id": null,
+        "references_expired": null,
+        "created_at": "2026-10-14 03:07:25.356292",
+        "updated_at": "2026-10-14 03:07:25.356292"
+      }
+    ],
+    "card_acts": [
+      {
+        "id": 105342,
+        "card_id": 637,
+        "actor_id": 1,
+        "ip_address": null,
+        "acted_at": "2026-10-14 03:07:25.570847"
+      }
+    ],
+    "card_actions": [
+      {
+        "id": 725,
+        "card_id": 637,
+        "card_act_id": 105342,
+        "super_action_id": null,
+        "action_type": 0,
+        "draft": 0,
+        "comment": null
+      }
+    ],
+    "card_changes": [],
+    "card_references": [],
+    "card_virtuals": [],
+    "files": []
+  },
+  "codename_ids": {
+    "salt": 221,
+    "password": 216
+  }
+}

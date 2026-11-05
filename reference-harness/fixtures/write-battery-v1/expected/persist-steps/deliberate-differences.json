@@ -1,0 +1,201 @@
+{
+  "about": "Declared, reasoned differences between the TypeScript engine and the Ruby oracle, as recorded on this fixture's synthetic deck (reference-harness/fixtures/write-battery-v1), over the PUBLIC write-probe op list. tools/persistence/compare-persist.mjs counts a step as deliberate only when its row delta is exactly the list below; any other change to that step is a mismatch. The withheld steps' own declarations live with the withheld recording (withheld/persist-steps/deliberate-differences.json) and are excluded from this file with the rest of the withheld set.",
+  "differences": [
+    {
+      "step": 7,
+      "title": "Re-creating a compound card while one of its parts is trashed",
+      "reason": "Ruby looks for a trashed junction to revive before it has resolved the revived part's id, finds none, and inserts a second cards row for the same (left_id, right_id) pair. That insert only succeeds on the oracle deck, whose schema carries no UNIQUE (left_id, right_id) index on cards; on a schema that enforces that uniqueness, as the TypeScript engine's own schema does (db/schema.sqlite.sql), the same Ruby save fails. The TypeScript engine revives the existing trashed junction row instead (recording the revival's name, type, content, trash and part changes), which keeps one row per name and violates no uniqueness constraint.",
+      "deltaFaults": [
+        {
+          "table": "cards",
+          "kind": "missing-in-ts",
+          "key": "PersistProbe Renamed+PersistProbe B~2",
+          "ruby": {
+            "id": "PersistProbe Renamed+PersistProbe B",
+            "name": null,
+            "key": null,
+            "codename": null,
+            "left_id": "PersistProbe Renamed",
+            "right_id": "PersistProbe B",
+            "trash": 0,
+            "type_id": 2,
+            "db_content": "beta",
+            "creator_id": 1,
+            "updater_id": 1,
+            "read_rule_class": "*all plus",
+            "read_rule_id": 10,
+            "current_revision_id": null,
+            "references_expired": null,
+            "created_at": "T",
+            "updated_at": "T"
+          }
+        },
+        {
+          "table": "cards",
+          "kind": "extra-in-ts",
+          "key": "PersistProbe Renamed+PersistProbe B",
+          "ts": {
+            "id": "PersistProbe Renamed+PersistProbe B",
+            "name": null,
+            "key": null,
+            "codename": null,
+            "left_id": "PersistProbe Renamed",
+            "right_id": "PersistProbe B",
+            "trash": 0,
+            "type_id": 2,
+            "db_content": "beta",
+            "creator_id": 1,
+            "updater_id": 1,
+            "read_rule_class": "*all plus",
+            "read_rule_id": 10,
+            "current_revision_id": null,
+            "references_expired": null,
+            "created_at": "T",
+            "updated_at": "T"
+          }
+        },
+        {
+          "table": "card_changes",
+          "kind": "extra-in-ts",
+          "key": "PersistProbe Renamed+PersistProbe B/02/1",
+          "ts": {
+            "id": "PersistProbe Renamed+PersistProbe B/02/1",
+            "card_action_id": "PersistProbe Renamed+PersistProbe B/02",
+            "field": 1,
+            "value": "2"
+          }
+        },
+        {
+          "table": "card_changes",
+          "kind": "extra-in-ts",
+          "key": "PersistProbe Renamed+PersistProbe B/02/2",
+          "ts": {
+            "id": "PersistProbe Renamed+PersistProbe B/02/2",
+            "card_action_id": "PersistProbe Renamed+PersistProbe B/02",
+            "field": 2,
+            "value": "beta"
+          }
+        },
+        {
+          "table": "card_changes",
+          "kind": "extra-in-ts",
+          "key": "PersistProbe Renamed+PersistProbe B/02/3",
+          "ts": {
+            "id": "PersistProbe Renamed+PersistProbe B/02/3",
+            "card_action_id": "PersistProbe Renamed+PersistProbe B/02",
+            "field": 3,
+            "value": "f"
+          }
+        },
+        {
+          "table": "card_changes",
+          "kind": "extra-in-ts",
+          "key": "PersistProbe Renamed+PersistProbe B/02/4",
+          "ts": {
+            "id": "PersistProbe Renamed+PersistProbe B/02/4",
+            "card_action_id": "PersistProbe Renamed+PersistProbe B/02",
+            "field": 4,
+            "value": "PersistProbe Renamed"
+          }
+        },
+        {
+          "table": "card_changes",
+          "kind": "extra-in-ts",
+          "key": "PersistProbe Renamed+PersistProbe B/02/5",
+          "ts": {
+            "id": "PersistProbe Renamed+PersistProbe B/02/5",
+            "card_action_id": "PersistProbe Renamed+PersistProbe B/02",
+            "field": 5,
+            "value": "PersistProbe B"
+          }
+        }
+      ]
+    },
+    {
+      "step": 67,
+      "title": "Revert of an act that renamed another card: the port completes the revert",
+      "reason": "Ruby raises 'stage finalize was skipped' part-way through this revert: the nested update! in :rollback_actions opens its own act (card/lib/card/director/run.rb:109-114), so the outer act never reaches its finalize stage and the act's own action rows are lost with it. Ruby's recording therefore shows the reverted rows written but the act's action and change rows absent, and its rendered page is the half-applied one. The port completes the revert and keeps the action rows its save created, which is what the revert was meant to do rather than crashing mid-way and dropping the act's history. The rows below are exactly the action and change rows Ruby does not keep: the port's own action for the reverted card, the renamed card's action, and the three changes they carry. outsideRows pins the four change rows the same divergence leaves in the deck outside the probe's own records: the reverted card's reverted content and type, and the renamed card's name and type, which Ruby writes against act rows the outer act then discards. Those ids are this deck's own.",
+      "deltaFaults": [
+        {
+          "table": "card_actions",
+          "kind": "extra-in-ts",
+          "key": "PersistProbe Form/14",
+          "ts": {
+            "id": "PersistProbe Form/14",
+            "card_id": "PersistProbe Form",
+            "card_act_id": "PersistProbe Form/act6",
+            "super_action_id": null,
+            "action_type": 1,
+            "draft": 0,
+            "comment": null
+          }
+        },
+        {
+          "table": "card_actions",
+          "kind": "extra-in-ts",
+          "key": "PersistProbe Other/12",
+          "ts": {
+            "id": "PersistProbe Other/12",
+            "card_id": "PersistProbe Other",
+            "card_act_id": "PersistProbe Form/act6",
+            "super_action_id": "PersistProbe Form/14",
+            "action_type": 1,
+            "draft": 0,
+            "comment": null
+          }
+        },
+        {
+          "table": "card_changes",
+          "kind": "extra-in-ts",
+          "key": "PersistProbe Form/14/2",
+          "ts": {
+            "id": "PersistProbe Form/14/2",
+            "card_action_id": "PersistProbe Form/14",
+            "field": 2,
+            "value": "main2"
+          }
+        },
+        {
+          "table": "card_changes",
+          "kind": "extra-in-ts",
+          "key": "PersistProbe Form/14/3",
+          "ts": {
+            "id": "PersistProbe Form/14/3",
+            "card_action_id": "PersistProbe Form/14",
+            "field": 3,
+            "value": "f"
+          }
+        },
+        {
+          "table": "card_changes",
+          "kind": "extra-in-ts",
+          "key": "PersistProbe Other/12/0",
+          "ts": {
+            "id": "PersistProbe Other/12/0",
+            "card_action_id": "PersistProbe Other/12",
+            "field": 0,
+            "value": "PersistProbe Other"
+          }
+        }
+      ],
+      "outsideRows": [
+        {
+          "table": "card_changes",
+          "row": "{\"card_action_id\":811,\"field\":2,\"value\":\"main2\"}"
+        },
+        {
+          "table": "card_changes",
+          "row": "{\"card_action_id\":811,\"field\":3,\"value\":\"f\"}"
+        },
+        {
+          "table": "card_changes",
+          "row": "{\"card_action_id\":812,\"field\":0,\"value\":\"PersistProbe Other\"}"
+        },
+        {
+          "table": "card_changes",
+          "row": "{\"card_action_id\":812,\"field\":3,\"value\":\"f\"}"
+        }
+      ]
+    }
+  ]
+}

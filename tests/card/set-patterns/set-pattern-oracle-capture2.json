@@ -1,0 +1,129 @@
+{
+  "pattern_cards": [
+    {
+      "code": "self",
+      "pattern_card": "*self"
+    },
+    {
+      "code": "type_plus_right",
+      "pattern_card": "*type plus right"
+    },
+    {
+      "code": "right",
+      "pattern_card": "*right"
+    },
+    {
+      "code": "rule",
+      "pattern_card": "*rule"
+    },
+    {
+      "code": "rstar",
+      "pattern_card": "*rstar"
+    },
+    {
+      "code": "star",
+      "pattern_card": "*star"
+    },
+    {
+      "code": "type",
+      "pattern_card": "*type"
+    },
+    {
+      "code": "all_plus",
+      "pattern_card": "*all plus"
+    },
+    {
+      "code": "all",
+      "pattern_card": "*all"
+    }
+  ],
+  "cards": [
+    {
+      "name": "Oracle Junction",
+      "module_keys": [
+        null,
+        "Type::Basic",
+        "All"
+      ],
+      "safe_keys": [
+        "SELF-oracle_junction",
+        "TYPE-rich_text",
+        "ALL"
+      ],
+      "assigns_type_module_keys": []
+    },
+    {
+      "name": "Oracle Junction+child_one",
+      "module_keys": [
+        null,
+        null,
+        null,
+        "Type::Basic",
+        "AllPlus",
+        "All"
+      ],
+      "safe_keys": [
+        "SELF-oracle_junction-child_one",
+        "TYPE_PLUS_RIGHT-rich_text-child_one",
+        "RIGHT-child_one",
+        "TYPE-rich_text",
+        "ALL_PLUS",
+        "ALL"
+      ],
+      "assigns_type_module_keys": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "*read",
+      "module_keys": [
+        "Self::Read",
+        "Star",
+        "Type::Setting",
+        "All"
+      ],
+      "safe_keys": [
+        "SELF-Xread",
+        "STAR",
+        "TYPE-setting",
+        "ALL"
+      ],
+      "assigns_type_module_keys": []
+    },
+    {
+      "name": "Zz Probe Two+field",
+      "module_keys": [
+        null,
+        null,
+        "Type::Basic",
+        "AllPlus",
+        "All"
+      ],
+      "safe_keys": [
+        "TYPE_PLUS_RIGHT-rich_text-field",
+        "RIGHT-field",
+        "TYPE-rich_text",
+        "ALL_PLUS",
+        "ALL"
+      ],
+      "assigns_type_module_keys": [
+        null,
+        null
+      ]
+    }
+  ],
+  "tpr_set_labels": {
+    "label": "All \"+child_one\" cards on \"RichText\" cards",
+    "short_label": "all \"+child_one\" on \"RichTexts\"",
+    "uncapitalized_label": "",
+    "rule_cache_key_base": ""
+  },
+  "all_set": {
+    "rule_cache_key_base": "all",
+    "uncapitalized_label": ""
+  },
+  "type_set": {
+    "rule_cache_key_base": "2+type"
+  }
+}

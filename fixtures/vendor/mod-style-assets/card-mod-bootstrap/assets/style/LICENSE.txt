@@ -1,0 +1,65 @@
+Third-party license for the file in this directory
+===================================================
+
+Component
+---------
+
+    Bootstrap Icons — the icon font stylesheet. The font binaries
+    (bootstrap-icons.woff / .woff2) are served by the deck at runtime from
+    the `/mod/bootstrap/fonts/` asset route; this directory holds only the
+    CSS that names them.
+
+    Upstream: https://icons.getbootstrap.com/   (source: https://github.com/twbs/icons)
+    File:     ./bootstrap-icons.css
+
+Copyright
+---------
+
+**The vendored file carries no banner.** It opens with an `@font-face` rule
+and declares no license. The upstream project is named here from the file's
+own embedded metadata: the `"bootstrap-icons"` font-family it declares and
+the `.bi-` class prefix its glyph rules use, plus this file's position as the
+bootstrap mod's `assets/style/` stylesheet. No copyright line is stated, so
+none is asserted here.
+
+License: the MIT License, reproduced in full below. Upstream publishes its
+copy at https://github.com/twbs/icons/blob/main/LICENSE.md.
+
+Version
+-------
+
+Not stated in the vendored file, and not claimed here. The stylesheet's glyph
+set is pinned by its own contents — every rule is a `.bi-<name>::before`
+content code point — so the deck's icon coverage is verifiable from this
+file without knowing the release.
+
+The MIT License (MIT)
+
+Copyright (c) 2019-2024 The Bootstrap Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+Scope of the MIT grant inside this project
+------------------------------------------
+
+MIT is permissive and GPL-compatible, so vendoring these bytes does not
+disturb this project's GPL-3.0-or-later scope (see NOTICE at the repository
+root). The MIT terms require only that the notice above travel with the
+software, which this file does; the vendored stylesheet itself carries no
+banner, so this file is the only place the notice travels with it.

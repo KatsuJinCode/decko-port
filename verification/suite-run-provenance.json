@@ -1,0 +1,28 @@
+{
+  "runId": "full-suite-20261103",
+  "startedAt": "2026-11-03T07:04:55Z",
+  "completedAt": "2026-11-03T07:39:51Z",
+  "durationSeconds": 2096,
+  "environment": {
+    "host": "brandon-portal-vm",
+    "architecture": "aarch64",
+    "memory": "12 GB",
+    "runtime": "Node.js v24",
+    "database": "MySQL 8.4.11",
+    "maxWorkers": 2
+  },
+  "sourceCommit": "fc5917bb",
+  "command": "node tools/test-gates.mjs run full",
+  "initialFullSuite": {
+    "passed": 12072,
+    "failed": 75,
+    "skipped": 194,
+    "total": 12341
+  },
+  "targetedCloseout": {
+    "shard1": { "passed": 161, "skipped": 141 },
+    "shard2": { "passed": 56, "skipped": 42 },
+    "subsequentRun": { "passed": 466, "failed": 4, "skipped": 0, "total": 470 },
+    "finalRun": { "passed": 4, "failed": 0, "skipped": 0, "total": 4 }
+  }
+}

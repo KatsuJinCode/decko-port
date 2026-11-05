@@ -1,0 +1,1706 @@
+{
+ "format": "decko-browser-journeys/1",
+ "fixture": "synthetic-v1",
+ "about": "User journeys on the synthetic-v1 deck, written once and run against every engine. Each journey starts on a fresh copy of the built deck. Steps: visit, signin (actor, through the sign-in form), click / fill / type / check / uncheck / select / upload (a target: link, button, css, name, field or text, optionally within a css scope), editor (sets an editor's content as Decko's own steps do), press, wait, window / close_window, mail_link, observe (records what the user sees).",
+ "journeys": [
+  {
+   "id": "signin-signout-member",
+   "covers": [
+    "sign in",
+    "sign out",
+    "signup.feature: sign out, sign back in"
+   ],
+   "steps": [
+    {
+     "visit": "/"
+    },
+    {
+     "observe": "home, signed out"
+    },
+    {
+     "click": {
+      "link": "Sign in"
+     }
+    },
+    {
+     "observe": "sign-in page"
+    },
+    {
+     "fill": {
+      "field": "*email"
+     },
+     "value": "mira.member@example.test"
+    },
+    {
+     "fill": {
+      "field": "*password"
+     },
+     "value": "Fixture member pass 1#"
+    },
+    {
+     "click": {
+      "button": "Sign in"
+     }
+    },
+    {
+     "observe": "after sign-in"
+    },
+    {
+     "click": {
+      "link": "Sign out"
+     }
+    },
+    {
+     "observe": "after sign-out"
+    }
+   ]
+  },
+  {
+   "id": "signin-wrong-password",
+   "covers": [
+    "sign in refused"
+   ],
+   "steps": [
+    {
+     "visit": "/*signin"
+    },
+    {
+     "fill": {
+      "field": "*email"
+     },
+     "value": "mira.member@example.test"
+    },
+    {
+     "fill": {
+      "field": "*password"
+     },
+     "value": "not the password"
+    },
+    {
+     "click": {
+      "button": "Sign in"
+     }
+    },
+    {
+     "observe": "refused sign-in"
+    }
+   ]
+  },
+  {
+   "id": "signin-admin-home",
+   "covers": [
+    "sign in",
+    "administrator navbar"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/"
+    },
+    {
+     "observe": "admin home"
+    }
+   ]
+  },
+  {
+   "id": "create-note-member",
+   "covers": [
+    "create through the editor",
+    "rich text editor"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/new/Note"
+    },
+    {
+     "observe": "new note form"
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Browser Note"
+    },
+    {
+     "editor": "card[content]",
+     "value": "<p>Written in a browser.</p>"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "observe": "created note"
+    }
+   ]
+  },
+  {
+   "id": "create-phrase-admin",
+   "covers": [
+    "create through the editor",
+    "plain input"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/new/Phrase"
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Phrase 9"
+    },
+    {
+     "editor": "card[content]",
+     "value": "Lantern harbor juniper"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "observe": "created phrase"
+    }
+   ]
+  },
+  {
+   "id": "create-duplicate-name-admin",
+   "covers": [
+    "validation error in the editor",
+    "refusal for the administrator"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/new/Phrase"
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Phrase 3"
+    },
+    {
+     "editor": "card[content]",
+     "value": "duplicate"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "observe": "duplicate refused"
+    }
+   ]
+  },
+  {
+   "id": "create-invalid-number-admin",
+   "covers": [
+    "validation error in the editor"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/new/Number"
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Number 9"
+    },
+    {
+     "editor": "card[content]",
+     "value": "not a number"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "observe": "invalid number refused"
+    }
+   ]
+  },
+  {
+   "id": "edit-note-admin",
+   "covers": [
+    "edit through the editor",
+    "follower mail"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/Note_001?view=edit"
+    },
+    {
+     "observe": "edit form"
+    },
+    {
+     "editor": "card[content]",
+     "value": "<p>Edited in a browser.</p>"
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "observe": "edited note"
+    },
+    {
+     "visit": "/Note_001"
+    },
+    {
+     "observe": "edited note reloaded"
+    }
+   ]
+  },
+  {
+   "id": "edit-phrase-save-member",
+   "covers": [
+    "edit through the editor",
+    "member edits a plain-input card"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/Phrase_4?view=edit"
+    },
+    {
+     "editor": "card[content]",
+     "value": "Hollow garnet beacon"
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "observe": "after save"
+    },
+    {
+     "visit": "/Phrase_4"
+    },
+    {
+     "observe": "saved phrase"
+    }
+   ]
+  },
+  {
+   "id": "rename-admin",
+   "covers": [
+    "rename through the editor",
+    "referers updated"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/Phrase_1?view=edit_name"
+    },
+    {
+     "observe": "rename form"
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Phrase One"
+    },
+    {
+     "click": {
+      "button": "Rename"
+     }
+    },
+    {
+     "observe": "after rename"
+    },
+    {
+     "visit": "/Phrase_One"
+    },
+    {
+     "observe": "renamed card"
+    }
+   ]
+  },
+  {
+   "id": "rename-topic-with-referers-admin",
+   "covers": [
+    "rename through the editor",
+    "referers updated"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/Topic_001?view=edit_name"
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Topic Zero One"
+    },
+    {
+     "click": {
+      "button": "Rename"
+     }
+    },
+    {
+     "observe": "after rename"
+    },
+    {
+     "visit": "/Note_001"
+    },
+    {
+     "observe": "referring note"
+    }
+   ]
+  },
+  {
+   "id": "delete-admin",
+   "covers": [
+    "delete through the editor"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/Phrase_2?view=edit"
+    },
+    {
+     "click": {
+      "link": "Delete"
+     }
+    },
+    {
+     "observe": "after delete"
+    },
+    {
+     "visit": "/Phrase_2"
+    },
+    {
+     "observe": "deleted card"
+    }
+   ]
+  },
+  {
+   "id": "delete-system-card-admin",
+   "covers": [
+    "refusal for the administrator"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/*all?view=edit"
+    },
+    {
+     "observe": "system card edit form"
+    },
+    {
+     "click": {
+      "link": "Delete"
+     }
+    },
+    {
+     "observe": "after delete attempt"
+    }
+   ]
+  },
+  {
+   "id": "new-topic-structured-form",
+   "covers": [
+    "structure.feature: New structured card",
+    "nest editing"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/new/Topic"
+    },
+    {
+     "observe": "new topic form"
+    }
+   ]
+  },
+  {
+   "id": "create-structured-topic-member",
+   "covers": [
+    "structure.feature: Create and edit templated card",
+    "nest editing"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/new/Topic"
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Topic 900"
+    },
+    {
+     "editor": "card[subcards][+summary][content]",
+     "value": "<p>Summary written in the form.</p>"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "observe": "created topic"
+    },
+    {
+     "visit": "/Topic_900+summary"
+    },
+    {
+     "observe": "its summary"
+    }
+   ]
+  },
+  {
+   "id": "edit-nested-summary-member",
+   "covers": [
+    "nest editing",
+    "edit with plusses"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/Topic_002?view=edit"
+    },
+    {
+     "observe": "structured edit form"
+    },
+    {
+     "editor": "card[subcards][+summary][content]",
+     "value": "<p>Summary edited through the topic.</p>"
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "observe": "topic after nested edit"
+    }
+   ]
+  },
+  {
+   "id": "edit-nests-view-admin",
+   "covers": [
+    "nest editing"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/Report_Index?view=edit_nests"
+    },
+    {
+     "observe": "edit nests"
+    }
+   ]
+  },
+  {
+   "id": "default-content-in-form",
+   "covers": [
+    "structure.feature: default rule",
+    "default content"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/new/Note"
+    },
+    {
+     "observe": "default content shown"
+    }
+   ]
+  },
+  {
+   "id": "pointer-checkbox-input",
+   "covers": [
+    "pointer_inputs.feature: checkbox input",
+    "rule created through the editor"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/card/new?card%5Bname%5D=tags%2B*right%2B*input_type&type=Phrase"
+    },
+    {
+     "editor": "card[content]",
+     "value": "checkbox"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "visit": "/card/new?card%5Bname%5D=tags%2B*right%2B*options&type=Search"
+    },
+    {
+     "editor": "card[content]",
+     "value": "{\"type\":\"Tag\",\"sort\":\"name\"}"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "visit": "/Topic_004+tags?view=edit"
+    },
+    {
+     "observe": "checkbox editor"
+    },
+    {
+     "check": {
+      "css": "input[type=checkbox][value='Tag 02']"
+     }
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "visit": "/Topic_004+tags"
+    },
+    {
+     "observe": "tags after checking"
+    }
+   ]
+  },
+  {
+   "id": "pointer-radio-input",
+   "covers": [
+    "pointer_inputs.feature: radio input"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/card/new?card%5Bname%5D=tags%2B*right%2B*input_type&type=Phrase"
+    },
+    {
+     "editor": "card[content]",
+     "value": "radio"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "visit": "/card/new?card%5Bname%5D=tags%2B*right%2B*options&type=Search"
+    },
+    {
+     "editor": "card[content]",
+     "value": "{\"type\":\"Tag\",\"sort\":\"name\"}"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "visit": "/Topic_005+tags?view=edit"
+    },
+    {
+     "observe": "radio editor"
+    },
+    {
+     "check": {
+      "css": "input[type=radio][value='Tag 03']"
+     }
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "visit": "/Topic_005+tags"
+    },
+    {
+     "observe": "tags after choosing"
+    }
+   ]
+  },
+  {
+   "id": "pointer-multiselect-input",
+   "covers": [
+    "pointer_inputs.feature: multiselect input"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/card/new?card%5Bname%5D=tags%2B*right%2B*input_type&type=Phrase"
+    },
+    {
+     "editor": "card[content]",
+     "value": "multiselect"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "visit": "/card/new?card%5Bname%5D=tags%2B*right%2B*options&type=Search"
+    },
+    {
+     "editor": "card[content]",
+     "value": "{\"type\":\"Tag\",\"sort\":\"name\"}"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "visit": "/Topic_006+tags?view=edit"
+    },
+    {
+     "observe": "multiselect editor"
+    },
+    {
+     "select": {
+      "css": "select"
+     },
+     "option": "Tag 04"
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "visit": "/Topic_006+tags"
+    },
+    {
+     "observe": "tags after selecting"
+    }
+   ]
+  },
+  {
+   "id": "rule-board-admin",
+   "covers": [
+    "rule board"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/Topic_001?view=board"
+    },
+    {
+     "observe": "board"
+    },
+    {
+     "click": {
+      "link": "Rules"
+     }
+    },
+    {
+     "observe": "rules tab"
+    }
+   ]
+  },
+  {
+   "id": "upload-file-admin",
+   "covers": [
+    "attach.feature: Uploading a file",
+    "uploads"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/new/File"
+    },
+    {
+     "upload": {
+      "css": "input[type=file]"
+     },
+     "file": "minutes.txt"
+    },
+    {
+     "wait": {
+      "text": "minutes.txt"
+     }
+    },
+    {
+     "observe": "upload preview"
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Browser Minutes"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "observe": "created file card"
+    },
+    {
+     "download": {
+      "link": "minutes.txt"
+     },
+     "file": "minutes.txt",
+     "label": "uploaded file bytes"
+    }
+   ]
+  },
+  {
+   "id": "upload-remove-preview-admin",
+   "covers": [
+    "attach.feature: Uploading a file (remove the upload)"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/new/File"
+    },
+    {
+     "upload": {
+      "css": "input[type=file]"
+     },
+     "file": "minutes.txt"
+    },
+    {
+     "wait": {
+      "text": "minutes.txt"
+     }
+    },
+    {
+     "click": {
+      "button": "Delete"
+     }
+    },
+    {
+     "observe": "upload removed"
+    }
+   ]
+  },
+  {
+   "id": "upload-image-admin",
+   "covers": [
+    "attach.feature: Uploading and changing an image",
+    "uploads"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/new/Image"
+    },
+    {
+     "upload": {
+      "css": "input[type=file]"
+     },
+     "file": "gradient.png"
+    },
+    {
+     "wait": {
+      "text": "gradient.png"
+     }
+    },
+    {
+     "observe": "image preview"
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Browser Gradient"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "observe": "created image card"
+    }
+   ]
+  },
+  {
+   "id": "upload-replace-file-admin",
+   "covers": [
+    "attach.feature: updating a file",
+    "uploads"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/Report_1?view=edit"
+    },
+    {
+     "upload": {
+      "css": "input[type=file]"
+     },
+     "file": "minutes.txt"
+    },
+    {
+     "wait": {
+      "text": "minutes.txt"
+     }
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "observe": "replaced file"
+    }
+   ]
+  },
+  {
+   "id": "upload-empty-file-refused",
+   "covers": [
+    "attach.feature: Block creating a new empty file"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/new/File"
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Empty File"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "observe": "empty file refused"
+    }
+   ]
+  },
+  {
+   "id": "upload-file-member",
+   "covers": [
+    "uploads",
+    "member permissions"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/new/File"
+    },
+    {
+     "upload": {
+      "css": "input[type=file]"
+     },
+     "file": "minutes.txt"
+    },
+    {
+     "wait": {
+      "text": "minutes.txt"
+     }
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Member Minutes"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "observe": "member's file card"
+    }
+   ]
+  },
+  {
+   "id": "navbox-keyword-search",
+   "covers": [
+    "navbox.feature: quick search",
+    "searches"
+   ],
+   "steps": [
+    {
+     "visit": "/"
+    },
+    {
+     "type": {
+      "css": "#query_keyword"
+     },
+     "value": "Topic 01"
+    },
+    {
+     "wait": {
+      "css": ".select2-results__option, .ui-autocomplete li, .search-box-dropdown li, ._search-box-results li"
+     }
+    },
+    {
+     "observe": "search suggestions"
+    },
+    {
+     "press": "Enter"
+    },
+    {
+     "observe": "search results"
+    }
+   ]
+  },
+  {
+   "id": "navbox-paging",
+   "covers": [
+    "navbox.feature: paging",
+    "searches",
+    "keyword search on SQLite (stock Ruby raises: match is not implemented for SQLite)"
+   ],
+   "steps": [
+    {
+     "visit": "/"
+    },
+    {
+     "fill": {
+      "css": "#query_keyword"
+     },
+     "value": "Topic"
+    },
+    {
+     "press": "Enter"
+    },
+    {
+     "observe": "first page"
+    }
+   ]
+  },
+  {
+   "id": "navbox-cql-member",
+   "covers": [
+    "navbox.feature: cql search",
+    "searches"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/"
+    },
+    {
+     "fill": {
+      "css": "#query_keyword"
+     },
+     "value": "{\"type\":\"Memo\"}"
+    },
+    {
+     "press": "Enter"
+    },
+    {
+     "observe": "cql results"
+    }
+   ]
+  },
+  {
+   "id": "search-filtered-anonymous",
+   "covers": [
+    "searches",
+    "permission filtering"
+   ],
+   "steps": [
+    {
+     "visit": "/"
+    },
+    {
+     "fill": {
+      "css": "#query_keyword"
+     },
+     "value": "Memo"
+    },
+    {
+     "press": "Enter"
+    },
+    {
+     "observe": "anonymous results"
+    }
+   ]
+  },
+  {
+   "id": "search-card-pages",
+   "covers": [
+    "searches",
+    "search card paging"
+   ],
+   "steps": [
+    {
+     "visit": "/All_Topics"
+    },
+    {
+     "observe": "search card"
+    },
+    {
+     "click": {
+      "link": "2"
+     }
+    },
+    {
+     "observe": "search card page 2"
+    },
+    {
+     "visit": "/Search_Page"
+    },
+    {
+     "observe": "page of searches"
+    }
+   ]
+  },
+  {
+   "id": "denied-anonymous-read",
+   "covers": [
+    "permission denied: anonymous"
+   ],
+   "steps": [
+    {
+     "visit": "/Memo_01"
+    },
+    {
+     "observe": "memo for anonymous"
+    },
+    {
+     "visit": "/Brief_01"
+    },
+    {
+     "observe": "brief for anonymous"
+    }
+   ]
+  },
+  {
+   "id": "denied-anonymous-create",
+   "covers": [
+    "permission denied: anonymous"
+   ],
+   "steps": [
+    {
+     "visit": "/new/Note"
+    },
+    {
+     "observe": "new note for anonymous"
+    }
+   ]
+  },
+  {
+   "id": "denied-anonymous-edit",
+   "covers": [
+    "permission denied: anonymous"
+   ],
+   "steps": [
+    {
+     "visit": "/Topic_001?view=edit"
+    },
+    {
+     "observe": "edit topic for anonymous"
+    }
+   ]
+  },
+  {
+   "id": "denied-member-read",
+   "covers": [
+    "permission denied: member"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/Brief_01"
+    },
+    {
+     "observe": "brief for member"
+    },
+    {
+     "visit": "/Topic_003"
+    },
+    {
+     "observe": "admin-only topic for member"
+    }
+   ]
+  },
+  {
+   "id": "denied-member-create",
+   "covers": [
+    "permission denied: member"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/new/Brief"
+    },
+    {
+     "observe": "new brief for member"
+    }
+   ]
+  },
+  {
+   "id": "denied-member-edit",
+   "covers": [
+    "permission denied: member"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/Phrase_5?view=edit"
+    },
+    {
+     "observe": "edit phrase for member"
+    },
+    {
+     "visit": "/Memo_02?view=edit"
+    },
+    {
+     "observe": "edit memo for member"
+    }
+   ]
+  },
+  {
+   "id": "denied-member-delete",
+   "covers": [
+    "permission denied: member"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/Topic_007?view=edit"
+    },
+    {
+     "observe": "topic edit form for member"
+    },
+    {
+     "click": {
+      "link": "Delete"
+     }
+    },
+    {
+     "observe": "after member delete attempt"
+    }
+   ]
+  },
+  {
+   "id": "follow-from-board-admin",
+   "covers": [
+    "follow"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/Topic_008?view=board"
+    },
+    {
+     "click": {
+      "link": "Engage"
+     }
+    },
+    {
+     "observe": "follow section"
+    },
+    {
+     "click": {
+      "css": "a.follow-link"
+     }
+    },
+    {
+     "observe": "after follow"
+    }
+   ]
+  },
+  {
+   "id": "unfollow-from-board-member",
+   "covers": [
+    "unfollow"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/Topic_009?view=board"
+    },
+    {
+     "click": {
+      "link": "Engage"
+     }
+    },
+    {
+     "observe": "follow section"
+    },
+    {
+     "click": {
+      "css": "a.follow-link"
+     }
+    },
+    {
+     "observe": "after unfollow"
+    }
+   ]
+  },
+  {
+   "id": "unfollow-from-mail",
+   "covers": [
+    "notifications.feature: Unfollow link in the email",
+    "follower mail"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/Note_011?view=edit"
+    },
+    {
+     "editor": "card[content]",
+     "value": "<p>Edited so the follower hears.</p>"
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "signin": "member"
+    },
+    {
+     "mail_link": {
+      "subject": "Note 011",
+      "contains": "follow"
+     }
+    },
+    {
+     "observe": "after unfollow link"
+    }
+   ]
+  },
+  {
+   "id": "account-settings-member",
+   "covers": [
+    "account settings"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/Mira_Member"
+    },
+    {
+     "observe": "own user card"
+    },
+    {
+     "visit": "/Mira_Member+*account?view=edit"
+    },
+    {
+     "observe": "account edit form"
+    }
+   ]
+  },
+  {
+   "id": "account-change-password-member",
+   "covers": [
+    "account settings",
+    "sign in with the new password"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/Mira_Member+*account?view=edit"
+    },
+    {
+     "fill": {
+      "field": "*password"
+     },
+     "value": "A new fixture pass 3#"
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "observe": "after password change"
+    },
+    {
+     "click": {
+      "link": "Sign out"
+     }
+    },
+    {
+     "visit": "/*signin"
+    },
+    {
+     "fill": {
+      "field": "*email"
+     },
+     "value": "mira.member@example.test"
+    },
+    {
+     "fill": {
+      "field": "*password"
+     },
+     "value": "A new fixture pass 3#"
+    },
+    {
+     "click": {
+      "button": "Sign in"
+     }
+    },
+    {
+     "observe": "signed in with the new password"
+    }
+   ]
+  },
+  {
+   "id": "account-change-email-member",
+   "covers": [
+    "account settings"
+   ],
+   "steps": [
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/Mira_Member+*account?view=edit"
+    },
+    {
+     "fill": {
+      "field": "*email"
+     },
+     "value": "mira.changed@example.test"
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "observe": "after email change"
+    }
+   ]
+  },
+  {
+   "id": "signup-anonymous",
+   "covers": [
+    "signup.feature: Signing up",
+    "account settings"
+   ],
+   "steps": [
+    {
+     "visit": "/"
+    },
+    {
+     "click": {
+      "link": "Sign up"
+     }
+    },
+    {
+     "observe": "sign-up form"
+    },
+    {
+     "fill": {
+      "name": "card[name]"
+     },
+     "value": "Wanda Browser"
+    },
+    {
+     "fill": {
+      "field": "*email"
+     },
+     "value": "wanda.browser@example.test"
+    },
+    {
+     "fill": {
+      "field": "*password"
+     },
+     "value": "Fixture wanda pass 4#"
+    },
+    {
+     "click": {
+      "button": "Submit"
+     }
+    },
+    {
+     "observe": "after sign-up"
+    }
+   ]
+  },
+  {
+   "id": "reset-password-request",
+   "covers": [
+    "reset_password.feature: Resetting password",
+    "account mail",
+    "following the mailed link"
+   ],
+   "steps": [
+    {
+     "visit": "/*signin"
+    },
+    {
+     "click": {
+      "link": "Reset password"
+     }
+    },
+    {
+     "observe": "reset form"
+    },
+    {
+     "fill": {
+      "field": "*email",
+      "within": ".modal"
+     },
+     "value": "mira.member@example.test"
+    },
+    {
+     "click": {
+      "button": "Reset password",
+      "within": ".modal"
+     }
+    },
+    {
+     "observe": "after reset request"
+    },
+    {
+     "mail_link": {
+      "subject": "reset",
+      "contains": "token"
+     }
+    },
+    {
+     "observe": "reset link page"
+    }
+   ]
+  },
+  {
+   "id": "edit-conflict",
+   "covers": [
+    "conflict.feature: Two edits on a card at the same time"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/Phrase_3?view=edit"
+    },
+    {
+     "editor": "card[content]",
+     "value": "Admin's version"
+    },
+    {
+     "window": "second"
+    },
+    {
+     "visit": "/Phrase_3?view=edit"
+    },
+    {
+     "editor": "card[content]",
+     "value": "Second window's version"
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "close_window": "second"
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "observe": "conflict"
+    }
+   ]
+  },
+  {
+   "id": "history-view-admin",
+   "covers": [
+    "history.feature (commented upstream): view history"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/Note_001?view=history"
+    },
+    {
+     "observe": "history"
+    }
+   ]
+  },
+  {
+   "id": "read-pages-anonymous",
+   "covers": [
+    "reading: nests, links, files, chain, loop"
+   ],
+   "steps": [
+    {
+     "visit": "/Report_Index"
+    },
+    {
+     "observe": "files page"
+    },
+    {
+     "visit": "/Chain_01"
+    },
+    {
+     "observe": "nest chain"
+    },
+    {
+     "visit": "/Loop_A"
+    },
+    {
+     "observe": "nest loop"
+    },
+    {
+     "visit": "/Topic_001"
+    },
+    {
+     "observe": "structured topic"
+    },
+    {
+     "visit": "/No_Such_Card"
+    },
+    {
+     "observe": "missing card"
+    }
+   ]
+  },
+  {
+   "id": "permission-rule-flip-admin",
+   "covers": [
+    "permission rule changed through the rule edit form; allowed/denied behaviour observed on the changed rule"
+   ],
+   "steps": [
+    {
+     "signin": "admin"
+    },
+    {
+     "visit": "/*all+*read/edit"
+    },
+    {
+     "observe": "rule edit form"
+    },
+    {
+     "uncheck": {
+      "css": "input[name='anyone-perm-checkbox']"
+     }
+    },
+    {
+     "check": {
+      "css": "input[name='member-perm-checkbox']"
+     }
+    },
+    {
+     "click": {
+      "button": "Save and Close"
+     }
+    },
+    {
+     "observe": "rule saved"
+    },
+    {
+     "fresh_session": true
+    },
+    {
+     "visit": "/Note_001"
+    },
+    {
+     "observe": "note for anonymous after the rule change"
+    },
+    {
+     "signin": "member"
+    },
+    {
+     "visit": "/Note_001"
+    },
+    {
+     "observe": "note for member after the rule change"
+    }
+   ]
+  }
+ ]
+}

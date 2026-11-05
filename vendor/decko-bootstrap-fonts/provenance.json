@@ -1,0 +1,20 @@
+{
+  "gem": "card-mod-bootstrap",
+  "version": "0.20.0",
+  "upstream": "https://github.com/twbs/icons",
+  "upstreamFontVersion": "not established from gem metadata; exact gem bytes pinned below",
+  "licenseUrl": "https://raw.githubusercontent.com/twbs/icons/main/LICENSE",
+  "licenseSha256": "0fb3e11bd57e896c5a512afd64864d28a37de45d19835016c87ca1ad19ead969",
+  "files": [
+    {
+      "path": "public/fonts/bootstrap-icons.woff2",
+      "bytes": 121296,
+      "sha256": "966620f9e3bec428663687f9e8d67a6b8e35d79adebf6fb204e9b139eada7599"
+    },
+    {
+      "path": "public/fonts/bootstrap-icons.woff",
+      "bytes": 164352,
+      "sha256": "c6569d46a2e92b767b67d10c05b59e5d709da7c09d35426b629e31ae81d19d00"
+    }
+  ]
+}

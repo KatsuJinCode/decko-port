@@ -1,0 +1,184 @@
+{
+  "scope": "same five matrix cases inside actual Bunny Edge; exclusive old test database; no production resources",
+  "source": "f287240f4609ca8177b66b6a1974d3caad27bb4a",
+  "artifactSha256": "50eaa257d44b091ebbbc4cdae8e7ad72c56c22d1869770563d6e3d90605203ab",
+  "phase": "complete",
+  "events": [
+    {
+      "method": "GET",
+      "path": "/pullzone/6925086",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/compute/script/100871/releases/active",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/database/v1/databases",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/database/v2/databases/[database id redacted]/auth/generate",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/compute/script/100871/secrets",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/compute/script/100871/secrets",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/compute/script/100871/variables/add",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/compute/script/100871/variables/add",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/compute/script/100871/variables/add",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/compute/script/100871/code",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/compute/script/100871/code",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/compute/script/100871/publish",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/compute/script/100871/releases/active",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/pullzone/6925086/purgeCache",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/compute/script/100871/releases/active",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/compute/script/100871/code",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/compute/script/100871/code",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/compute/script/100871/publish",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/compute/script/100871/releases/active",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/pullzone/6925086/purgeCache",
+      "status": 204
+    }
+  ],
+  "runId": "edge-five-b3349ce4b6608b3f5f408ce3",
+  "buildId": "b5d42a3e70d5481a13548da68955ed2a2dcebc56d06c55ac391d50ea8278670c",
+  "before": {
+    "tables": 17,
+    "rows": 37,
+    "sha256": "bdedcc13322e2139e300736cbf09ba7f55e0510ecf07803f71706a5326f51e72"
+  },
+  "precedingError": "HOSTED RUN REFUSED: the deployed build at https://decko-o6-parity-51f-edge.bunny.run/_status is commit ebb7c6aefb2596e38e6d9b377f652aef83a73e19, but this run claims to test commit under test f287240f4609ca8177b66b6a1974d3caad27bb4a. No test request was sent. Deploy the commit under test, then re-run.",
+  "deployment": {
+    "release": 1279183,
+    "sha256": "50eaa257d44b091ebbbc4cdae8e7ad72c56c22d1869770563d6e3d90605203ab",
+    "guard": {
+      "commit": "f287240f4609ca8177b66b6a1974d3caad27bb4a",
+      "statusUrl": "https://decko-o6-parity-51f-edge.bunny.run/_status"
+    }
+  },
+  "identity": {
+    "buildId": "b5d42a3e70d5481a13548da68955ed2a2dcebc56d06c55ac391d50ea8278670c",
+    "caseSourceSha256": "c7c6e69834f1529b5558b10c5877ee5c083bb2351459a168d8862e49ba3ef6ee",
+    "schemaSha256": "cd17e29cd1c302567b39b198d6a766569ea1b31d43b32e726e91217972989fe4",
+    "databaseUrl": "https://01M6J2FQQTM3D1WGH36WCNFRTK-decko-o6-1103.lite.bunnydb.net",
+    "runId": "edge-five-b3349ce4b6608b3f5f408ce3",
+    "caseCount": 5
+  },
+  "execution": {
+    "status": 200,
+    "responseSha256": "5c09821c6204fa0795e22fe107dc8086835a7cc03717b3322d5b5bcceeea7b51"
+  },
+  "cases": [
+    {
+      "name": "saves: a create, an update and a delete are committed and read back",
+      "status": "passed",
+      "assertions": 5,
+      "elapsedMs": 1046.750908
+    },
+    {
+      "name": "rollback: a failure in a later stage of a save leaves every table as it was",
+      "status": "passed",
+      "assertions": 4,
+      "elapsedMs": 707.0036099999998
+    },
+    {
+      "name": "concurrent writes: two saves on two handles both commit, each with its own history",
+      "status": "passed",
+      "assertions": 6,
+      "elapsedMs": 781.5187889999997
+    },
+    {
+      "name": "concurrent reads: a reader is never served a save's uncommitted rows",
+      "status": "passed",
+      "assertions": 2,
+      "elapsedMs": 377.08258399999977
+    },
+    {
+      "name": "permissions: a rule that grants another party denies the write and writes nothing",
+      "status": "passed",
+      "assertions": 11,
+      "elapsedMs": 746.4405050000005
+    }
+  ],
+  "restoration": {
+    "originalTables": 17,
+    "allOriginalRowsEqual": true,
+    "mailPreserved": true,
+    "runRecordRetained": true
+  },
+  "sinkRestoration": {
+    "release": 1279208,
+    "sha256": "3236321d5684fd24bd4e4977a26a79e74823b0ec41c77fed9d149cf2de1c6804",
+    "guard": {
+      "commit": "ebb7c6aefb2596e38e6d9b377f652aef83a73e19",
+      "statusUrl": "https://decko-o6-parity-51f-edge.bunny.run/_status"
+    }
+  },
+  "routeDisabled": true,
+  "passed": true
+}

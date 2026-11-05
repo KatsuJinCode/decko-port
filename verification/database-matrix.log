@@ -1,0 +1,17 @@
+
+ RUN  v5.0.1 C:/localProjects/decko-ts-o6-bunny-hosted-20261103
+
+ ✓ tests/deploy/runtime-db-matrix.test.ts (5 tests) 107910ms
+   ✓ matrix: hosted libsql (5)
+     ✓ saves: a create, an update and a delete are committed and read back 25664ms
+     ✓ rollback: a failure in a later stage of a save leaves every table as it was 25201ms
+     ✓ concurrent writes: two saves on two handles both commit, each with its own history 5054ms
+     ✓ concurrent reads: a reader is never served a save's uncommitted rows 6416ms
+     ✓ permissions: a rule that grants another party denies the write and writes nothing 4548ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  17:25:38
+   Duration  110.87s (tests 97%, transform 2%, import 1%)
+
+JUNIT report written to C:/localProjects/fleet-briefs/routing-20261101/o6-bunny/matrix-attempt2.junit.xml
