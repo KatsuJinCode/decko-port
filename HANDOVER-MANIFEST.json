@@ -1776,12 +1776,6 @@
       "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
     },
     {
-      "path": "LIMITATIONS.md",
-      "mode": "100644",
-      "bytes": 9280,
-      "sha256": "b7ecb7419c016560da18a36e0d7d3b24216d4358381a8831013a7b9b3670d42f"
-    },
-    {
       "path": "NOTICE",
       "mode": "100644",
       "bytes": 17181,
